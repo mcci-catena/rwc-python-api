@@ -1,0 +1,9 @@
+doc/Makefile
+doc/*.bat
+doc/build/doctrees/
+doc/build/html/_sources/
+doc/build/html/.buildinfo
+doc/build/html/*.inv
+doc/source/
+
+rwclib/__pycache__/
