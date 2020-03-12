@@ -16,7 +16,7 @@ This is python library to control RWC5020x LoRa Tester remotely through either s
 
 ## How to install the package
 
-1.  clone the repository from [gitlab](https://github.com/mcci-catena/rwc-python-api)
+1.  clone the repository from [github](https://github.com/mcci-catena/rwc-python-api)
 2.  Open terminal in PC
 3.  Go to /[path_to_repository]/rwc-python-api/
 4.  To install, enter the command `python setup.py install`
