@@ -176,7 +176,7 @@ class RWCTesterApi(RwcSerialSetup):
         another sub menu
 
         :param submenu: sub menu type (LINK, POWER_TIME, POWER_CHANNEL, 
-        SENSITIVITY, REMOTE)
+                        SENSITIVITY, REMOTE)
 
         :return: ACK on success, NAK on failure
 
@@ -500,7 +500,8 @@ class RWCTesterApi(RwcSerialSetup):
 
         :param chindexrange: Channel index (0 - 5)
         :param chmaskrange: Channel Mask (For EDT 0x00 ~ 0xFF, 
-        For GWT 0x00 ~ 0xFFFF(US/AU/CN), read-only (others))
+                            For GWT 0x00 ~ 0xFFFF(US/AU/CN), 
+                            read-only (others))
 
         :return: ACK on success, NAK on failure
 
@@ -527,7 +528,7 @@ class RWCTesterApi(RwcSerialSetup):
         :param chindexrange: Channel index (0 - 5)
 
         :return: It returns the channel mask with respect to the channel 
-        index; NAK on failure
+                index; NAK on failure
 
         '''
         chindexnum = int(chindexrange)
@@ -649,7 +650,7 @@ class RWCTesterApi(RwcSerialSetup):
         :Parameters: N/A (Query only)
 
         :return: It returns the channel group of US/AU/CN region; 
-        NAK on failure
+                NAK on failure
 
         '''
         cmdGetChGroup = 'READ:RF:CH_GROUP?' + '\n'
@@ -750,7 +751,8 @@ class RWCTesterApi(RwcSerialSetup):
         Configure the data rate of ping channel
 
         :param drvalue: DR0_SF12BW125, DR1_SF11BW125, DR2_SF10BW125, 
-        DR3_SF9BW125, DR4_SF8BW125, DR5_SF7BW125, DR6_SF7BW250, DR7_FSK50
+                        DR3_SF9BW125, DR4_SF8BW125, DR5_SF7BW125, 
+                        DR6_SF7BW250, DR7_FSK50
 
         :return: ACK on success, NAK on failure
         
@@ -953,7 +955,7 @@ class RWCTesterApi(RwcSerialSetup):
         Configure an operating Region of RWC5020A
 
         :param region: EU_868, EU_433, US_915, AU_921, CN_490, KR_922, 
-        AS_923, IN_866
+                        AS_923, IN_866
 
         :return: ACK on success, NAK on failure
         
@@ -1486,7 +1488,7 @@ class RWCTesterApi(RwcSerialSetup):
         Configure the Periodic Uplink message in GWT
 
         :param peruplinkmsg: NONE, LINK_CHECK_REQ, CONFIRMED_UP, 
-        UNCONFIRMRED_UP, DL_COUNTER
+                            UNCONFIRMRED_UP, DL_COUNTER
 
         :return: ACK on success, NAK on failure
         
@@ -2001,7 +2003,7 @@ class RWCTesterApi(RwcSerialSetup):
         Configure the selection of downlink slot (RX window)
 
         :param slotval: For EDT, RX1, RX2, PING(Class B), 
-        For GWT, RX1, RX2, RX1&RX2
+                        For GWT, RX1, RX2, RX1&RX2
 
         :return: ACK on success, NAK on failure
         
@@ -2044,7 +2046,7 @@ class RWCTesterApi(RwcSerialSetup):
         Configure Data Rate of Uplink in GWT mode
 
         :param dr: DR0_SF12BW125, DR1_SF11BW125, DR2_SF10BW125, DR3_SF9BW125, 
-        DR4_SF8BW125, DR5_SF7BW125, DR6_SF7BW250, DR7_FSK50
+                    DR4_SF8BW125, DR5_SF7BW125, DR6_SF7BW250, DR7_FSK50
 
         :return: ACK on success, NAK on failure
         
@@ -2166,7 +2168,7 @@ class RWCTesterApi(RwcSerialSetup):
         Configure RX2_DR value for RXParamSetupReq
 
         :param dr: DR0_SF12BW125, DR1_SF11BW125, DR2_SF10BW125, DR3_SF9BW125, 
-        DR4_SF8BW125, DR5_SF7BW125, DR6_SF7BW250, DR7_FSK50
+                    DR4_SF8BW125, DR5_SF7BW125, DR6_SF7BW250, DR7_FSK50
 
         :return: ACK on success, NAK on failure
         
@@ -3490,7 +3492,8 @@ class RWCTesterApi(RwcSerialSetup):
 
         :param macnum: MAC Command Number
         :param drval: DR0_SF12BW125, DR1_SF11BW125, DR2_SF10BW125, 
-        DR3_SF9BW125, DR4_SF8BW125, DR5_SF7BW125, DR6_SF7BW250, DR7_FSK50
+                        DR3_SF9BW125, DR4_SF8BW125, DR5_SF7BW125, 
+                        DR6_SF7BW250, DR7_FSK50
 
         :return: ACK on success, NAK on failure
         
@@ -3822,7 +3825,7 @@ class RWCTesterApi(RwcSerialSetup):
 
         :param macnum: MAC Command Number
         :param value: 8, 10, 12, 13, 14, 16, 18, 20, 21, 24, 26, 27, 29, 
-        30, 33, 36
+                    30, 33, 36
 
         :return: ACK on success, NAK on failure
         
@@ -4424,7 +4427,7 @@ class RWCTesterApi(RwcSerialSetup):
 
         :param macnum: MAC Command Number
         :param datarate: DR0_SF12BW125, DR1_SF11BW125, DR2_SF10BW125, 
-        DR3_SF9BW125, DR4_SF8BW125, DR5_SF7BW125, DR6_SF7BW250, DR7_FSK50
+                        DR3_SF9BW125, DR4_SF8BW125, DR5_SF7BW125, DR6_SF7BW250, DR7_FSK50
 
         :return: ACK on success, NAK on failure
         
@@ -4530,7 +4533,7 @@ class RWCTesterApi(RwcSerialSetup):
 
         :param macnum: MAC Command Number
         :param datarate: DR0_SF12BW125, DR1_SF11BW125, DR2_SF10BW125, 
-        DR3_SF9BW125, DR4_SF8BW125, DR5_SF7BW125, DR6_SF7BW250, DR7_FSK50
+                        DR3_SF9BW125, DR4_SF8BW125, DR5_SF7BW125, DR6_SF7BW250, DR7_FSK50
 
         :return: ACK on success, NAK on failure
         
@@ -4702,7 +4705,7 @@ class RWCTesterApi(RwcSerialSetup):
 
         :param macnum: MAC Command Number
         :param datarate: DR0_SF12BW125, DR1_SF11BW125, DR2_SF10BW125, 
-        DR3_SF9BW125, DR4_SF8BW125, DR5_SF7BW125, DR6_SF7BW250, DR7_FSK50
+                        DR3_SF9BW125, DR4_SF8BW125, DR5_SF7BW125, DR6_SF7BW250, DR7_FSK50
 
         :return: ACK on success, NAK on failure
         
@@ -5708,6 +5711,7 @@ class RWCTesterApi(RwcSerialSetup):
         :Parameters: N/A (Query only)
 
         :return: MAC Command status; NAK on failure
+
         '''
         cmdGetMacSendStatus = 'READ:LINK:MAC_SEND_STATUS?' + '\n'
         result = RwcSerialSetup.transceive(self, cmdGetMacSendStatus)
@@ -5721,12 +5725,65 @@ class RWCTesterApi(RwcSerialSetup):
 
         :return: Duty cycle value; NAK on failure
 
-
-        .. _powerlabel:
         '''
         cmdGetDutyCycleVal = 'READ:LINK:DUTY_CYCLE?' + '\n'
         result = RwcSerialSetup.transceive(self, cmdGetDutyCycleVal)
         return result
+
+    def link_micerror(self, value):
+        '''
+        Set Mic Error
+
+        :param value: ON, OFF
+
+        :return: ACK on success, NAK on failure
+
+        '''
+        cmdValue = value
+        if (cmdValue == 'ON' or cmdValue == 'OFF'):
+            cmdMicError = 'CONF:LINK:MIC_ERROR ' + cmdValue + '\n'
+            result = RwcSerialSetup.transceive(self, cmdMicError)
+            return result
+        else:
+            raise Exception('Invalid parameter received.')
+
+    def link_xormhdr(self, value):
+        '''
+        Set XOR MHDR
+
+        :param value: 8-bit Hex Value
+
+        :return: ACK on success, NAK on failure
+
+        '''
+        cmdValue = int(value)
+        if (cmdValue >= 0 and cmdValue <= 2**8 - 1):
+            cmdHexValue = hex(cmdValue)
+            cmdXorMHDR = 'CONF:LINK:XOR_MHDR ' + cmdHexValue + '\n'
+            result = RwcSerialSetup.transceive(self, cmdXorMHDR)
+            return result
+        else:
+            raise Exception('Invalid parameter received.')
+
+    def link_xorfhdr(self, value):
+        '''
+        Set XOR FHDR
+
+        :param value: 56-bit Hex Value
+
+        :return: ACK on success, NAK on failure
+
+
+        .. _powerlabel:
+        '''
+        cmdValue = int(value)
+        if (cmdValue >= 0 and cmdValue <= 2**56 - 1):
+            cmdHexValue = hex(cmdValue)
+            cmdXorFHDR = 'CONF:LINK:XOR_FHDR ' + cmdHexValue + '\n'
+            result = RwcSerialSetup.transceive(self, cmdXorFHDR)
+            return result
+        else:
+            raise Exception('Invalid parameter received.')
 
     #Power Command Methods
     def power_setscalemode(self, mode):
@@ -6186,7 +6243,7 @@ class RWCTesterApi(RwcSerialSetup):
         :param: Query only
 
         :return: It returns the channel mask value of power measure test; 
-        NAK on failure
+                NAK on failure
         
         '''
         cmdGetTargetChMaskValue = 'READ:POWER:TARGET_CH_MASK? ' + '\n'
@@ -6220,7 +6277,7 @@ class RWCTesterApi(RwcSerialSetup):
         :param: Query only
 
         :return: It returns the channel mask value of power measurement; 
-        NAK on failure
+                NAK on failure
         
         '''
         cmdGetTargetChMaskOptValue = 'READ:POWER:TARGET_CH_MASK_OPT? ' + '\n'
@@ -6264,7 +6321,8 @@ class RWCTesterApi(RwcSerialSetup):
         Configure the Data Rate to be used in power measure test
 
         :param datarate: DR0_SF12BW125, DR1_SF11BW125, DR2_SF10BW125, 
-        DR3_SF9BW125, DR4_SF8BW125, DR5_SF7BW125, DR6_SF7BW250, DR7_FSK50
+                        DR3_SF9BW125, DR4_SF8BW125, DR5_SF7BW125, 
+                        DR6_SF7BW250, DR7_FSK50
 
         :return: ACK on success, NAK on failure
         
@@ -6830,7 +6888,7 @@ class RWCTesterApi(RwcSerialSetup):
         :param: Query only
 
         :return: It returns the mask value to be used in Sensitivity test; 
-        NAK on failure
+                NAK on failure
         
         '''
         cmdGetTargetChMask = 'READ:SENSITIVITY:TARGET_CH_MASK?' + '\n'
@@ -6877,7 +6935,7 @@ class RWCTesterApi(RwcSerialSetup):
         Configure the DR value to be used in sensitivity test
 
         :param drvalue: DR0_SF12BW125, DR1_SF11BW125, DR2_SF10BW125, 
-        DR3_SF9BW125, DR4_SF8BW125, DR5_SF7BW125
+                        DR3_SF9BW125, DR4_SF8BW125, DR5_SF7BW125
 
         :return: ACK on success, NAK on failure
         
@@ -6904,7 +6962,7 @@ class RWCTesterApi(RwcSerialSetup):
         :param: Query only
 
         :return: It returns the DR value to be used in sensitivity test; 
-        NAK on failure
+                NAK on failure
         
         '''
         cmdGetTargetDr = 'READ:SENSITIVITY:TARGET_DR?' + '\n'
@@ -6940,7 +6998,7 @@ class RWCTesterApi(RwcSerialSetup):
         :param chnum: Channel Number
 
         :return: It returns the downlink channel frequency value; 
-        NAK on failure
+                NAK on failure
         
         '''
         cmdChNum = str(chnum)
@@ -6954,7 +7012,8 @@ class RWCTesterApi(RwcSerialSetup):
         Configure the Message type of user-defined MAC command
 
         :param msgtype: MAC Command Message type 
-        (0000_0000, 1111_1111, 1111_0000, 1010_1010, PRBS, USER)
+                        (0000_0000, 1111_1111, 1111_0000, 
+                        1010_1010, PRBS, USER)
 
         :return: ACK on success, NAK on failure
         
