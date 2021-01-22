@@ -1,9 +1,9 @@
-#Script to perform EU certification 5.5 test
+# Script to perform EU certification 5.5 test
 
 import os
 import sys
 import time
-#sys.path.insert(0, os.path.abspath('..'))
+# sys.path.insert(0, os.path.abspath('..'))
 
 from rwclib.cRWC5020x import RWCTesterApi
 
@@ -166,7 +166,7 @@ def send_mac():
     result = ob.link_sendmac()
     if result:
         if result == 'ACK':
-            #debug('MAC Command Sent')
+            # debug('MAC Command Sent')
             pass
         else:
             fatal('Send MAC command failed\n')
@@ -178,7 +178,7 @@ def link_reset():
     result = ob.link_msgreset()
     if result:
         if result == 'ACK':
-            #debug('Link message reset')
+            # debug('Link message reset')
             pass
         else:
             fatal('Link message reset failed\n')
@@ -213,7 +213,7 @@ def link_test(req_num, req_cmd, resp_num, resp_cmd):
                         err('Invalid Response: {}\nTest failed\n'.format(msglist[resp_num]))
                         return False
             else:
-                #err('MAC Request fail: {} \n'.format(msglist[req_num]))
+                # err('MAC Request fail: {} \n'.format(msglist[req_num]))
                 rcnt += 1
         time.sleep(1)
         cnt += 1    
@@ -223,27 +223,27 @@ if __name__ == '__main__':
 
     ob = RWCTesterApi('COM7', None)            #For RS-232 communication
 
-    #open port
+    # Open port
     ob.open_port()
 
-    #Run Link
+    # Run Link
     exec_link()
     debug('Start EU Certification(5.5) Test\n')
 
-    #clear if old link messages
+    # Clear if old link messages
     clear_link()
 
-    #Check link status
+    # Check link status
     link_status()
 
-    #Send ACTIVATE_TM mac request
+    # Send ACTIVATE_TM mac request
     debug('ACTIVATE-TM MAC CMD REQUEST\n')
     config_param('RX1', 1, 'ACTIVATE_TM')
     result = link_test(17, 'ActivateTM', 17, 'DlCounter')
     if bool(result) is False:
         fatal('ACTIVATE-TM MAC CMD REQUEST: Test Failed')
 
-    #Send ECHO REQUEST mac command
+    # Send ECHO REQUEST mac command
     byte_len = 2
 
     while (byte_len < 19):
@@ -255,11 +255,11 @@ if __name__ == '__main__':
             fatal('ECHO REQUEST MAC CMD REQUEST (Bytes - {}): Test Failed'.format(byte_len))
         byte_len += 1
 
-    #Set abnormal mode
+    # Set abnormal mode
     mode = 'MIC_ERR'
     abnormal(mode)
 
-    #Send ECHO REQUEST mac command
+    # Send ECHO REQUEST mac command
     debug('ECHO REQUEST MAC CMD REQUEST\n')
     config_param('RX1', 1, 'ECHO_REQUEST_TM')
     result = link_test(17, 'EchoRequest', 0, 'U') #To verify any UL Packet
@@ -273,7 +273,7 @@ if __name__ == '__main__':
     else:
         print ('Response: {}'.format(msglist[17]), end = '\n\n')
 
-    #SET LINK ABNORMAL PARAM
+    # SET LINK ABNORMAL PARAM
     mode = 'OFF'
     abnormal(mode)
 

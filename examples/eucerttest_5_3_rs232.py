@@ -1,4 +1,4 @@
-#Script to perform EU certification 5.3 test
+# Script to perform EU certification 5.3 test
 
 import os, sys
 import time
@@ -178,7 +178,7 @@ def send_mac():
     result = ob.link_sendmac()
     if result:
         if result == 'ACK':
-            #debug('MAC Command Sent')
+            # debug('MAC Command Sent')
             pass
         else:
             fatal('Send MAC command failed\n')
@@ -190,7 +190,7 @@ def link_reset():
     result = ob.link_msgreset()
     if result:
         if result == 'ACK':
-            #debug('Link message reset')
+            # debug('Link message reset')
             pass
         else:
             fatal('Link message reset failed\n')
@@ -225,7 +225,7 @@ def link_test(num, req_cmd, resp_cmd):
                         err('Invalid Response: {}\n'.format(msglist[num]))
                         return False
             else:
-                #err('Invalid MAC Request : {} \n'.format(msglist[num]))
+                # err('Invalid MAC Request : {} \n'.format(msglist[num]))
                 rcnt += 1
         time.sleep(1)
         cnt += 1    
@@ -235,27 +235,27 @@ if __name__ == '__main__':
 
     ob = RWCTesterApi('COM12', None)            #For RS-232 communication
 
-    #open port
+    # Open port
     ob.open_port()
     
-    #clear if old link messages
+    # Clear if old link messages
     clear_link()
 
-    #Run Link
+    # Run Link
     exec_link()
     debug('Start EU Certification(5.3) Test\n')
 
-    #Check link status
+    # Check link status
     link_status()
 
-    #Send ACTIVATE_TM mac request
+    # Send ACTIVATE_TM mac request
     debug('ACTIVATE-TM MAC CMD REQUEST\n')
     config_param('RX1', 1, 'ACTIVATE_TM')
     result = link_test(17, 'ActivateTM', 'DlCounter')
     if bool(result) is False:
         fatal('ACTIVATE-TM MAC CMD REQUEST: Test Failed\n')
 
-    #Send TRIGGER_JOIN_REQ_TM mac request
+    # Send TRIGGER_JOIN_REQ_TM mac request
     debug('TRIGGER JOIN MAC CMD REQUEST\n')
     set_droffset(2)
     set_dr('DR2_SF10BW125')
@@ -264,17 +264,17 @@ if __name__ == '__main__':
     if bool(result) is False:
         fatal('TRIGGER JOIN MAC CMD REQUEST: Test Failed\n')
 
-    #Check link status
+    # Check link status
     link_status()
 
-    #Send ACTIVATE_TM mac request
+    # Send ACTIVATE_TM mac request
     debug('ACTIVATE-TM MAC CMD REQUEST\n')
     config_param('RX1', 1, 'ACTIVATE_TM')
     result = link_test(17, 'ActivateTM', 'DlCounter')
     if bool(result) is False:
         fatal('ACTIVATE-TM MAC CMD REQUEST: Test Failed\n')
 
-    #Send ECHO REQUEST mac command
+    # Send ECHO REQUEST mac command
     byte_len = 2
 
     debug('ECHO REQUEST MAC CMD REQUEST\n')
@@ -284,7 +284,7 @@ if __name__ == '__main__':
     if bool(result) is False:
         fatal('ECHO REQUEST MAC CMD REQUEST (Bytes - {}): Test Failed\n'.format(byte_len))
 
-    #Send ECHO REQUEST mac command
+    # Send ECHO REQUEST mac command
     debug('ECHO REQUEST MAC CMD REQUEST\n')
     set_echolen(byte_len)
     config_param('RX2', 1, 'ECHO_REQUEST_TM')

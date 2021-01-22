@@ -1,7 +1,35 @@
-import serial
-import unittest
+##############################################################################
+# 
+# Module: rwc5020x_test_1_16.py
+#
+# Description:
+#     Unit test cases for sw version 1.160
+#
+# Copyright notice:
+#     This file copyright (c) 2021 by
+#
+#         MCCI Corporation
+#         3520 Krums Corners Road
+#         Ithaca, NY  14850
+#
+#     Released under the MIT license.
+#
+# Author:
+#     Sivaprakash Veluthambi, MCCI   January, 2021
+#
+# Revision history:
+#     V0.1.0 Thu Jan 14 2021 18:50:59 sivaprakash
+#       Module created
+#
+##############################################################################
+
+import os
+import sys
 import time
-import sys, os
+import unittest
+
+import serial
+
 sys.path.insert(0, os.path.abspath('..'))
 
 from rwclib.cRWC5020x import RWCTesterApi
@@ -11,21 +39,20 @@ class RwcApiTest(unittest.TestCase):
     @classmethod
     def setUpClass(self):
         port = myport
-        #addr = myaddr
         addr = None
         self.rwctest = RWCTesterApi(port, addr)
 
     def test_atstart_openport(self):
         self.assertTrue(self.rwctest.open_port(), 'Failed to open the port')
 
-    #Test cases for Common Command Methods
+    # Test cases for Common Command Methods
     def test_com_query_identification(self):
-        self.assertEqual(self.rwctest.query_identification(), 'RWC5020A LoRaWAN Tester, Ver=1.200,SN=RWC50201760009 ')
+        self.assertEqual(self.rwctest.query_identification(), 'RWC5020A LoRa Tester, Ver=1.160,SN=RWC50201760009 ')
 
     def test_com_reset(self):
         self.assertEqual(self.rwctest.reset(), 'ACK', 'Reset Operation Failed')
 
-    #Test cases for System Configuration Command Methods
+    # Test cases for System Configuration Command Methods
     def test_conf_setmode(self):
         self.assertEqual(self.rwctest.set_mode('EDT'), 'ACK', 'EDT change mode failed.')
         time.sleep(.5000)
@@ -100,7 +127,7 @@ class RwcApiTest(unittest.TestCase):
 
     def test_rffrequencyoffset(self):
         self.assertEqual(self.rwctest.rf_setfreqoffset('110'), 'ACK', 'Set RF Frequency offset failed.')
-        self.assertEqual(self.rwctest.rf_getfreqoffset(), '110.0', 'Get RF Frequency offset failed.')
+        self.assertEqual(self.rwctest.rf_getfreqoffset(), '110', 'Get RF Frequency offset failed.')
 
     def test_rftimeoffset(self):
         self.assertEqual(self.rwctest.rf_settimeoffset('110'), 'ACK', 'Set RF Time offset failed.')
@@ -110,8 +137,7 @@ class RwcApiTest(unittest.TestCase):
         self.assertEqual(self.rwctest.set_mode('EDT'), 'ACK', 'GWT change mode failed.')
         self.assertEqual(self.rwctest.protocol_setregion('IN_866'), 'ACK', 'Set Region Failed')
         self.assertEqual(self.rwctest.rf_setchannelmask(0, 0x3F), 'ACK', 'Set RF Channel Mask failed.')
-        self.assertEqual(self.rwctest.rf_getchannelmask(0), '0x3F', 'Read RF Channel Mask failed.')
-        
+        self.assertEqual(self.rwctest.rf_getchannelmask(0), '0x3F', 'Read RF Channel Mask failed.')        
 
     def test_rfchannelgroup(self):
         self.assertEqual(self.rwctest.set_mode('EDT'), 'ACK', 'EDT change mode failed.')
@@ -152,7 +178,7 @@ class RwcApiTest(unittest.TestCase):
         self.assertEqual(self.rwctest.rf_setchannelgroup(56), 'ACK', 'Set RF Channel Group failed.')
         self.assertEqual(self.rwctest.rf_getchannelgroup(), '56~63,71', 'Read RF Channel Group failed.')
 
-        self.assertEqual(self.rwctest.protocol_setregion('CN_490'), 'ACK', 'Set Region Failed')
+        self.assertEqual(self.rwctest.protocol_setregion('CN_470'), 'ACK', 'Set Region Failed')
         self.assertEqual(self.rwctest.rf_setchannelgroup(0), 'ACK', 'Set RF Channel Group failed.')
         self.assertEqual(self.rwctest.rf_getchannelgroup(), '00~07', 'Read RF Channel Group failed.')
         self.assertEqual(self.rwctest.rf_setchannelgroup(8), 'ACK', 'Set RF Channel Group failed.')
@@ -168,19 +194,11 @@ class RwcApiTest(unittest.TestCase):
         self.assertEqual(self.rwctest.rf_setchannelgroup(48), 'ACK', 'Set RF Channel Group failed.')
         self.assertEqual(self.rwctest.rf_getchannelgroup(), '48~55', 'Read RF Channel Group failed.')
         self.assertEqual(self.rwctest.rf_setchannelgroup(56), 'ACK', 'Set RF Channel Group failed.')
-        self.assertEqual(self.rwctest.rf_getchannelgroup(), '56~63', 'Read RF Channel Group failed.')
-        self.assertEqual(self.rwctest.rf_setchannelgroup(64), 'ACK', 'Set RF Channel Group failed.')
-        self.assertEqual(self.rwctest.rf_getchannelgroup(), '64~71', 'Read RF Channel Group failed.')
-        self.assertEqual(self.rwctest.rf_setchannelgroup(72), 'ACK', 'Set RF Channel Group failed.')
-        self.assertEqual(self.rwctest.rf_getchannelgroup(), '72~79', 'Read RF Channel Group failed.')
-        self.assertEqual(self.rwctest.rf_setchannelgroup(80), 'ACK', 'Set RF Channel Group failed.')
-        self.assertEqual(self.rwctest.rf_getchannelgroup(), '80~87', 'Read RF Channel Group failed.')
-        self.assertEqual(self.rwctest.rf_setchannelgroup(88), 'ACK', 'Set RF Channel Group failed.')
-        self.assertEqual(self.rwctest.rf_getchannelgroup(), '88~95', 'Read RF Channel Group failed.')
+        self.assertEqual(self.rwctest.rf_getchannelgroup(), '56~63', 'Read RF Channel Group failed.')     
 
-    #Test Cases for Protocol Command Methods
+    # Test Cases for Protocol Command Methods
     def test_protocolregion(self):
-        regionlist = ['EU_868', 'EU_433', 'US_915', 'AU_921', 'CN_490', 'KR_922', 'AS_923', 'IN_866']
+        regionlist = ['EU_868', 'EU_433', 'US_915', 'AU_921', 'CN_470', 'KR_922', 'AS_923', 'IN_866', 'RU_864']
         for region in regionlist:
             if region == 'EU_868':
                 self.assertEqual(self.rwctest.protocol_setregion(region), 'ACK', 'Set Region Failed')
@@ -194,7 +212,7 @@ class RwcApiTest(unittest.TestCase):
             if region == 'AU_921':
                 self.assertEqual(self.rwctest.protocol_setregion(region), 'ACK', 'Set Region Failed')
                 self.assertEqual(self.rwctest.protocol_getregion(), 'AU_915', 'Failed to read region')
-            if region == 'CN_490':
+            if region == 'CN_470':
                 self.assertEqual(self.rwctest.protocol_setregion(region), 'ACK', 'Set Region Failed')
                 self.assertEqual(self.rwctest.protocol_getregion(), 'CN_470', 'Failed to read region')
             if region == 'KR_922':
@@ -206,9 +224,12 @@ class RwcApiTest(unittest.TestCase):
             if region == 'IN_866':
                 self.assertEqual(self.rwctest.protocol_setregion(region), 'ACK', 'Set Region Failed')
                 self.assertEqual(self.rwctest.protocol_getregion(), 'IN_865', 'Failed to read region')
+            if region == 'RU_864':
+                self.assertEqual(self.rwctest.protocol_setregion(region), 'ACK', 'Set Region Failed')
+                self.assertEqual(self.rwctest.protocol_getregion(), 'RU_864', 'Failed to read region')
                 
     def test_protocoloperator(self):
-        operatorlist = ['LoRaWAN', 'PRIVATE', 'SKT']
+        operatorlist = ['LoRaWAN', 'SKT']
 
         self.assertEqual(self.rwctest.protocol_setregion('KR_922'), 'ACK', 'Set Region Failed')
         
@@ -216,9 +237,6 @@ class RwcApiTest(unittest.TestCase):
             if operator == 'LoRaWAN':
                 self.assertEqual(self.rwctest.protocol_setoperator(operator), 'ACK', 'Set Operator Failed')
                 self.assertEqual(self.rwctest.protocol_getoperator(), 'LoRaWAN', 'Failed to read operator')
-            #if operator == 'PRIVATE':
-                #self.assertEqual(self.rwctest.protocol_setoperator(operator), 'ACK', 'Set Operator Failed')
-                #self.assertEqual(self.rwctest.protocol_getoperator(), 'PRIVATE', 'Failed to read operator')
             if operator == 'SKT':
                 self.assertEqual(self.rwctest.protocol_setoperator(operator), 'ACK', 'Set Operator Failed')
                 self.assertEqual(self.rwctest.protocol_getoperator(), 'SKT', 'Failed to read operator')
@@ -335,7 +353,7 @@ class RwcApiTest(unittest.TestCase):
 
     def test_protocolframecnt(self):
         self.assertEqual(self.rwctest.protocol_setframecnt('300'), 'ACK', 'Set Frame Count Value Failed')
-        self.assertEqual(self.rwctest.protocol_getframecnt(), '300', 'Failed to read frame count value')
+        self.assertEqual(self.rwctest.protocol_getframecnt(), '0x012C', 'Failed to read frame count value')
 
     def test_protocoladrflag(self):
         adrflaglist = ['OFF', 'ON']
@@ -416,22 +434,22 @@ class RwcApiTest(unittest.TestCase):
         self.assertEqual(self.rwctest.protocol_getdownlinkslot(), 'RX1&RX2', 'Failed to read')
 
     def test_protocoluplinkdatarate(self):
-        self.assertEqual(self.rwctest.protocol_setuplinkdatarate('DR0_SF12BW125'), 'ACK', 'Set Operation Failed')
-        self.assertEqual(self.rwctest.protocol_getuplinkdatarate(), 'DR0_SF12BW125', 'Failed to read')
-        self.assertEqual(self.rwctest.protocol_setuplinkdatarate('DR1_SF11BW125'), 'ACK', 'Set Operation Failed')
-        self.assertEqual(self.rwctest.protocol_getuplinkdatarate(), 'DR1_SF11BW125', 'Failed to read')
-        self.assertEqual(self.rwctest.protocol_setuplinkdatarate('DR2_SF10BW125'), 'ACK', 'Set Operation Failed')
-        self.assertEqual(self.rwctest.protocol_getuplinkdatarate(), 'DR2_SF10BW125', 'Failed to read')
-        self.assertEqual(self.rwctest.protocol_setuplinkdatarate('DR3_SF9BW125'), 'ACK', 'Set Operation Failed')
-        self.assertEqual(self.rwctest.protocol_getuplinkdatarate(), 'DR3_SF9BW125', 'Failed to read')
-        self.assertEqual(self.rwctest.protocol_setuplinkdatarate('DR4_SF8BW125'), 'ACK', 'Set Operation Failed')
-        self.assertEqual(self.rwctest.protocol_getuplinkdatarate(), 'DR4_SF8BW125', 'Failed to read')
-        self.assertEqual(self.rwctest.protocol_setuplinkdatarate('DR5_SF7BW125'), 'ACK', 'Set Operation Failed')
-        self.assertEqual(self.rwctest.protocol_getuplinkdatarate(), 'DR5_SF7BW125', 'Failed to read')
-        self.assertEqual(self.rwctest.protocol_setuplinkdatarate('DR6_SF7BW250'), 'ACK', 'Set Operation Failed')
-        self.assertEqual(self.rwctest.protocol_getuplinkdatarate(), 'DR6_SF7BW250', 'Failed to read')
-        self.assertEqual(self.rwctest.protocol_setuplinkdatarate('DR7_FSK50'), 'ACK', 'Set Operation Failed')
-        self.assertEqual(self.rwctest.protocol_getuplinkdatarate(), 'DR7_FSK50', 'Failed to read')
+        self.assertEqual(self.rwctest.protocol_setuplinkdatarate('DR_0'), 'ACK', 'Set Operation Failed')
+        self.assertEqual(self.rwctest.protocol_getuplinkdatarate(), 'DR_0', 'Failed to read')
+        self.assertEqual(self.rwctest.protocol_setuplinkdatarate('DR_1'), 'ACK', 'Set Operation Failed')
+        self.assertEqual(self.rwctest.protocol_getuplinkdatarate(), 'DR_1', 'Failed to read')
+        self.assertEqual(self.rwctest.protocol_setuplinkdatarate('DR_2'), 'ACK', 'Set Operation Failed')
+        self.assertEqual(self.rwctest.protocol_getuplinkdatarate(), 'DR_2', 'Failed to read')
+        self.assertEqual(self.rwctest.protocol_setuplinkdatarate('DR_3'), 'ACK', 'Set Operation Failed')
+        self.assertEqual(self.rwctest.protocol_getuplinkdatarate(), 'DR_3', 'Failed to read')
+        self.assertEqual(self.rwctest.protocol_setuplinkdatarate('DR_4'), 'ACK', 'Set Operation Failed')
+        self.assertEqual(self.rwctest.protocol_getuplinkdatarate(), 'DR_4', 'Failed to read')
+        self.assertEqual(self.rwctest.protocol_setuplinkdatarate('DR_5'), 'ACK', 'Set Operation Failed')
+        self.assertEqual(self.rwctest.protocol_getuplinkdatarate(), 'DR_5', 'Failed to read')
+        self.assertEqual(self.rwctest.protocol_setuplinkdatarate('DR_6'), 'ACK', 'Set Operation Failed')
+        self.assertEqual(self.rwctest.protocol_getuplinkdatarate(), 'DR_6', 'Failed to read')
+        self.assertEqual(self.rwctest.protocol_setuplinkdatarate('DR_7'), 'ACK', 'Set Operation Failed')
+        self.assertEqual(self.rwctest.protocol_getuplinkdatarate(), 'DR_7', 'Failed to read')
 
     def test_protocolrx1_dr_offset(self):
         self.assertEqual(self.rwctest.protocol_setrx1_dr_offset(2), 'ACK', 'Set Operation Failed')
@@ -442,18 +460,18 @@ class RwcApiTest(unittest.TestCase):
         self.assertEqual(self.rwctest.protocol_getrx2_frequency(), '865.000000', 'Failed to read')
 
     def test_protocolrx2_dr(self):
-        self.assertEqual(self.rwctest.protocol_setrx2_dr('DR0_SF12BW125'), 'ACK', 'Set Operation Failed')
-        self.assertEqual(self.rwctest.protocol_getrx2_dr(), 'DR0_SF12BW125', 'Failed to read')
-        self.assertEqual(self.rwctest.protocol_setrx2_dr('DR1_SF11BW125'), 'ACK', 'Set Operation Failed')
-        self.assertEqual(self.rwctest.protocol_getrx2_dr(), 'DR1_SF11BW125', 'Failed to read')
-        self.assertEqual(self.rwctest.protocol_setrx2_dr('DR2_SF10BW125'), 'ACK', 'Set Operation Failed')
-        self.assertEqual(self.rwctest.protocol_getrx2_dr(), 'DR2_SF10BW125', 'Failed to read')
-        self.assertEqual(self.rwctest.protocol_setrx2_dr('DR3_SF9BW125'), 'ACK', 'Set Operation Failed')
-        self.assertEqual(self.rwctest.protocol_getrx2_dr(), 'DR3_SF9BW125', 'Failed to read')
-        self.assertEqual(self.rwctest.protocol_setrx2_dr('DR4_SF8BW125'), 'ACK', 'Set Operation Failed')
-        self.assertEqual(self.rwctest.protocol_getrx2_dr(), 'DR4_SF8BW125', 'Failed to read')
-        self.assertEqual(self.rwctest.protocol_setrx2_dr('DR5_SF7BW125'), 'ACK', 'Set Operation Failed')
-        self.assertEqual(self.rwctest.protocol_getrx2_dr(), 'DR5_SF7BW125', 'Failed to read')
+        self.assertEqual(self.rwctest.protocol_setrx2_dr('DR_0'), 'ACK', 'Set Operation Failed')
+        self.assertEqual(self.rwctest.protocol_getrx2_dr(), 'DR_0', 'Failed to read')
+        self.assertEqual(self.rwctest.protocol_setrx2_dr('DR_1'), 'ACK', 'Set Operation Failed')
+        self.assertEqual(self.rwctest.protocol_getrx2_dr(), 'DR_1', 'Failed to read')
+        self.assertEqual(self.rwctest.protocol_setrx2_dr('DR_2'), 'ACK', 'Set Operation Failed')
+        self.assertEqual(self.rwctest.protocol_getrx2_dr(), 'DR_2', 'Failed to read')
+        self.assertEqual(self.rwctest.protocol_setrx2_dr('DR_3'), 'ACK', 'Set Operation Failed')
+        self.assertEqual(self.rwctest.protocol_getrx2_dr(), 'DR_3', 'Failed to read')
+        self.assertEqual(self.rwctest.protocol_setrx2_dr('DR_4'), 'ACK', 'Set Operation Failed')
+        self.assertEqual(self.rwctest.protocol_getrx2_dr(), 'DR_4', 'Failed to read')
+        self.assertEqual(self.rwctest.protocol_setrx2_dr('DR_5'), 'ACK', 'Set Operation Failed')
+        self.assertEqual(self.rwctest.protocol_getrx2_dr(), 'DR_5', 'Failed to read')
 
     def test_protocolpingperiodicity(self):
         self.assertEqual(self.rwctest.protocol_setpingperiodicity(5), 'ACK', 'Set Operation Failed')
@@ -503,47 +521,40 @@ class RwcApiTest(unittest.TestCase):
         self.assertEqual(self.rwctest.protocol_getlongitude(), '120.000000', 'Failed to read')
 
     def test_protocolsetduttype(self):
-        #self.assertEqual(self.rwctest.set_mode('NST'), 'ACK', 'NST change mode failed.')
         self.assertEqual(self.rwctest.protocol_setduttype('END_DEVICE'), 'ACK', 'Set Operation Failed')
         self.assertEqual(self.rwctest.protocol_getduttype(), 'END_DEVICE', 'Failed to read')
         self.assertEqual(self.rwctest.protocol_setduttype('GATEWAY'), 'ACK', 'Set Operation Failed')
         self.assertEqual(self.rwctest.protocol_getduttype(), 'GATEWAY', 'Failed to read')
 
     def test_protocolsetmacformatflag(self):
-        #self.assertEqual(self.rwctest.set_mode('NST'), 'ACK', 'NST change mode failed.')
         self.assertEqual(self.rwctest.protocol_setmacformatflag('OFF'), 'ACK', 'Set Operation Failed')
         self.assertEqual(self.rwctest.protocol_getmacformatflag(), 'OFF', 'Failed to read')
         self.assertEqual(self.rwctest.protocol_setmacformatflag('ON'), 'ACK', 'Set Operation Failed')
         self.assertEqual(self.rwctest.protocol_getmacformatflag(), 'ON', 'Failed to read')
 
     def test_protocolsetnstfcnt(self):
-        #self.assertEqual(self.rwctest.set_mode('NST'), 'ACK', 'NST change mode failed.')
         self.assertEqual(self.rwctest.protocol_setnstfcnt(30), 'ACK', 'Set Operation Failed')
         self.assertEqual(self.rwctest.protocol_getnstfcnt(), '30', 'Failed to read')
 
     def test_protocolsetnstfcntmode(self):
-        #self.assertEqual(self.rwctest.set_mode('NST'), 'ACK', 'NST change mode failed.')
         self.assertEqual(self.rwctest.protocol_setnstfcntmode('FIXED'), 'ACK', 'Set Operation Failed')
         self.assertEqual(self.rwctest.protocol_getnstfcntmode(), 'FIXED', 'Failed to read')
         self.assertEqual(self.rwctest.protocol_setnstfcntmode('INCREASING'), 'ACK', 'Set Operation Failed')
         self.assertEqual(self.rwctest.protocol_getnstfcntmode(), 'INCREASING', 'Failed to read')
 
     def test_protocolsetnstack(self):
-        #self.assertEqual(self.rwctest.set_mode('NST'), 'ACK', 'NST change mode failed.')
         self.assertEqual(self.rwctest.protocol_setnstack('OFF'), 'ACK', 'Set Operation Failed')
         self.assertEqual(self.rwctest.protocol_getnstack(), 'OFF', 'Failed to read')
         self.assertEqual(self.rwctest.protocol_setnstack('ON'), 'ACK', 'Set Operation Failed')
         self.assertEqual(self.rwctest.protocol_getnstack(), 'ON', 'Failed to read')
 
     def test_protocolsetnst_adrackreq(self):
-        #self.assertEqual(self.rwctest.set_mode('NST'), 'ACK', 'NST change mode failed.')
         self.assertEqual(self.rwctest.protocol_setnst_adrackreq('OFF'), 'ACK', 'Set Operation Failed')
         self.assertEqual(self.rwctest.protocol_getnst_adrackreq(), 'OFF', 'Failed to read')
         self.assertEqual(self.rwctest.protocol_setnst_adrackreq('ON'), 'ACK', 'Set Operation Failed')
         self.assertEqual(self.rwctest.protocol_getnst_adrackreq(), 'ON', 'Failed to read')
 
     def test_protocolsetnstfpending(self):
-        #self.assertEqual(self.rwctest.set_mode('NST'), 'ACK', 'NST change mode failed.')
         self.assertEqual(self.rwctest.protocol_setnstfpending('OFF'), 'ACK', 'Set Operation Failed')
         self.assertEqual(self.rwctest.protocol_getnstfpending(), 'OFF', 'Failed to read')
         self.assertEqual(self.rwctest.protocol_setnstfpending('ON'), 'ACK', 'Set Operation Failed')
@@ -565,34 +576,29 @@ class RwcApiTest(unittest.TestCase):
         self.assertEqual(self.rwctest.protocol_setclaamode('E'), 'ACK', 'Set Operation Failed')
         self.assertEqual(self.rwctest.protocol_getclaamode(), 'E', 'Failed to read')
 
-    #Test Cases for Link Command Methods
-    def test_linkrun(self):
-        #self.assertEqual(self.rwctest.link_(''), '', 'Set Operation Failed')
-        #self.assertEqual(self.rwctest.link_(), '', 'Failed to read')
-        pass
+    def test_protocolsetnwkid(self):
+        self.assertEqual(self.rwctest.protocol_setnwkid(0x01), 'ACK', 'Set Operation Failed')
+        self.assertEqual(self.rwctest.protocol_getnwkid(), '0x01', 'Failed to read')
 
-    def test_linkstop(self):
-        #self.assertEqual(self.rwctest.link_(''), '', 'Set Operation Failed')
-        #self.assertEqual(self.rwctest.link_(), '', 'Failed to read')
-        pass
+    def test_protocolnetidmsb(self):
+        self.assertEqual(self.rwctest.protocol_setnetidmsb(0x01), 'ACK', 'Set Operation Failed')
+        self.assertEqual(self.rwctest.protocol_getnetidmsb(), '0x00001', 'Failed to read')
 
-    def test_linkclear(self):
-        #self.assertEqual(self.rwctest.link_(''), '', 'Set Operation Failed')
-        #self.assertEqual(self.rwctest.link_(), '', 'Failed to read')
-        pass
+    def test_protocolnwkaddr(self):
+        self.assertEqual(self.rwctest.protocol_setnwkaddr(0x01), 'ACK', 'Set Operation Failed')
+        self.assertEqual(self.rwctest.protocol_getnwkaddr(), '0x0000001', 'Failed to read')
 
-    def test_linkactivationstatus(self):
-        #self.assertEqual(self.rwctest.link_getactivationstatus(), '', 'Failed to read')
-        pass
+    def test_protocolpingtimeoffset(self):
+        self.assertEqual(self.rwctest.protocol_setpingtimeoffset(1), 'ACK', 'Set Operation Failed')
+        self.assertEqual(self.rwctest.protocol_getpingtimeoffset(), '1', 'Failed to read')
 
-    def test_linkinfo(self):
-        #self.assertEqual(self.rwctest.link_getinfo(), '', 'Failed to read')
-        pass
-
-    def test_linksendmac(self):
-        #self.assertEqual(self.rwctest.link_sendmac(), '', 'Failed to read')
-        pass
-
+    def test_protocolmacrspslot(self):
+        self.assertEqual(self.rwctest.protocol_setmacrspslot('RX1'), 'ACK', 'Set Operation Failed')
+        self.assertEqual(self.rwctest.protocol_getmacrspslot(), 'RX1', 'Failed to read')
+        self.assertEqual(self.rwctest.protocol_setmacrspslot('RX2'), 'ACK', 'Set Operation Failed')
+        self.assertEqual(self.rwctest.protocol_getmacrspslot(), 'RX2', 'Failed to read')
+    
+    # Test Cases for Link Command Methods
     def test_linkmaccmdtype(self):
         self.assertEqual(self.rwctest.link_setmaccmdtype('UNCONFIRMED'), 'ACK', 'Set Operation Failed')
         self.assertEqual(self.rwctest.link_getmaccmdtype(), 'UNCONFIRMED', 'Failed to read')
@@ -606,8 +612,8 @@ class RwcApiTest(unittest.TestCase):
     def test_linkmaccmdfield(self):
         self.assertEqual(self.rwctest.link_setmaccmdfield('PAYLOAD'), 'ACK', 'Set Operation Failed')
         self.assertEqual(self.rwctest.link_getmaccmdfield(), 'PAYLOAD', 'Failed to read')
-        self.assertEqual(self.rwctest.link_setmaccmdfield('FOPTS'), 'ACK', 'Set Operation Failed')
-        self.assertEqual(self.rwctest.link_getmaccmdfield(), 'FOPTS', 'Failed to read')
+        self.assertEqual(self.rwctest.link_setmaccmdfield('FOPTION'), 'ACK', 'Set Operation Failed')
+        self.assertEqual(self.rwctest.link_getmaccmdfield(), 'FOPTION', 'Failed to read')
 
     def test_linkinstantmaccmd(self):
         self.assertEqual(self.rwctest.set_mode('EDT'), 'ACK', 'EDT change mode failed.')
@@ -654,7 +660,6 @@ class RwcApiTest(unittest.TestCase):
         self.assertEqual(self.rwctest.link_setinstantmaccmd(1, 'ADR_SETUP'), 'ACK', 'Set Operation Failed')
         self.assertEqual(self.rwctest.link_getinstantmaccmd(1), 'ADR_SETUP', 'Failed to read')
         
-
         self.assertEqual(self.rwctest.set_mode('GWT'), 'ACK', 'GWT change mode failed.')
         self.assertEqual(self.rwctest.link_setinstantmaccmd(1, 'LINK_CHECK'), 'ACK', 'Set Operation Failed')
         self.assertEqual(self.rwctest.link_getinstantmaccmd(1), 'LINK_CHECK', 'Failed to read')
@@ -673,24 +678,20 @@ class RwcApiTest(unittest.TestCase):
         self.assertEqual(self.rwctest.link_getmic_errdisplay(), 'ON', 'Failed to read')
 
     def test_linkadr_drval(self):
-        #self.assertEqual(self.rwctest.set_mode('EDT'), 'ACK', 'EDT change mode failed.')
-        #self.assertEqual(self.rwctest.link_setinstantmaccmd(1, 'LINK_ADR'), 'ACK', 'Set Operation Failed')
-        self.assertEqual(self.rwctest.link_setadr_drval(1, 'DR0_SF12BW125'), 'ACK', 'Set Operation Failed')
-        self.assertEqual(self.rwctest.link_getadr_drval(1), 'DR0_SF12BW125', 'Failed to read')
-        self.assertEqual(self.rwctest.link_setadr_drval(1, 'DR1_SF11BW125'), 'ACK', 'Set Operation Failed')
-        self.assertEqual(self.rwctest.link_getadr_drval(1), 'DR1_SF11BW125', 'Failed to read')
-        self.assertEqual(self.rwctest.link_setadr_drval(1, 'DR2_SF10BW125'), 'ACK', 'Set Operation Failed')
-        self.assertEqual(self.rwctest.link_getadr_drval(1), 'DR2_SF10BW125', 'Failed to read')
-        self.assertEqual(self.rwctest.link_setadr_drval(1, 'DR3_SF9BW125'), 'ACK', 'Set Operation Failed')
-        self.assertEqual(self.rwctest.link_getadr_drval(1), 'DR3_SF9BW125', 'Failed to read')
-        self.assertEqual(self.rwctest.link_setadr_drval(1, 'DR4_SF8BW125'), 'ACK', 'Set Operation Failed')
-        self.assertEqual(self.rwctest.link_getadr_drval(1), 'DR4_SF8BW125', 'Failed to read')
-        self.assertEqual(self.rwctest.link_setadr_drval(1, 'DR5_SF7BW125'), 'ACK', 'Set Operation Failed')
-        self.assertEqual(self.rwctest.link_getadr_drval(1), 'DR5_SF7BW125', 'Failed to read')
+        self.assertEqual(self.rwctest.link_setadr_drval(1, '0'), 'ACK', 'Set Operation Failed')
+        self.assertEqual(self.rwctest.link_getadr_drval(1), '0', 'Failed to read')
+        self.assertEqual(self.rwctest.link_setadr_drval(1, '1'), 'ACK', 'Set Operation Failed')
+        self.assertEqual(self.rwctest.link_getadr_drval(1), '1', 'Failed to read')
+        self.assertEqual(self.rwctest.link_setadr_drval(1, '2'), 'ACK', 'Set Operation Failed')
+        self.assertEqual(self.rwctest.link_getadr_drval(1), '2', 'Failed to read')
+        self.assertEqual(self.rwctest.link_setadr_drval(1, '3'), 'ACK', 'Set Operation Failed')
+        self.assertEqual(self.rwctest.link_getadr_drval(1), '3', 'Failed to read')
+        self.assertEqual(self.rwctest.link_setadr_drval(1, '4'), 'ACK', 'Set Operation Failed')
+        self.assertEqual(self.rwctest.link_getadr_drval(1), '4', 'Failed to read')
+        self.assertEqual(self.rwctest.link_setadr_drval(1, '5'), 'ACK', 'Set Operation Failed')
+        self.assertEqual(self.rwctest.link_getadr_drval(1), '5', 'Failed to read')
 
     def test_linkadr_txpower(self):
-        #self.assertEqual(self.rwctest.set_mode('EDT'), 'ACK', 'EDT change mode failed.')
-        #self.assertEqual(self.rwctest.link_setinstantmaccmd(1, 'LINK_ADR'), 'ACK', 'Set Operation Failed')
         self.assertEqual(self.rwctest.link_setadr_txpower(1, 5), 'ACK', 'Set Operation Failed')
         self.assertEqual(self.rwctest.link_getadr_txpower(1), '5', 'Failed to read')
 
@@ -700,21 +701,19 @@ class RwcApiTest(unittest.TestCase):
         self.assertEqual(self.rwctest.link_setadr_channelmask(1, 1, 0x7), 'ACK', 'Set Operation Failed')
         self.assertEqual(self.rwctest.link_getadr_channelmask(1, 1), '0x7', 'Failed to read')
 
-    #def test_linkadr_maskctrl(self):
-    #    self.assertEqual(self.rwctest.link_setinstantmaccmd(1, 'LINK_ADR'), 'ACK', 'Set Operation Failed')
-    #    self.assertEqual(self.rwctest.link_setadr_maskctrl(1, 1, 0xff), 'ACK', 'Set Operation Failed')
-    #    self.assertEqual(self.rwctest.link_getadr_maskctrl(1), '0xff', 'Failed to read')
+    def test_linkadr_maskctrl(self):
+       self.assertEqual(self.rwctest.link_setinstantmaccmd(1, 'LINK_ADR'), 'ACK', 'Set Operation Failed')
+       self.assertEqual(self.rwctest.link_setadr_maskctrl(1, 1, 0xff), 'ACK', 'Set Operation Failed')
+       self.assertEqual(self.rwctest.link_getadr_maskctrl(1, 1), '0xff', 'Failed to read')
 
-    #def test_linkadr_morechannelmask(self):
-    #    self.assertEqual(self.rwctest.link_setinstantmaccmd(1, 'LINK_ADR'), 'ACK', 'Set Operation Failed')
-    #    self.assertEqual(self.rwctest.link_setadr_morechannelmask('OFF'), 'ACK', 'Set Operation Failed')
-    #    self.assertEqual(self.rwctest.link_getadr_morechannelmask(), 'OFF', 'Failed to read')
-    #    self.assertEqual(self.rwctest.link_setadr_morechannelmask('ON'), 'ACK', 'Set Operation Failed')
-    #    self.assertEqual(self.rwctest.link_getadr_morechannelmask(), 'ON', 'Failed to read')
+    def test_linkadr_morechannelmask(self):
+       self.assertEqual(self.rwctest.link_setinstantmaccmd(1, 'LINK_ADR'), 'ACK', 'Set Operation Failed')
+       self.assertEqual(self.rwctest.link_setadr_morechannelmask('OFF'), 'ACK', 'Set Operation Failed')
+       self.assertEqual(self.rwctest.link_getadr_morechannelmask(), 'OFF', 'Failed to read')
+       self.assertEqual(self.rwctest.link_setadr_morechannelmask('ON'), 'ACK', 'Set Operation Failed')
+       self.assertEqual(self.rwctest.link_getadr_morechannelmask(), 'ON', 'Failed to read')
 
     def test_linkadr_nbtrans(self):
-        #self.assertEqual(self.rwctest.set_mode('EDT'), 'ACK', 'EDT change mode failed.')
-        #self.assertEqual(self.rwctest.link_setinstantmaccmd(1, 'LINK_ADR'), 'ACK', 'Set Operation Failed')
         self.assertEqual(self.rwctest.link_setadr_nbtrans(1,5), 'ACK', 'Set Operation Failed')
         self.assertEqual(self.rwctest.link_getadr_nbtrans(1), '5', 'Failed to read')
 
@@ -759,7 +758,6 @@ class RwcApiTest(unittest.TestCase):
         self.assertEqual(self.rwctest.link_getmaxeirp(1), '36', 'Failed to read')
 
     def test_linkuplinkdwelltime(self):
-        #self.assertEqual(self.rwctest.link_setinstantmaccmd(1, 'TX_PARAM_SETUP'), 'ACK', 'Set Operation Failed')
         self.assertEqual(self.rwctest.link_setuplinkdwelltime(1, 'NO_LIMIT'), 'ACK', 'Set Operation Failed')
         self.assertEqual(self.rwctest.link_getuplinkdwelltime(1), 'NO_LIMIT', 'Failed to read')
         self.assertEqual(self.rwctest.link_setuplinkdwelltime(1, '400ms'), 'ACK', 'Set Operation Failed')
@@ -806,24 +804,8 @@ class RwcApiTest(unittest.TestCase):
         self.assertEqual(self.rwctest.link_getdlchannelindex(1), '1', 'Failed to read')
 
     def test_linkdlchannelfrequency(self):
-        #self.assertEqual(self.rwctest.set_mode('EDT'), 'ACK', 'EDT change mode failed.')
-        #self.assertEqual(self.rwctest.link_setinstantmaccmd(1, 'DL_CHANNEL'), 'ACK', 'Set Operation Failed')
         self.assertEqual(self.rwctest.link_setdlchannelfrequency(1, 865), 'ACK', 'Set Operation Failed')
         self.assertEqual(self.rwctest.link_getdlchannelfrequency(1), '865.000000', 'Failed to read')
-
-    #def test_linkpayloadtype(self):
-        #self.assertEqual(self.rwctest.link_setpayloadtype('0000_0000'), 'ACK', 'Set Operation Failed')
-        #self.assertEqual(self.rwctest.link_getpayloadtype(), '0000_0000', 'Failed to read')
-        #self.assertEqual(self.rwctest.link_setpayloadtype('1111_1111'), 'ACK', 'Set Operation Failed')
-        #self.assertEqual(self.rwctest.link_getpayloadtype(), '1111_1111', 'Failed to read')
-        #self.assertEqual(self.rwctest.link_setpayloadtype('1111_0000'), 'ACK', 'Set Operation Failed')
-        #self.assertEqual(self.rwctest.link_getpayloadtype(), '1111_0000', 'Failed to read')
-        #self.assertEqual(self.rwctest.link_setpayloadtype('1010_1010'), 'ACK', 'Set Operation Failed')
-        #self.assertEqual(self.rwctest.link_getpayloadtype(), '1010_1010', 'Failed to read')
-        #self.assertEqual(self.rwctest.link_setpayloadtype('PRBS'), 'ACK', 'Set Operation Failed')
-        #self.assertEqual(self.rwctest.link_getpayloadtype(), 'PRBS', 'Failed to read')
-        #self.assertEqual(self.rwctest.link_setpayloadtype('USER'), 'ACK', 'Set Operation Failed')
-        #self.assertEqual(self.rwctest.link_getpayloadtype(), 'USER', 'Failed to read')
 
     def test_linkfport(self):
         self.assertEqual(self.rwctest.link_setfport(30), 'ACK', 'Set Operation Failed')
@@ -836,92 +818,34 @@ class RwcApiTest(unittest.TestCase):
     def test_linkbeaconfrequency(self):
         self.assertEqual(self.rwctest.set_mode('EDT'), 'ACK', 'EDT change mode failed.')
         self.assertEqual(self.rwctest.link_setinstantmaccmd(1, 'BEACON_FREQ'), 'ACK', 'Set Operation Failed')
-        self.assertEqual(self.rwctest.link_setbeaconfrequency(1, 865), 'ACK', 'Set Operation Failed')
-        self.assertEqual(self.rwctest.link_getbeaconfrequency(1), '865.000000', 'Failed to read')
+        self.assertEqual(self.rwctest.link_setbeaconfrequency(865), 'ACK', 'Set Operation Failed')
+        self.assertEqual(self.rwctest.link_getbeaconfrequency(), '865.000000', 'Failed to read')
 
-    #def test_linkbeacondatarate(self):
-    #    self.assertEqual(self.rwctest.link_setinstantmaccmd(1, 'BEACON_FREQ'), 'ACK', 'Set Operation Failed')
-    #    self.assertEqual(self.rwctest.link_setbeacondatarate(1, 'DR0_SF12BW125'), 'ACK', 'Set Operation Failed')
-    #    self.assertEqual(self.rwctest.link_getbeacondatarate(1), 'DR0_SF12BW125', 'Failed to read')
-    #    self.assertEqual(self.rwctest.link_setbeacondatarate(1, 'DR1_SF11BW125'), 'ACK', 'Set Operation Failed')
-    #    self.assertEqual(self.rwctest.link_getbeacondatarate(1), 'DR1_SF11BW125', 'Failed to read')
-    #    self.assertEqual(self.rwctest.link_setbeacondatarate(1, 'DR2_SF10BW125'), 'ACK', 'Set Operation Failed')
-    #    self.assertEqual(self.rwctest.link_getbeacondatarate(1), 'DR2_SF10BW125', 'Failed to read')
-    #    self.assertEqual(self.rwctest.link_setbeacondatarate(1, 'DR3_SF9BW125'), 'ACK', 'Set Operation Failed')
-    #    self.assertEqual(self.rwctest.link_getbeacondatarate(1), 'DR3_SF9BW125', 'Failed to read')
-    #    self.assertEqual(self.rwctest.link_setbeacondatarate(1, 'DR4_SF8BW125'), 'ACK', 'Set Operation Failed')
-    #    self.assertEqual(self.rwctest.link_getbeacondatarate(1), 'DR4_SF8BW125', 'Failed to read')
-    #    self.assertEqual(self.rwctest.link_setbeacondatarate(1, 'DR5_SF7BW125'), 'ACK', 'Set Operation Failed')
-    #    self.assertEqual(self.rwctest.link_getbeacondatarate(1), 'DR5_SF7BW125', 'Failed to read')
+    def test_linkbeacondatarate(self):
+       self.assertEqual(self.rwctest.link_setinstantmaccmd(1, 'BEACON_FREQ'), 'ACK', 'Set Operation Failed')
+       self.assertEqual(self.rwctest.link_setbeacondatarate('DR_0'), 'ACK', 'Set Operation Failed')
+       self.assertEqual(self.rwctest.link_getbeacondatarate(), 'DR_0', 'Failed to read')
+       self.assertEqual(self.rwctest.link_setbeacondatarate('DR_1'), 'ACK', 'Set Operation Failed')
+       self.assertEqual(self.rwctest.link_getbeacondatarate(), 'DR_1', 'Failed to read')
 
     def test_linkpingdatarate(self):
         self.assertEqual(self.rwctest.link_setinstantmaccmd(1, 'PING_SLOT_CH'), 'ACK', 'Set Operation Failed')
-        self.assertEqual(self.rwctest.link_setpingdatarate(1, 'DR0_SF12BW125'), 'ACK', 'Set Operation Failed')
-        self.assertEqual(self.rwctest.link_getpingdatarate(1), 'DR0_SF12BW125', 'Failed to read')
-        self.assertEqual(self.rwctest.link_setpingdatarate(1, 'DR1_SF11BW125'), 'ACK', 'Set Operation Failed')
-        self.assertEqual(self.rwctest.link_getpingdatarate(1), 'DR1_SF11BW125', 'Failed to read')
-        self.assertEqual(self.rwctest.link_setpingdatarate(1, 'DR2_SF10BW125'), 'ACK', 'Set Operation Failed')
-        self.assertEqual(self.rwctest.link_getpingdatarate(1), 'DR2_SF10BW125', 'Failed to read')
-        self.assertEqual(self.rwctest.link_setpingdatarate(1, 'DR3_SF9BW125'), 'ACK', 'Set Operation Failed')
-        self.assertEqual(self.rwctest.link_getpingdatarate(1), 'DR3_SF9BW125', 'Failed to read')
-        self.assertEqual(self.rwctest.link_setpingdatarate(1, 'DR4_SF8BW125'), 'ACK', 'Set Operation Failed')
-        self.assertEqual(self.rwctest.link_getpingdatarate(1), 'DR4_SF8BW125', 'Failed to read')
-        self.assertEqual(self.rwctest.link_setpingdatarate(1, 'DR5_SF7BW125'), 'ACK', 'Set Operation Failed')
-        self.assertEqual(self.rwctest.link_getpingdatarate(1), 'DR5_SF7BW125', 'Failed to read')
-
+        self.assertEqual(self.rwctest.link_setpingdatarate('DR_0'), 'ACK', 'Set Operation Failed')
+        self.assertEqual(self.rwctest.link_getpingdatarate(), 'DR_0', 'Failed to read')
+        self.assertEqual(self.rwctest.link_setpingdatarate('DR_1'), 'ACK', 'Set Operation Failed')
+        self.assertEqual(self.rwctest.link_getpingdatarate(), 'DR_1', 'Failed to read')
+        
     def test_linkpingfrequency(self):
         self.assertEqual(self.rwctest.link_setinstantmaccmd(1, 'PING_SLOT_CH'), 'ACK', 'Set Operation Failed')
-        self.assertEqual(self.rwctest.link_setpingfrequency(1, 865), 'ACK', 'Set Operation Failed')
-        self.assertEqual(self.rwctest.link_getpingfrequency(1), '865.000000', 'Failed to read')
-
-    def test_linkrx2datarate(self):
-        self.assertEqual(self.rwctest.link_setinstantmaccmd(1, 'RX_PARAM_SETUP'), 'ACK', 'Set Operation Failed')
-        self.assertEqual(self.rwctest.link_setrx2datarate(1, 'DR0_SF12BW125'), 'ACK', 'Set Operation Failed')
-        self.assertEqual(self.rwctest.link_getrx2datarate(1), 'DR0_SF12BW125', 'Failed to read')
-        self.assertEqual(self.rwctest.link_setrx2datarate(1, 'DR1_SF11BW125'), 'ACK', 'Set Operation Failed')
-        self.assertEqual(self.rwctest.link_getrx2datarate(1), 'DR1_SF11BW125', 'Failed to read')
-        self.assertEqual(self.rwctest.link_setrx2datarate(1, 'DR2_SF10BW125'), 'ACK', 'Set Operation Failed')
-        self.assertEqual(self.rwctest.link_getrx2datarate(1), 'DR2_SF10BW125', 'Failed to read')
-        self.assertEqual(self.rwctest.link_setrx2datarate(1, 'DR3_SF9BW125'), 'ACK', 'Set Operation Failed')
-        self.assertEqual(self.rwctest.link_getrx2datarate(1), 'DR3_SF9BW125', 'Failed to read')
-        self.assertEqual(self.rwctest.link_setrx2datarate(1, 'DR4_SF8BW125'), 'ACK', 'Set Operation Failed')
-        self.assertEqual(self.rwctest.link_getrx2datarate(1), 'DR4_SF8BW125', 'Failed to read')
-        self.assertEqual(self.rwctest.link_setrx2datarate(1, 'DR5_SF7BW125'), 'ACK', 'Set Operation Failed')
-        self.assertEqual(self.rwctest.link_getrx2datarate(1), 'DR5_SF7BW125', 'Failed to read')
-        self.assertEqual(self.rwctest.link_setrx2datarate(1, 'DR6_SF7BW250'), 'ACK', 'Set Operation Failed')
-        self.assertEqual(self.rwctest.link_getrx2datarate(1), 'DR6_SF7BW250', 'Failed to read')
-
-    def test_linkrx2frequency(self):
-        self.assertEqual(self.rwctest.link_setinstantmaccmd(1, 'RX_PARAM_SETUP'), 'ACK', 'Set Operation Failed')
-        self.assertEqual(self.rwctest.link_setrx2frequency(1, 865), 'ACK', 'Set Operation Failed')
-        self.assertEqual(self.rwctest.link_getrx2frequency(1), '865.000000', 'Failed to read')
-
-    def test_linkreceivedelay(self):
-        self.assertEqual(self.rwctest.link_setinstantmaccmd(1, 'RX_TIMING_SETUP'), 'ACK', 'Set Operation Failed')
-        self.assertEqual(self.rwctest.link_setreceivedelay(1, 5), 'ACK', 'Set Operation Failed')
-        self.assertEqual(self.rwctest.link_getreceivedelay(1), '5', 'Failed to read')
-
-    def test_linkrx1droffset(self):
-        self.assertEqual(self.rwctest.link_setinstantmaccmd(1, 'RX_PARAM_SETUP'), 'ACK', 'Set Operation Failed')
-        self.assertEqual(self.rwctest.link_setrx1droffset(1, 1), 'ACK', 'Set Operation Failed')
-        self.assertEqual(self.rwctest.link_getrx1droffset(1), '1', 'Failed to read')
+        self.assertEqual(self.rwctest.link_setpingfrequency(865), 'ACK', 'Set Operation Failed')
+        self.assertEqual(self.rwctest.link_getpingfrequency(), '865.000000', 'Failed to read')
 
     def test_linkrejoindatarate(self):
         self.assertEqual(self.rwctest.link_setinstantmaccmd(1, 'FORCE_REJOIN'), 'ACK', 'Set Operation Failed')
-        self.assertEqual(self.rwctest.link_setrejoindatarate(1, 'DR0_SF12BW125'), 'ACK', 'Set Operation Failed')
-        self.assertEqual(self.rwctest.link_getrejoindatarate(1), 'DR0_SF12BW125', 'Failed to read')
-        self.assertEqual(self.rwctest.link_setrejoindatarate(1, 'DR1_SF11BW125'), 'ACK', 'Set Operation Failed')
-        self.assertEqual(self.rwctest.link_getrejoindatarate(1), 'DR1_SF11BW125', 'Failed to read')
-        self.assertEqual(self.rwctest.link_setrejoindatarate(1, 'DR2_SF10BW125'), 'ACK', 'Set Operation Failed')
-        self.assertEqual(self.rwctest.link_getrejoindatarate(1), 'DR2_SF10BW125', 'Failed to read')
-        self.assertEqual(self.rwctest.link_setrejoindatarate(1, 'DR3_SF9BW125'), 'ACK', 'Set Operation Failed')
-        self.assertEqual(self.rwctest.link_getrejoindatarate(1), 'DR3_SF9BW125', 'Failed to read')
-        self.assertEqual(self.rwctest.link_setrejoindatarate(1, 'DR4_SF8BW125'), 'ACK', 'Set Operation Failed')
-        self.assertEqual(self.rwctest.link_getrejoindatarate(1), 'DR4_SF8BW125', 'Failed to read')
-        self.assertEqual(self.rwctest.link_setrejoindatarate(1, 'DR5_SF7BW125'), 'ACK', 'Set Operation Failed')
-        self.assertEqual(self.rwctest.link_getrejoindatarate(1), 'DR5_SF7BW125', 'Failed to read')
-        self.assertEqual(self.rwctest.link_setrejoindatarate(1, 'DR6_SF7BW250'), 'ACK', 'Set Operation Failed')
-        self.assertEqual(self.rwctest.link_getrejoindatarate(1), 'DR6_SF7BW250', 'Failed to read')
+        self.assertEqual(self.rwctest.link_setrejoindatarate(1, 'DR_0'), 'ACK', 'Set Operation Failed')
+        self.assertEqual(self.rwctest.link_getrejoindatarate(1), 'DR_0', 'Failed to read')
+        self.assertEqual(self.rwctest.link_setrejoindatarate(1, 'DR_1'), 'ACK', 'Set Operation Failed')
+        self.assertEqual(self.rwctest.link_getrejoindatarate(1), 'DR_1', 'Failed to read')
 
     def test_linkrejointype(self):
         self.assertEqual(self.rwctest.link_setinstantmaccmd(1, 'FORCE_REJOIN'), 'ACK', 'Set Operation Failed')
@@ -1041,32 +965,22 @@ class RwcApiTest(unittest.TestCase):
 
     def test_linkpayloadlength(self):
         self.assertEqual(self.rwctest.link_setinstantmaccmd(1, 'ECHO_REQUEST_TM'), 'ACK', 'Set Operation Failed')
-        self.assertEqual(self.rwctest.link_setpayloadlength(1, 200), 'ACK', 'Set Operation Failed')
-        self.assertEqual(self.rwctest.link_getpayloadlength(1), '200', 'Failed to read')
+        self.assertEqual(self.rwctest.link_setpayloadlength(200), 'ACK', 'Set Operation Failed')
+        self.assertEqual(self.rwctest.link_getpayloadlength(), '200', 'Failed to read')
 
     def test_linkcwtimeout(self):
-        self.assertEqual(self.rwctest.link_setcwtimeout(1, 10), 'ACK', 'Set Operation Failed')
-        self.assertEqual(self.rwctest.link_getcwtimeout(1), '10', 'Failed to read')
+        self.assertEqual(self.rwctest.link_setcwtimeout(10), 'ACK', 'Set Operation Failed')
+        self.assertEqual(self.rwctest.link_getcwtimeout(), '10', 'Failed to read')
 
     def test_linkcwfrequency(self):
-        self.assertEqual(self.rwctest.link_setcwfrequency(1, 900), 'ACK', 'Set Operation Failed')
-        self.assertEqual(self.rwctest.link_getcwfrequency(1), '900.000000', 'Failed to read')
+        self.assertEqual(self.rwctest.link_setcwfrequency(900), 'ACK', 'Set Operation Failed')
+        self.assertEqual(self.rwctest.link_getcwfrequency(), '900.000000', 'Failed to read')
 
     def test_linkcwpower(self):
-        self.assertEqual(self.rwctest.link_setcwpower(1, 25), 'ACK', 'Set Operation Failed')
-        self.assertEqual(self.rwctest.link_getcwpower(1), '25', 'Failed to read')
-
-    def test_linkabnormal(self):
-        self.assertEqual(self.rwctest.link_setabnormal('MIC_ERR'), 'ACK', 'Set Operation Failed')
-        self.assertEqual(self.rwctest.link_getabnormal(), 'MIC_ERR', 'Failed to read')
-        self.assertEqual(self.rwctest.link_setabnormal('NO_RSP'), 'ACK', 'Set Operation Failed')
-        self.assertEqual(self.rwctest.link_getabnormal(), 'NO_RSP', 'Failed to read')
-        self.assertEqual(self.rwctest.link_setabnormal('INVALID_CMD'), 'ACK', 'Set Operation Failed')
-        self.assertEqual(self.rwctest.link_getabnormal(), 'INVALID_CMD', 'Failed to read')
-        self.assertEqual(self.rwctest.link_setabnormal('OFF'), 'ACK', 'Set Operation Failed')
-        self.assertEqual(self.rwctest.link_getabnormal(), 'OFF', 'Failed to read')
+        self.assertEqual(self.rwctest.link_setcwpower(25), 'ACK', 'Set Operation Failed')
+        self.assertEqual(self.rwctest.link_getcwpower(), '25', 'Failed to read')
     
-    #Test Cases for Power Channel Command Methods
+    # Test Cases for Power Channel Command Methods
     def test_powscalemode(self):
         self.assertEqual(self.rwctest.power_setscalemode('AUTO'), 'ACK', 'Set Operation Failed')
         self.assertEqual(self.rwctest.power_getscalemode(), 'AUTO', 'Failed to read')
@@ -1081,51 +995,7 @@ class RwcApiTest(unittest.TestCase):
         self.assertEqual(self.rwctest.power_setminyvalue(-30), 'ACK', 'Set Operation Failed')
         self.assertEqual(self.rwctest.power_getminyvalue(), '-20', 'Failed to read')
 
-    def test_powertargetchmask(self):
-        self.assertEqual(self.rwctest.power_settargetchmask(0x00000000000000000000000000000001), 'ACK', 'Set Operation Failed')
-        self.assertEqual(self.rwctest.power_gettargetchmask(), '0x01', 'Failed to read')
-
-    def test_powermode(self):
-        self.assertEqual(self.rwctest.power_setmode('SYNC_TO_LINK'), 'ACK', 'Set Operation Failed')
-        self.assertEqual(self.rwctest.power_getmode(), 'SYNC_TO_LINK', 'Failed to read')
-        self.assertEqual(self.rwctest.power_setmode('SCENARIO'), 'ACK', 'Set Operation Failed')
-        self.assertEqual(self.rwctest.power_getmode(), 'SCENARIO', 'Failed to read')
-
-    def test_powerscenario(self):
-        self.assertEqual(self.rwctest.power_setscenario('NORMAL_UL'), 'ACK', 'Set Operation Failed')
-        self.assertEqual(self.rwctest.power_getscenario(), 'NORMAL_UL', 'Failed to read')
-        self.assertEqual(self.rwctest.power_setscenario('CERTI_UL'), 'ACK', 'Set Operation Failed')
-        self.assertEqual(self.rwctest.power_getscenario(), 'CERTI_UL', 'Failed to read')
-        self.assertEqual(self.rwctest.power_setscenario('CERTI_CW'), 'ACK', 'Set Operation Failed')
-        self.assertEqual(self.rwctest.power_getscenario(), 'CERTI_CW', 'Failed to read')
-
-    def test_poweradr(self):
-        self.assertEqual(self.rwctest.power_setadrpower(2), 'ACK', 'Set Operation Failed')
-        self.assertEqual(self.rwctest.power_getadrpower(), '2', 'Failed to read')
-
-    def test_poweruldatarate(self):
-        self.assertEqual(self.rwctest.power_setuldatarate('DR0_SF12BW125'), 'ACK', 'Set Operation Failed')
-        self.assertEqual(self.rwctest.power_getuldatarate(), 'DR0_SF12BW125', 'Failed to read')
-        self.assertEqual(self.rwctest.power_setuldatarate('DR1_SF11BW125'), 'ACK', 'Set Operation Failed')
-        self.assertEqual(self.rwctest.power_getuldatarate(), 'DR1_SF11BW125', 'Failed to read')
-        self.assertEqual(self.rwctest.power_setuldatarate('DR2_SF10BW125'), 'ACK', 'Set Operation Failed')
-        self.assertEqual(self.rwctest.power_getuldatarate(), 'DR2_SF10BW125', 'Failed to read')
-        self.assertEqual(self.rwctest.power_setuldatarate('DR3_SF9BW125'), 'ACK', 'Set Operation Failed')
-        self.assertEqual(self.rwctest.power_getuldatarate(), 'DR3_SF9BW125', 'Failed to read')
-        self.assertEqual(self.rwctest.power_setuldatarate('DR4_SF8BW125'), 'ACK', 'Set Operation Failed')
-        self.assertEqual(self.rwctest.power_getuldatarate(), 'DR4_SF8BW125', 'Failed to read')
-        self.assertEqual(self.rwctest.power_setuldatarate('DR5_SF7BW125'), 'ACK', 'Set Operation Failed')
-        self.assertEqual(self.rwctest.power_getuldatarate(), 'DR5_SF7BW125', 'Failed to read')
-        self.assertEqual(self.rwctest.power_setuldatarate('DR6_SF7BW250'), 'ACK', 'Set Operation Failed')
-        self.assertEqual(self.rwctest.power_getuldatarate(), 'DR6_SF7BW250', 'Failed to read')
-        self.assertEqual(self.rwctest.power_setuldatarate('DR7_FSK50'), 'ACK', 'Set Operation Failed')
-        self.assertEqual(self.rwctest.power_getuldatarate(), 'DR7_FSK50', 'Failed to read')
-
-    def test_powerpacketnum(self):
-        self.assertEqual(self.rwctest.power_setpacketnum(5), 'ACK', 'Set Operation Failed')
-        self.assertEqual(self.rwctest.power_getpacketnum(), '5', 'Failed to read')
-    
-    #Test Cases for Sensitivity Command Methods
+    # Test Cases for Sensitivity Command Methods
     def test_sensitivityopmode(self):
         self.assertEqual(self.rwctest.sensitivity_setopmode('CERTI_ECHO'), 'ACK', 'Set Operation Failed')
         self.assertEqual(self.rwctest.sensitivity_getopmode(), 'CERTI_ECHO', 'Failed to read')
@@ -1146,7 +1016,7 @@ class RwcApiTest(unittest.TestCase):
 
     def test_sensitivitysteppower(self):
         self.assertEqual(self.rwctest.sensitivity_setsteppower(20), 'ACK', 'Set Operation Failed')
-        self.assertEqual(self.rwctest.sensitivity_getsteppower(), '20.0', 'Failed to read')
+        self.assertEqual(self.rwctest.sensitivity_getsteppower(), '20', 'Failed to read')
 
     def test_sensitivitytargetpower(self):
         self.assertEqual(self.rwctest.sensitivity_settargetpower(0.1), 'ACK', 'Set Operation Failed')
@@ -1176,34 +1046,6 @@ class RwcApiTest(unittest.TestCase):
     def test_sensitivitytargetdr(self):
         self.assertEqual(self.rwctest.sensitivity_settargetdr('DR0_SF12BW125'), 'ACK', 'Set Operation Failed')
         self.assertEqual(self.rwctest.sensitivity_gettargetdr(), 'DR0_SF12BW125', 'Failed to read')
-        self.assertEqual(self.rwctest.sensitivity_settargetdr('DR1_SF11BW125'), 'ACK', 'Set Operation Failed')
-        self.assertEqual(self.rwctest.sensitivity_gettargetdr(), 'DR1_SF11BW125', 'Failed to read')
-        self.assertEqual(self.rwctest.sensitivity_settargetdr('DR2_SF10BW125'), 'ACK', 'Set Operation Failed')
-        self.assertEqual(self.rwctest.sensitivity_gettargetdr(), 'DR2_SF10BW125', 'Failed to read')
-        self.assertEqual(self.rwctest.sensitivity_settargetdr('DR3_SF9BW125'), 'ACK', 'Set Operation Failed')
-        self.assertEqual(self.rwctest.sensitivity_gettargetdr(), 'DR3_SF9BW125', 'Failed to read')
-        self.assertEqual(self.rwctest.sensitivity_settargetdr('DR4_SF8BW125'), 'ACK', 'Set Operation Failed')
-        self.assertEqual(self.rwctest.sensitivity_gettargetdr(), 'DR4_SF8BW125', 'Failed to read')
-        self.assertEqual(self.rwctest.sensitivity_settargetdr('DR5_SF7BW125'), 'ACK', 'Set Operation Failed')
-        self.assertEqual(self.rwctest.sensitivity_gettargetdr(), 'DR5_SF7BW125', 'Failed to read')
-
-    def test_sensitivitytargetdlch(self):
-        self.assertEqual(self.rwctest.sensitivity_settargetdlch(1, 900), 'ACK', 'Set Operation Failed')
-        self.assertEqual(self.rwctest.sensitivity_gettargetdlch(1), '900.000000', 'Failed to read')
-
-    #def test_sensitivitypayloadtype(self):
-    #    self.assertEqual(self.rwctest.sensitivity_setpayloadtype('0000_0000'), 'ACK', 'Set Operation Failed')
-    #    self.assertEqual(self.rwctest.sensitivity_getpayloadtype(), '0000_0000', 'Failed to read')
-    #    self.assertEqual(self.rwctest.sensitivity_setpayloadtype('1111_1111'), 'ACK', 'Set Operation Failed')
-    #    self.assertEqual(self.rwctest.sensitivity_getpayloadtype(), '1111_1111', 'Failed to read')
-    #    self.assertEqual(self.rwctest.sensitivity_setpayloadtype('1111_0000'), 'ACK', 'Set Operation Failed')
-    #    self.assertEqual(self.rwctest.sensitivity_getpayloadtype(), '1111_0000', 'Failed to read')
-    #    self.assertEqual(self.rwctest.sensitivity_setpayloadtype('1010_1010'), 'ACK', 'Set Operation Failed')
-    #    self.assertEqual(self.rwctest.sensitivity_getpayloadtype(), '1010_1010', 'Failed to read')
-    #    self.assertEqual(self.rwctest.sensitivity_setpayloadtype('PRBS'), 'ACK', 'Set Operation Failed')
-    #    self.assertEqual(self.rwctest.sensitivity_getpayloadtype(), 'PRBS', 'Failed to read')
-    #   self.assertEqual(self.rwctest.sensitivity_setpayloadtype('USER'), 'ACK', 'Set Operation Failed')
-    #    self.assertEqual(self.rwctest.sensitivity_getpayloadtype(), 'USER', 'Failed to read')
         
     def test_sensitivityfport(self):
         self.assertEqual(self.rwctest.sensitivity_setfport(200), 'ACK', 'Set Operation Failed')
@@ -1213,7 +1055,7 @@ class RwcApiTest(unittest.TestCase):
         self.assertEqual(self.rwctest.sensitivity_setpayloadsize(16), 'ACK', 'Set Operation Failed')
         self.assertEqual(self.rwctest.sensitivity_getpayloadsize(), '16', 'Failed to read')
     
-    #Test Cases for NST Command Methods
+    # Test Cases for NST Command Methods
     def test_nsttx_repeatnum(self):
         self.assertEqual(self.rwctest.nst_tx_setrepeatnum(100), 'ACK', 'Set Operation Failed')
         self.assertEqual(self.rwctest.nst_tx_getrepeatnum(), '100', 'Failed to read')
@@ -1228,7 +1070,7 @@ class RwcApiTest(unittest.TestCase):
 
     def test_nsttx_interval(self):
         self.assertEqual(self.rwctest.nst_tx_setinterval(0.5), 'ACK', 'Set Operation Failed')
-        self.assertEqual(self.rwctest.nst_tx_getinterval(), '0.500', 'Failed to read')
+        self.assertEqual(self.rwctest.nst_tx_getinterval(), '0.50', 'Failed to read')
 
     def test_nsttx_bw(self):
         self.assertEqual(self.rwctest.nst_tx_setbw(125), 'ACK', 'Set Operation Failed')
@@ -1263,20 +1105,6 @@ class RwcApiTest(unittest.TestCase):
     def test_nsttx_preamblesize(self):
         self.assertEqual(self.rwctest.nst_tx_setpreamblesize(2), 'ACK', 'Set Operation Failed')
         self.assertEqual(self.rwctest.nst_tx_getpreamblesize(), '2', 'Failed to read')
-
-    #def test_nsttx_payloadtype(self):
-    #    self.assertEqual(self.rwctest.nst_tx_setpayloadtype('0000_0000'), 'ACK', 'Set Operation Failed')
-    #    self.assertEqual(self.rwctest.nst_tx_getpayloadtype(), '0000_0000', 'Failed to read')
-    #    self.assertEqual(self.rwctest.nst_tx_setpayloadtype('1111_1111'), 'ACK', 'Set Operation Failed')
-    #    self.assertEqual(self.rwctest.nst_tx_getpayloadtype(), '1111_1111', 'Failed to read')
-    #    self.assertEqual(self.rwctest.nst_tx_setpayloadtype('1111_0000'), 'ACK', 'Set Operation Failed')
-    #    self.assertEqual(self.rwctest.nst_tx_getpayloadtype(), '1111_0000', 'Failed to read')
-    #    self.assertEqual(self.rwctest.nst_tx_setpayloadtype('1010_1010'), 'ACK', 'Set Operation Failed')
-    #    self.assertEqual(self.rwctest.nst_tx_getpayloadtype(), '1010_1010', 'Failed to read')
-    #    self.assertEqual(self.rwctest.nst_tx_setpayloadtype('PRBS'), 'ACK', 'Set Operation Failed')
-    #    self.assertEqual(self.rwctest.nst_tx_getpayloadtype(), 'PRBS', 'Failed to read')
-    #    self.assertEqual(self.rwctest.nst_tx_setpayloadtype('USER'), 'ACK', 'Set Operation Failed')
-    #    self.assertEqual(self.rwctest.nst_tx_getpayloadtype(), 'USER', 'Failed to read')
 
     def test_nsttx_payloadsize(self):
         self.assertEqual(self.rwctest.nst_tx_setpayloadsize(16), 'ACK', 'Set Operation Failed')
@@ -1336,7 +1164,7 @@ class RwcApiTest(unittest.TestCase):
 
     def test_nstmfg_interval(self):
         self.assertEqual(self.rwctest.nst_mfg_setinterval(0.1), 'ACK', 'Set Operation Failed')
-        self.assertEqual(self.rwctest.nst_mfg_getinterval(), '0.100', 'Failed to read')
+        self.assertEqual(self.rwctest.nst_mfg_getinterval(), '0.10', 'Failed to read')
 
     def test_nstmfg_bw(self):
         self.assertEqual(self.rwctest.nst_mfg_setbw(500), 'ACK', 'Set Operation Failed')
@@ -1378,31 +1206,9 @@ class RwcApiTest(unittest.TestCase):
         self.assertEqual(self.rwctest.nst_mfg_setpayloadsize(16), 'ACK', 'Set Operation Failed')
         self.assertEqual(self.rwctest.nst_mfg_getpayloadsize(), '16', 'Failed to read')
 
-    #def test_nstmfg_payloadtype(self):
-    #    self.assertEqual(self.rwctest.nst_mfg_setpayloadtype('0000_0000'), 'ACK', 'Set Operation Failed')
-    #    self.assertEqual(self.rwctest.nst_mfg_getpayloadtype(), '0000_0000', 'Failed to read')
-    #    self.assertEqual(self.rwctest.nst_mfg_setpayloadtype('1111_1111'), 'ACK', 'Set Operation Failed')
-    #    self.assertEqual(self.rwctest.nst_mfg_getpayloadtype(), '1111_1111', 'Failed to read')
-    #    self.assertEqual(self.rwctest.nst_mfg_setpayloadtype('1111_0000'), 'ACK', 'Set Operation Failed')
-    #    self.assertEqual(self.rwctest.nst_mfg_getpayloadtype(), '1111_0000', 'Failed to read')
-    #    self.assertEqual(self.rwctest.nst_mfg_setpayloadtype('1010_1010'), 'ACK', 'Set Operation Failed')
-    #    self.assertEqual(self.rwctest.nst_mfg_getpayloadtype(), '1010_1010', 'Failed to read')
-    #    self.assertEqual(self.rwctest.nst_mfg_setpayloadtype('PRBS'), 'ACK', 'Set Operation Failed')
-    #    self.assertEqual(self.rwctest.nst_mfg_getpayloadtype(), 'PRBS', 'Failed to read')
-    #    self.assertEqual(self.rwctest.nst_mfg_setpayloadtype('USER'), 'ACK', 'Set Operation Failed')
-    #    self.assertEqual(self.rwctest.nst_mfg_getpayloadtype(), 'USER', 'Failed to read')
-
     def test_nstmfg_preamblesize(self):
         self.assertEqual(self.rwctest.nst_mfg_setpreamblesize(8), 'ACK', 'Set Operation Failed')
         self.assertEqual(self.rwctest.nst_mfg_getpreamblesize(), '8', 'Failed to read')
-
-    def test_nstmfg_run(self):
-        #self.assertEqual(self.rwctest.nst_mfg_run(), '', 'Failed to read')
-        pass
-
-    def test_nstmfg_stop(self):
-        #self.assertEqual(self.rwctest.nst_mfg_stop(), '', 'Failed to read')
-        pass
 
     def test_nstmfg_repeatnum(self):
         self.assertEqual(self.rwctest.nst_mfg_setrepeatnum(10), 'ACK', 'Set Operation Failed')
@@ -1414,13 +1220,9 @@ class RwcApiTest(unittest.TestCase):
         self.assertEqual(self.rwctest.nst_mfg_setnwktype('PUBLIC'), 'ACK', 'Set Operation Failed')
         self.assertEqual(self.rwctest.nst_mfg_getnwktype(), 'PUBLIC', 'Failed to read')
 
-    def test_nstmfg_getdutinfo(self):
-        #self.assertEqual(self.rwctest.nst_mfg_getdutinfo(), '', 'Failed to read')
-        pass
-    
-    #Test Cases for System Command Methods
+    # Test Cases for System Command Methods
     def test_querysysversion(self):
-        self.assertEqual(self.rwctest.query_sysversion(), '1.200', 'Reading System Software Version Failed.')
+        self.assertEqual(self.rwctest.query_sysversion(), '1.160', 'Reading System Software Version Failed.')
 
     def test_sysreferenceclock(self):
         self.assertEqual(self.rwctest.sys_setreferenceclock('INT'), 'ACK', 'Setting System Reference Clock Failed.')
@@ -1428,8 +1230,6 @@ class RwcApiTest(unittest.TestCase):
 
         self.assertEqual(self.rwctest.sys_setreferenceclock('EXT'), 'ACK', 'Setting System Reference Clock Failed.')
         self.assertEqual(self.rwctest.sys_getreferenceclock(), 'EXT', 'Reading System Reference Clock Failed.')
-
-        #self.assertRaises(Exception, self.rwctest.sys_setreferenceclock('ET'))
 
     def test_sysserialnum(self):
         self.assertEqual(self.rwctest.query_sysserialnum(), '0x1760009', 'Reading System Serial Number Failed.')

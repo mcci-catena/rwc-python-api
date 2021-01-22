@@ -1,4 +1,4 @@
-#Script to perform link analyzer test by accessing RWC tester library
+# Script to perform link analyzer test by accessing RWC tester library
 
 import sys
 import time
@@ -160,7 +160,7 @@ class LinkAnalyzerTest(RWCTesterApi):
 
 if __name__ == '__main__':
     
-    myobj = LinkAnalyzerTest('COM12') #change the serial port accordingly for RS232 communication
+    myobj = LinkAnalyzerTest('COM12')    # Change the serial port accordingly for RS232 communication
     myobj.config_link_screen()
     myobj.config_protocol()
     myobj.config_rf()

@@ -1,4 +1,4 @@
-#Script to perform link analyzer test by accessing RWC tester library
+# Script to perform link analyzer test by accessing RWC tester library
 
 import sys
 import time
@@ -160,7 +160,7 @@ class LinkAnalyzerTest(RWCTesterApi):
 
 if __name__ == '__main__':
 
-    myobj = LinkAnalyzerTest('5001', '192.168.0.33') #Change the ip and port accordingly for ethernet communication    
+    myobj = LinkAnalyzerTest('5001', '192.168.0.33')    # Change the ip and port accordingly for ethernet communication    
     myobj.config_link_screen()
     myobj.config_protocol()
     myobj.config_rf()

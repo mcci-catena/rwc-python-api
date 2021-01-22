@@ -1,6 +1,35 @@
-import serial
+##############################################################################
+# 
+# Module: cRWC5020x.py
+#
+# Description:
+#     Remote command methods for RWC5020x Tester
+#
+# Copyright notice:
+#     This file copyright (c) 2021 by
+#
+#         MCCI Corporation
+#         3520 Krums Corners Road
+#         Ithaca, NY  14850
+#
+#     Released under the MIT license.
+#
+# Author:
+#     Sivaprakash Veluthambi, MCCI   January, 2021
+#
+# Revision history:
+#     V0.1.0 Thu Jan 14 2021 18:50:59 sivaprakash
+#       Module created
+#
+##############################################################################
+
+# Built-in imports
 import sys
 import time
+import ipaddress
+
+# Lib imports
+import serial
 
 from rwclib.cRWCSerialSetup import RwcSerialSetup
 
@@ -8,8 +37,8 @@ class RWCTesterApi(RwcSerialSetup):
     '''
     .. class:: RWCTesterApi
 
-    This is class file to send commands and receive response from RWC5020x 
-    LoRa Tester via RS232 Port.
+    This is class file to send commands and receive response from 
+    RWC5020x LoRa Tester via RS232 Port.
 
 
     **Class Methods:**
@@ -27,14 +56,15 @@ class RWCTesterApi(RwcSerialSetup):
         '''
         RwcSerialSetup.__init__(self, port, addr)
 
-    #Common Command Methods
+    # Common Command Methods
     def query_identification(self):
         '''
         Identification query command
 
         :Parameters: N/A
 
-        :return: Name, Version and Serial No. of the device; NAK on failure
+        :return: Name, Version and Serial No. of the device; 
+                 NAK on failure
 
         '''
         cmdIdn = '*IDN?' + '\n'
@@ -88,7 +118,7 @@ class RWCTesterApi(RwcSerialSetup):
             result = RwcSerialSetup.transceive(self, cmdRecall)
             return result
             
-    #System Configuration Command Methods
+    # System Configuration Command Methods
     def set_mode(self, mode):
         '''
         Configure an operating mode (or Main Menu) of RWC5020A
@@ -162,8 +192,8 @@ class RWCTesterApi(RwcSerialSetup):
 
         :Parameters: N/A (Query only)
 
-        :return: It returns the status of key input during remote control; NAK
-                 on failure
+        :return: It returns the status of key input during remote 
+                 control; NAK on failure
 
         '''
         cmdGetLockStatus = 'READ:REMOTE:LOCK?' + '\n'
@@ -172,11 +202,11 @@ class RWCTesterApi(RwcSerialSetup):
 
     def set_screen(self, submenu):
         '''
-        Configure a screen (or Sub Menu) of RWC5020A to move directly to 
-        another sub menu
+        Configure a screen (or Sub Menu) of RWC5020A to move directly 
+        to another sub menu
 
         :param submenu: sub menu type (LINK, POWER_TIME, POWER_CHANNEL, 
-        SENSITIVITY, REMOTE)
+                        SENSITIVITY, REMOTE)
 
         :return: ACK on success, NAK on failure
 
@@ -218,8 +248,9 @@ class RWCTesterApi(RwcSerialSetup):
 
         '''
         frequencynum = int(freqrange)
-        if (frequencynum >= 400 and frequencynum <= 510
-        ) or (frequencynum >= 862 and frequencynum <= 960):
+        if (frequencynum >= 400 
+                and frequencynum <= 510) or (frequencynum >= 862 
+                    and frequencynum <= 960):
             cmdFreqRange = str(frequencynum)
             cmdNstFrequency = 'CONF:RF:FREQ ' + cmdFreqRange + '\n'
             result = RwcSerialSetup.transceive(self, cmdNstFrequency)
@@ -250,8 +281,9 @@ class RWCTesterApi(RwcSerialSetup):
 
         '''
         txfrequencynum = int(freqrange)
-        if (txfrequencynum >= 400 and txfrequencynum <= 510
-        ) or (txfrequencynum >= 862 and txfrequencynum <= 960):
+        if (txfrequencynum >= 400 
+                and txfrequencynum <= 510) or (txfrequencynum >= 862 
+                    and txfrequencynum <= 960):
             cmdTxFreqRange = str(txfrequencynum)
             cmdNstTxFrequency = 'CONF:RF:TX_FREQ ' + cmdTxFreqRange + '\n'
             result = RwcSerialSetup.transceive(self, cmdNstTxFrequency)
@@ -282,8 +314,9 @@ class RWCTesterApi(RwcSerialSetup):
 
         '''
         rxfrequencynum = int(freqrange)
-        if (rxfrequencynum >= 400 and rxfrequencynum <= 510
-        ) or (rxfrequencynum >= 862 and rxfrequencynum <= 960):
+        if (rxfrequencynum >= 400 
+                and rxfrequencynum <= 510) or (rxfrequencynum >= 862 
+                    and rxfrequencynum <= 960):
             cmdRxFreqRange = str(rxfrequencynum)
             cmdNstRxFrequency = 'CONF:RF:RX_FREQ ' + cmdRxFreqRange + '\n'
             result = RwcSerialSetup.transceive(self, cmdNstRxFrequency)
@@ -314,8 +347,9 @@ class RWCTesterApi(RwcSerialSetup):
 
         '''
         mfgfrequencynum = int(freqrange)
-        if (mfgfrequencynum >= 400 and mfgfrequencynum <= 510
-        ) or (mfgfrequencynum >= 862 and mfgfrequencynum <= 960):
+        if (mfgfrequencynum >= 400 
+                and mfgfrequencynum <= 510) or (mfgfrequencynum >= 862 
+                    and mfgfrequencynum <= 960):
             cmdMfgFreqRange = str(mfgfrequencynum)
             cmdNstMfgFrequency = 'CONF:RF:MFG_FREQ ' + cmdMfgFreqRange + '\n'
             result = RwcSerialSetup.transceive(self, cmdNstMfgFrequency)
@@ -409,9 +443,7 @@ class RWCTesterApi(RwcSerialSetup):
         offsetnum = int(sysclkoffsetrng)
         if (offsetnum >= -100 and offsetnum <= 100):
             cmdOffsetRange = str(offsetnum)
-            cmdSysclkOffset = 'CONF:RF:SYSCLK_OFFSET' \
-            + cmdOffsetRange \
-            + '\n'
+            cmdSysclkOffset = 'CONF:RF:SYSCLK_OFFSET ' + cmdOffsetRange + '\n'
             result = RwcSerialSetup.transceive(self, cmdSysclkOffset)
             return result
         else:
@@ -423,7 +455,8 @@ class RWCTesterApi(RwcSerialSetup):
 
         :Parameters: N/A (Query only)
 
-        :return: It returns the system clock offset value; NAK on failure
+        :return: It returns the system clock offset value; 
+                 NAK on failure
         '''
         cmdGetSysclkOffset = 'READ:RF:SYSCLK_OFFSET?' + '\n'
         result = RwcSerialSetup.transceive(self, cmdGetSysclkOffset)
@@ -442,8 +475,8 @@ class RWCTesterApi(RwcSerialSetup):
         if (freqoffnum >= -1000 and freqoffnum <= 1000):
             cmdFreqOffsetRange = str(freqoffnum)
             cmdSetFreqOffset = 'CONF:RF:FREQ_OFFSET ' \
-            + cmdFreqOffsetRange \
-            + '\n'
+                                + cmdFreqOffsetRange \
+                                + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetFreqOffset)
             return result
         else:
@@ -475,7 +508,8 @@ class RWCTesterApi(RwcSerialSetup):
         if (timeoffnum >= -1000 and timeoffnum <= 1000):
             cmdTimeOffsetRange = str(timeoffnum)
             cmdSetTimeOffset = 'CONF:RF:TIME_OFFSET ' \
-            + cmdTimeOffsetRange + '\n'
+                                + cmdTimeOffsetRange \
+                                + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetTimeOffset)
             return result
         else:
@@ -496,23 +530,29 @@ class RWCTesterApi(RwcSerialSetup):
 
     def rf_setchannelmask(self, chindexrange, chmaskrange):
         '''
-        Configure the channel mask of channel index 0 in both EDT and GWT mode
+        Configure the channel mask of channel index 0 in both EDT and 
+        GWT mode
 
         :param chindexrange: Channel index (0 - 5)
         :param chmaskrange: Channel Mask (For EDT 0x00 ~ 0xFF, 
-        For GWT 0x00 ~ 0xFFFF(US/AU/CN), read-only (others))
+                            For GWT 0x00 ~ 0xFFFF(US/AU/CN), 
+                            read-only (others))
 
         :return: ACK on success, NAK on failure
 
         '''
         chindexnum = int(chindexrange)
         chmasknum = int(chmaskrange)
+
         if (chindexnum >= 0 and chindexnum <= 5):
             cmdChIndexrange = str(chindexnum)
             if (chmasknum >= 0 and chmasknum <= 65535):
                 cmdChMaskRange = hex(chmasknum)
                 cmdSetChMask = 'CONF:RF:CH_MASK_' \
-                + cmdChIndexrange + ' ' + cmdChMaskRange + '\n'
+                                + cmdChIndexrange \
+                                + ' ' \
+                                + cmdChMaskRange \
+                                + '\n'
                 result = RwcSerialSetup.transceive(self, cmdSetChMask)
                 return result
             else:
@@ -522,12 +562,13 @@ class RWCTesterApi(RwcSerialSetup):
 
     def rf_getchannelmask(self, chindexrange):
         '''
-        Read the channel mask of channel index 0 in both EDT and GWT mode
+        Read the channel mask of channel index 0 in both EDT and 
+        GWT mode
 
         :param chindexrange: Channel index (0 - 5)
 
-        :return: It returns the channel mask with respect to the channel 
-        index; NAK on failure
+        :return: It returns the channel mask with respect to the 
+                 channel index; NAK on failure
 
         '''
         chindexnum = int(chindexrange)
@@ -541,18 +582,23 @@ class RWCTesterApi(RwcSerialSetup):
 
     def rf_setchannelgroup(self, chgrouprange):
         '''
-        Configure the channel group (only applicable to US/AU/CN in EDT mode)
+        Configure the channel group 
+        (only applicable to US/AU/CN in EDT mode)
 
-        :param: For US/AU, 00 ~ 07, 08 ~ 15, 16 ~ 23, 24 ~ 31, ... , 48 ~ 55, 56 ~ 63,
-                For CN, 00 ~ 07, 08 ~ 15, 16 ~ 23, 24 ~ 31, ... , 80 ~ 87, 88 ~ 95
+        :param: For US/AU, 
+                00 ~ 07, 08 ~ 15, 16 ~ 23, 
+                24 ~ 31, ... , 48 ~ 55, 56 ~ 63,
+                For CN, 
+                00 ~ 07, 08 ~ 15, 16 ~ 23, 
+                24 ~ 31, ... , 80 ~ 87, 88 ~ 95
 
         :return: ACK on success, NAK on failure
 
         '''
         chgroupnum = int(chgrouprange)
         chregion = self.protocol_getregion()
-        if (chregion == 'US_915' or chregion == 'AU_915' or 
-        chregion == 'CN_470'):
+        if (chregion == 'US_915' 
+            or chregion == 'AU_915' or chregion == 'CN_470'):
             if chgroupnum == 0:
                 if chregion == 'CN_470':
                     cmdSetChGroup = 'CONF:RF:CH_GROUP 00~07' + '\n'
@@ -644,12 +690,13 @@ class RWCTesterApi(RwcSerialSetup):
 
     def rf_getchannelgroup(self):
         '''
-        Read the channel group (only applicable to US/AU/CN in EDT mode)
+        Read the channel group 
+        (only applicable to US/AU/CN in EDT mode)
 
         :Parameters: N/A (Query only)
 
         :return: It returns the channel group of US/AU/CN region; 
-        NAK on failure
+                 NAK on failure
 
         '''
         cmdGetChGroup = 'READ:RF:CH_GROUP?' + '\n'
@@ -721,12 +768,13 @@ class RWCTesterApi(RwcSerialSetup):
 
         '''
         pingfrequencynum = int(freqrange)
-        if (pingfrequencynum >= 400 and pingfrequencynum <= 510
-        ) or (pingfrequencynum >= 862 and pingfrequencynum <= 960):
+        if (pingfrequencynum >= 400 
+                and pingfrequencynum <= 510) or (pingfrequencynum >= 862 
+                    and pingfrequencynum <= 960):
             cmdPingFreqRange = str(pingfrequencynum)
             cmdNstPingFrequency = 'CONF:RF:PING_FREQ ' \
-            + cmdPingFreqRange \
-            + '\n'
+                                    + cmdPingFreqRange \
+                                    + '\n'
             result = RwcSerialSetup.transceive(self, cmdNstPingFrequency)
             return result
         else:
@@ -750,7 +798,8 @@ class RWCTesterApi(RwcSerialSetup):
         Configure the data rate of ping channel
 
         :param drvalue: DR0_SF12BW125, DR1_SF11BW125, DR2_SF10BW125, 
-        DR3_SF9BW125, DR4_SF8BW125, DR5_SF7BW125, DR6_SF7BW250, DR7_FSK50
+                        DR3_SF9BW125, DR4_SF8BW125, DR5_SF7BW125, 
+                        DR6_SF7BW250, DR7_FSK50
 
         :return: ACK on success, NAK on failure
         
@@ -763,8 +812,7 @@ class RWCTesterApi(RwcSerialSetup):
             'DR4_SF8BW125',
             'DR5_SF7BW125',
             'DR6_SF7BW250',
-            'DR7_FSK50'
-            ]
+            'DR7_FSK50']
         if drvalue in drvallist:
             cmdSetPingDr = 'CONF:RF:PING_DR ' + drvalue + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetPingDr)
@@ -778,7 +826,8 @@ class RWCTesterApi(RwcSerialSetup):
 
         :Parameters: N/A (Query only)
 
-        :return: It returns the data rate of ping channel; NAK on failure
+        :return: It returns the data rate of ping channel; 
+                 NAK on failure
 
         '''
         cmdGetPingDr = 'READ:RF:PING_DR?' + '\n'
@@ -795,10 +844,13 @@ class RWCTesterApi(RwcSerialSetup):
 
         '''
         bcnfrequencynum = int(freqrange)
-        if (bcnfrequencynum >= 400 and bcnfrequencynum <= 510
-        ) or (bcnfrequencynum >= 862 and bcnfrequencynum <= 960):
+        if (bcnfrequencynum >= 400 
+                and bcnfrequencynum <= 510) or (bcnfrequencynum >= 862 
+                    and bcnfrequencynum <= 960):
             cmdBcnFreqRange = str(bcnfrequencynum)
-            cmdNstBcnFrequency = 'CONF:RF:BEACON_FREQ ' + cmdBcnFreqRange + '\n'
+            cmdNstBcnFrequency = 'CONF:RF:BEACON_FREQ ' \
+                                    + cmdBcnFreqRange \
+                                    + '\n'
             result = RwcSerialSetup.transceive(self, cmdNstBcnFrequency)
             return result
         else:
@@ -816,6 +868,33 @@ class RWCTesterApi(RwcSerialSetup):
         cmdGetBeaconFreq = 'READ:RF:BEACON_FREQ?' + '\n'
         result = RwcSerialSetup.transceive(self, cmdGetBeaconFreq)
         return result
+
+    def rf_setbeacondr(self, drvalue):
+        '''
+        Configure the data rate of beacon
+
+        :param drvalue: DR0_SF12BW125, DR1_SF11BW125, DR2_SF10BW125, 
+                        DR3_SF9BW125, DR4_SF8BW125, DR5_SF7BW125, 
+                        DR6_SF7BW250, DR7_FSK50
+
+        :return: ACK on success, NAK on failure
+        
+        '''
+        drvallist = [
+            'DR0_SF12BW125',
+            'DR1_SF11BW125',
+            'DR2_SF10BW125',
+            'DR3_SF9BW125',
+            'DR4_SF8BW125',
+            'DR5_SF7BW125',
+            'DR6_SF7BW250',
+            'DR7_FSK50']
+        if drvalue in drvallist:
+            cmdSetBeaconDr = 'CONF:RF:BEACON_DR ' + drvalue + '\n'
+            result = RwcSerialSetup.transceive(self, cmdSetBeaconDr)
+            return result
+        else:
+            raise Exception('Invalid parameter received.')
 
     def rf_getbeacondr(self):
         '''
@@ -872,13 +951,14 @@ class RWCTesterApi(RwcSerialSetup):
         :return: ACK on success, NAK on failure
 
         '''
-        cmdAsChannelMode = mode
-        if cmdAsChannelMode == 'AS920-923':
-            cmdSetAsChMode = 'CONF:RF:AS923_CH_MODE AS920-923' + '\n'
-            result = RwcSerialSetup.transceive(self, cmdSetAsChMode)
-            return result
-        elif cmdAsChannelMode == 'AS923-925':
-            cmdSetAsChMode = 'CONF:RF:AS923_CH_MODE AS923-925' + '\n'
+        chModeList = ['AS920-923', 'AS923-925']
+        cmdSupportedVersion = [
+            '1.200', '1.203', '1.204', '1.206', 
+            '1.210', '1.220', '1.221', '1.222']
+        verStatus = self.validate_sys_swversion(cmdSupportedVersion)
+
+        if verStatus and mode in chModeList:
+            cmdSetAsChMode = 'CONF:RF:AS923_CH_MODE ' + mode + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetAsChMode)
             return result
         else:
@@ -892,8 +972,118 @@ class RWCTesterApi(RwcSerialSetup):
 
         :return: It returns the channel mode; NAK on failure 
         '''
-        cmdGetChModeAs = 'READ:RF:AS923_CH_MODE?' + '\n'
-        result = RwcSerialSetup.transceive(self, cmdGetChModeAs)
+        cmdSupportedVersion = [
+            '1.200', '1.203', '1.204', '1.206', 
+            '1.210', '1.220', '1.221', '1.222']
+        verStatus = self.validate_sys_swversion(cmdSupportedVersion)
+
+        if verStatus:
+            cmdGetChModeAs = 'READ:RF:AS923_CH_MODE?' + '\n'
+            result = RwcSerialSetup.transceive(self, cmdGetChModeAs)
+            return result
+
+    def rf_setchannelgroup_as923(self, mode):
+        '''
+        Configure the channel group (only applicable to AS923 region)
+
+        :param mode: Channel group (AS_923-1, AS_923-2, AS_923-3)
+
+        :return: ACK on success, NAK on failure
+
+        '''
+        cmdAsChannelGroup = mode
+        if cmdAsChannelGroup == 'AS_923-1':
+            cmdSetAsChGroup = 'CONF:RF:AS923_CH_GROUP AS_923-1' + '\n'
+            result = RwcSerialSetup.transceive(self, cmdSetAsChGroup)
+            return result
+        elif cmdAsChannelGroup == 'AS_923-2':
+            cmdSetAsChGroup = 'CONF:RF:AS923_CH_GROUP AS_923-2' + '\n'
+            result = RwcSerialSetup.transceive(self, cmdSetAsChGroup)
+            return result
+        elif cmdAsChannelGroup == 'AS_923-3':
+            cmdSetAsChGroup = 'CONF:RF:AS923_CH_GROUP AS_923-3' + '\n'
+            result = RwcSerialSetup.transceive(self, cmdSetAsChGroup)
+            return result
+        else:
+            raise Exception('Invalid Channel Group Parameter passed.')
+
+    def rf_getchannelgroup_as923(self):
+        '''
+        Read the channel group (only applicable to AS923 region)
+
+        :Parameters: N/A (Query only)
+
+        :return: It returns the channel mode; NAK on failure 
+        '''
+        cmdGetChGroupAs = 'READ:RF:AS923_CH_GROUP?' + '\n'
+        result = RwcSerialSetup.transceive(self, cmdGetChGroupAs)
+        return result
+
+    def rf_setfreqoffset_as923(self, freqoffsetrng):
+        '''
+        Configure the frequency offset for channel group 
+        (only applicable to AS923 region)
+
+        :param freqoffsetrng: Offset range (-100 ~ 100)
+
+        :return: ACK on success, NAK on failure
+
+        '''
+        offsetnum = int(freqoffsetrng)
+        if (offsetnum >= -100 and offsetnum <= 100):
+            cmdOffsetRange = str(offsetnum)
+            cmdFreqOffset = 'CONF:RF:AS923_FREQ_OFFSET ' \
+                                + cmdOffsetRange \
+                                + '\n'
+            result = RwcSerialSetup.transceive(self, cmdFreqOffset)
+            return result
+        else:
+            raise Exception('Invalid offset range received')
+
+    def rf_getfreqoffset_as923(self):
+        '''
+        Read the frequency offset for channel group 
+        (only applicable to AS923 region)
+
+        :Parameters: N/A (Query only)
+
+        :return: It returns the frequency offset value of AS923 
+                 channel group; NAK on failure
+
+        '''
+        cmdGetFreqOffset = 'READ:RF:AS923_FREQ_OFFSET?' + '\n'
+        result = RwcSerialSetup.transceive(self, cmdGetFreqOffset)
+        return result
+
+    def rf_setchplan_cn470(self, planType):
+        '''
+        Configure the channel plan (only applicable to CN470 region)
+
+        :param planType: 20M_A, 20M_B, 26M_A, 26M_B
+
+        :return: ACK on success, NAK on failure
+        
+        '''
+        planTypelist = ['20M_A', '20M_B', '26M_A', '26M_B']
+        if planType in planTypelist:
+            cmdSetChPlan = 'CONF:RF:CN470_CH_PLAN ' + planType + '\n'
+            result = RwcSerialSetup.transceive(self, cmdSetChPlan)
+            return result
+        else:
+            raise Exception('Invalid parameter received.')
+
+    def rf_getchplan_cn470(self):
+        '''
+        Read the channel plan (only applicable to CN470 region)
+
+        :Parameters: N/A (Query only)
+
+        :return: It returns the channel plan of CN470 region; 
+                 NAK on failure
+
+        '''
+        cmdGetChPlan = 'READ:RF:CN470_CH_PLAN?' + '\n'
+        result = RwcSerialSetup.transceive(self, cmdGetChPlan)
         return result
 
     def rf_getmeasuredfreq(self):
@@ -952,8 +1142,8 @@ class RWCTesterApi(RwcSerialSetup):
         '''
         Configure an operating Region of RWC5020A
 
-        :param region: EU_868, EU_433, US_915, AU_921, CN_490, KR_922, 
-        AS_923, IN_866
+        :param region: EU_868, EU_433, US_915, AU_921, CN_470, KR_922, 
+                       AS_923, IN_866
 
         :return: ACK on success, NAK on failure
         
@@ -975,8 +1165,8 @@ class RWCTesterApi(RwcSerialSetup):
             cmdSetRegion = 'CONF:PROTOCOL:REGION AU_921' + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetRegion)
             return result
-        elif cmdRegion == 'CN_490':
-            cmdSetRegion = 'CONF:PROTOCOL:REGION CN_490' + '\n'
+        elif cmdRegion == 'CN_470':
+            cmdSetRegion = 'CONF:PROTOCOL:REGION CN_470' + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetRegion)
             return result
         elif cmdRegion == 'KR_922':
@@ -989,6 +1179,10 @@ class RWCTesterApi(RwcSerialSetup):
             return result
         elif cmdRegion == 'IN_866':
             cmdSetRegion = 'CONF:PROTOCOL:REGION IN_866' + '\n'
+            result = RwcSerialSetup.transceive(self, cmdSetRegion)
+            return result
+        elif cmdRegion == 'RU_864':
+            cmdSetRegion = 'CONF:PROTOCOL:REGION RU_864' + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetRegion)
             return result
         else:
@@ -1091,13 +1285,15 @@ class RWCTesterApi(RwcSerialSetup):
         cmdActivationProcedure = activation
         if cmdActivationProcedure == 'OTAA':
             cmdSetActivationProcedure = 'CONF:PROTOCOL:ACTIVATION OTAA' + '\n'
-            result = RwcSerialSetup.transceive(self, 
-            cmdSetActivationProcedure)
+            result = RwcSerialSetup.transceive(
+                self, 
+                cmdSetActivationProcedure)
             return result
         elif cmdActivationProcedure == 'ABP':
             cmdSetActivationProcedure = 'CONF:PROTOCOL:ACTIVATION ABP' + '\n'
-            result = RwcSerialSetup.transceive(self, 
-            cmdSetActivationProcedure)
+            result = RwcSerialSetup.transceive(
+                self, 
+                cmdSetActivationProcedure)
             return result
         else:
             raise Exception('Invalid parameter received.')
@@ -1144,7 +1340,8 @@ class RWCTesterApi(RwcSerialSetup):
 
         :param: Query only
 
-        :return: It returns the flag status either ON or OFF; NAK on failure
+        :return: It returns the flag status either ON or OFF; 
+                 NAK on failure
         
         '''
         cmdGetTestModeFlag = 'READ:PROTOCOL:SET_TEST_MODE?' + '\n'
@@ -1164,7 +1361,8 @@ class RWCTesterApi(RwcSerialSetup):
         if cmdValue >= -1000 and cmdValue <= 1000:
             cmdTimeOffsetValue = str(cmdValue)
             cmdSetBeaconTimeOffset = 'CONF:PROTOCOL:BEACON_TIME_OFFSET ' \
-            + cmdTimeOffsetValue + '\n'
+                                        + cmdTimeOffsetValue \
+                                        + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetBeaconTimeOffset)
             return result
         else:
@@ -1252,7 +1450,8 @@ class RWCTesterApi(RwcSerialSetup):
 
         :param: Query only
 
-        :return: It returns the read application session key; NAK on failure
+        :return: It returns the read application session key; 
+                 NAK on failure
         
         '''
         cmdGetAppSessionKey = 'READ:PROTOCOL:APPS_KEY?' + '\n'
@@ -1462,7 +1661,8 @@ class RWCTesterApi(RwcSerialSetup):
         if delaynum >= 1 and delaynum <= 10:
             cmdRecvDelayVal = str(delaynum)
             cmdSetRecvDelayVal = 'CONF:PROTOCOL:RECEIVE_DELAY ' \
-            + cmdRecvDelayVal + '\n'
+                                    + cmdRecvDelayVal \
+                                    + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetRecvDelayVal)
             return result
         else:
@@ -1486,7 +1686,7 @@ class RWCTesterApi(RwcSerialSetup):
         Configure the Periodic Uplink message in GWT
 
         :param peruplinkmsg: NONE, LINK_CHECK_REQ, CONFIRMED_UP, 
-        UNCONFIRMRED_UP, DL_COUNTER
+                             UNCONFIRMRED_UP, DL_COUNTER
 
         :return: ACK on success, NAK on failure
         
@@ -1494,27 +1694,27 @@ class RWCTesterApi(RwcSerialSetup):
         cmdPeriodicUplinkMsg = peruplinkmsg
         if cmdPeriodicUplinkMsg == 'NONE':
             cmdSetPeriodicUplinkMsg = 'CONF:PROTOCOL:PERIODIC_UPLINK NONE' \
-            + '\n'
+                                        + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetPeriodicUplinkMsg)
             return result
         elif cmdPeriodicUplinkMsg == 'LINK_CHECK_REQ':
-            cmdSetPeriodicUplinkMsg \
-            = 'CONF:PROTOCOL:PERIODIC_UPLINK LINK_CHECK_REQ' + '\n'
+            cmdSetPeriodicUplinkMsg = 'CONF:PROTOCOL:PERIODIC_UPLINK LINK_CHECK_REQ' \
+                                        + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetPeriodicUplinkMsg)
             return result
         elif cmdPeriodicUplinkMsg == 'CONFIRMED_UP':
-            cmdSetPeriodicUplinkMsg \
-            = 'CONF:PROTOCOL:PERIODIC_UPLINK CONFIRMED_UP' + '\n'
+            cmdSetPeriodicUplinkMsg = 'CONF:PROTOCOL:PERIODIC_UPLINK CONFIRMED_UP' \
+                                        + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetPeriodicUplinkMsg)
             return result
         elif cmdPeriodicUplinkMsg == 'UNCONFIRMED_UP':
-            cmdSetPeriodicUplinkMsg \
-            = 'CONF:PROTOCOL:PERIODIC_UPLINK UNCONFIRMED_UP' + '\n'
+            cmdSetPeriodicUplinkMsg = 'CONF:PROTOCOL:PERIODIC_UPLINK UNCONFIRMED_UP' \
+                                        + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetPeriodicUplinkMsg)
             return result
         elif cmdPeriodicUplinkMsg == 'DL_COUNTER':
-            cmdSetPeriodicUplinkMsg \
-            = 'CONF:PROTOCOL:PERIODIC_UPLINK DL_COUNTER' + '\n'
+            cmdSetPeriodicUplinkMsg = 'CONF:PROTOCOL:PERIODIC_UPLINK DL_COUNTER' \
+                                        + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetPeriodicUplinkMsg)
             return result
         else:
@@ -1526,7 +1726,8 @@ class RWCTesterApi(RwcSerialSetup):
 
         :param: Query only
 
-        :return: It returns the periodic uplink message; NAK on failure
+        :return: It returns the periodic uplink message; 
+                 NAK on failure
         
         '''
         cmdGetPeriodicUplinkMsg = 'READ:PROTOCOL:PERIODIC_UPLINK?' + '\n'
@@ -1535,8 +1736,8 @@ class RWCTesterApi(RwcSerialSetup):
 
     def protocol_setinterval(self, interval):
         '''
-        Configure the interval in sec between Uplink message defined by 
-        Periodic uplink
+        Configure the interval in sec between Uplink message defined 
+        by Periodic uplink
 
         :param interval: 3 ~ 60
 
@@ -1624,7 +1825,8 @@ class RWCTesterApi(RwcSerialSetup):
 
         :param: Query only
 
-        :return: It returns the flag status either ON or OFF; NAK on failure
+        :return: It returns the flag status either ON or OFF; 
+                 NAK on failure
         
         '''
         cmdGetAdrFlag = 'READ:PROTOCOL:ADR?' + '\n'
@@ -1830,7 +2032,8 @@ class RWCTesterApi(RwcSerialSetup):
         if linkmarginnum >= 0 and linkmarginnum <= 254:
             cmdLinkMargin = str(linkmarginnum)
             cmdSetLinkMargin = 'CONF:PROTOCOL:LINK_MARGIN ' \
-            + cmdLinkMargin + '\n'
+                                + cmdLinkMargin \
+                                + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetLinkMargin)
             return result
         else:
@@ -1862,7 +2065,8 @@ class RWCTesterApi(RwcSerialSetup):
         if gwcntnum >= 0 and gwcntnum <= 255:
             cmdGatewayCnt = str(gwcntnum)
             cmdSetGatewayCnt = 'CONF:PROTOCOL:GATEWAY_CNT ' \
-            + cmdGatewayCnt + '\n'
+                                + cmdGatewayCnt \
+                                + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetGatewayCnt)
             return result
         else:
@@ -1885,7 +2089,7 @@ class RWCTesterApi(RwcSerialSetup):
         '''
         Configure the battery status value for DevStatusAns
 
-        :param: 0 ~ 255
+        :param batterystat: 0 ~ 255
 
         :return: ACK on success, NAK on failure
         
@@ -1894,7 +2098,8 @@ class RWCTesterApi(RwcSerialSetup):
         if batterystatnum >= 0 and batterystatnum <= 255:
             cmdBatteryStatusVal = str(batterystatnum)
             cmdSetBatteryStatusVal = 'CONF:PROTOCOL:BATTERY ' \
-            + cmdBatteryStatusVal + '\n'
+                                        + cmdBatteryStatusVal \
+                                        + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetBatteryStatusVal)
             return result
         else:
@@ -1926,7 +2131,8 @@ class RWCTesterApi(RwcSerialSetup):
         if snrnum >= -32 and snrnum <= 31:
             cmdSnrMarginVal = str(snrnum)
             cmdSetSnrMarginVal = 'CONF:PROTOCOL:SNR_MARGIN ' \
-            + cmdSnrMarginVal + '\n'
+                                    + cmdSnrMarginVal \
+                                    + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetSnrMarginVal)
             return result
         else:
@@ -2001,7 +2207,7 @@ class RWCTesterApi(RwcSerialSetup):
         Configure the selection of downlink slot (RX window)
 
         :param slotval: For EDT, RX1, RX2, PING(Class B), 
-        For GWT, RX1, RX2, RX1&RX2
+                        For GWT, RX1, RX2, RX1&RX2
 
         :return: ACK on success, NAK on failure
         
@@ -2039,47 +2245,75 @@ class RWCTesterApi(RwcSerialSetup):
         result = RwcSerialSetup.transceive(self, cmdGetDownlinkSlot)
         return result
 
-    def protocol_setuplinkdatarate(self, dr):
+    def protocol_setmacresponsefield(self, fieldType):
         '''
-        Configure Data Rate of Uplink in GWT mode
+        Configure the selection of MAC response field type
 
-        :param dr: DR0_SF12BW125, DR1_SF11BW125, DR2_SF10BW125, DR3_SF9BW125, 
-        DR4_SF8BW125, DR5_SF7BW125, DR6_SF7BW250, DR7_FSK50
+        :param fieldType: PAYLOAD, FOPTS
 
         :return: ACK on success, NAK on failure
         
         '''
-        cmdDrValue = str(dr)
-        if cmdDrValue == 'DR0_SF12BW125':
-            cmdSetUplinkDr = 'CONF:PROTOCOL:UPLINK_DR DR0_SF12BW125' + '\n'
+        fieldTypelist = ['PAYLOAD', 'FOPTS']
+        if fieldType in fieldTypelist:
+            cmdSetMACRespField = 'CONF:PROTOCOL:MAC_RSP_FIELD ' \
+                                    + fieldType \
+                                    + '\n'
+            result = RwcSerialSetup.transceive(self, cmdSetMACRespField)
+            return result
+        else:
+            raise Exception('Invalid parameter received.')
+
+    def protocol_getmacresponsefield(self):
+        '''
+        Read the selection of MAC response field type
+
+        :Parameters: N/A (Query only)
+
+        :return: It returns the MAC response field type; NAK on failure
+
+        '''
+        cmdGetMACRespField = 'READ:PROTOCOL:MAC_RSP_FIELD?' + '\n'
+        result = RwcSerialSetup.transceive(self, cmdGetMACRespField)
+        return result
+
+    def protocol_setuplinkdatarate(self, dr):
+        '''
+        Configure Data Rate of Uplink in GWT mode
+
+        :param dr: For S/W Version 1.150 and 1.160:
+                   DR_0, DR_1, DR_2, DR_3, DR_4, DR_5, DR_6, DR_7
+
+                   For S/W Version 1.170 - 1.305:
+                   DR0_SF12BW125, DR1_SF11BW125, DR2_SF10BW125, 
+                   DR3_SF9BW125, DR4_SF8BW125, DR5_SF7BW125, 
+                   DR6_SF7BW250, DR7_FSK50
+
+        :return: ACK on success, NAK on failure
+        
+        '''
+        verList1 = ['1.150', '1.160']
+        verList2 = [
+            '1.170', '1.200', '1.203', 
+            '1.204', '1.206', '1.210', 
+            '1.220', '1.221', '1.222', 
+            '1.300', '1.305']
+        drList1 = [
+            'DR_0', 'DR_1', 'DR_2', 'DR_3', 
+            'DR_4', 'DR_5', 'DR_6', 'DR_7']
+        drList2 = [
+            'DR0_SF12BW125', 'DR1_SF11BW125', 
+            'DR2_SF10BW125', 'DR3_SF9BW125', 
+            'DR4_SF8BW125', 'DR5_SF7BW125', 
+            'DR6_SF7BW250', 'DR7_FSK50']
+        swVersion = self.query_sysversion()
+
+        if swVersion in verList1 and dr in drList1:
+            cmdSetUplinkDr = 'CONF:PROTOCOL:UPLINK_DR ' + dr + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetUplinkDr)
             return result
-        elif cmdDrValue == 'DR1_SF11BW125':
-            cmdSetUplinkDr = 'CONF:PROTOCOL:UPLINK_DR DR1_SF11BW125' + '\n'
-            result = RwcSerialSetup.transceive(self, cmdSetUplinkDr)
-            return result
-        elif cmdDrValue == 'DR2_SF10BW125':
-            cmdSetUplinkDr = 'CONF:PROTOCOL:UPLINK_DR DR2_SF10BW125' + '\n'
-            result = RwcSerialSetup.transceive(self, cmdSetUplinkDr)
-            return result
-        elif cmdDrValue == 'DR3_SF9BW125':
-            cmdSetUplinkDr = 'CONF:PROTOCOL:UPLINK_DR DR3_SF9BW125' + '\n'
-            result = RwcSerialSetup.transceive(self, cmdSetUplinkDr)
-            return result
-        elif cmdDrValue == 'DR4_SF8BW125':
-            cmdSetUplinkDr = 'CONF:PROTOCOL:UPLINK_DR DR4_SF8BW125' + '\n'
-            result = RwcSerialSetup.transceive(self, cmdSetUplinkDr)
-            return result
-        elif cmdDrValue == 'DR5_SF7BW125':
-            cmdSetUplinkDr = 'CONF:PROTOCOL:UPLINK_DR DR5_SF7BW125' + '\n'
-            result = RwcSerialSetup.transceive(self, cmdSetUplinkDr)
-            return result
-        elif cmdDrValue == 'DR6_SF7BW250':
-            cmdSetUplinkDr = 'CONF:PROTOCOL:UPLINK_DR DR6_SF7BW250' + '\n'
-            result = RwcSerialSetup.transceive(self, cmdSetUplinkDr)
-            return result
-        elif cmdDrValue == 'DR7_FSK50':
-            cmdSetUplinkDr = 'CONF:PROTOCOL:UPLINK_DR DR7_FSK50' + '\n'
+        elif swVersion in verList2 and dr in drList2:
+            cmdSetUplinkDr = 'CONF:PROTOCOL:UPLINK_DR ' + dr + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetUplinkDr)
             return result
         else:
@@ -2110,7 +2344,8 @@ class RWCTesterApi(RwcSerialSetup):
         if rx1droffsetval >= 0 and rx1droffsetval <= 7:
             cmdRx1DrOffsetVal = str(rx1droffsetval)
             cmdSetRx1DrOffsetVal = 'CONF:PROTOCOL:RX1_DR_OFFSET ' \
-            + cmdRx1DrOffsetVal + '\n'
+                                    + cmdRx1DrOffsetVal \
+                                    + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetRx1DrOffsetVal)
             return result
         else:
@@ -2138,11 +2373,13 @@ class RWCTesterApi(RwcSerialSetup):
         :return: ACK on success, NAK on failure
         
         '''
-        if (rx2freq >= 400 and rx2freq <= 510
-        ) or (rx2freq >= 862 and rx2freq <= 960):
+        if (rx2freq >= 400 
+                and rx2freq <= 510) or (rx2freq >= 862 
+                    and rx2freq <= 960):
             cmdRx2Frequency = str(rx2freq)
             cmdSetRx2FrequencyVal = 'CONF:PROTOCOL:RX2_FREQ ' \
-            + cmdRx2Frequency + '\n'
+                                        + cmdRx2Frequency \
+                                        + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetRx2FrequencyVal)
             return result
         else:
@@ -2165,43 +2402,38 @@ class RWCTesterApi(RwcSerialSetup):
         '''
         Configure RX2_DR value for RXParamSetupReq
 
-        :param dr: DR0_SF12BW125, DR1_SF11BW125, DR2_SF10BW125, DR3_SF9BW125, 
-        DR4_SF8BW125, DR5_SF7BW125, DR6_SF7BW250, DR7_FSK50
+        :param dr: For S/W Version 1.150 and 1.160:
+                   DR_0, DR_1, DR_2, DR_3, DR_4, DR_5, DR_6, DR_7
+                   
+                   For S/W Version 1.170 - 1.305:
+                   DR0_SF12BW125, DR1_SF11BW125, DR2_SF10BW125, 
+                   DR3_SF9BW125, DR4_SF8BW125, DR5_SF7BW125, 
+                   DR6_SF7BW250, DR7_FSK50
 
         :return: ACK on success, NAK on failure
         
         '''
-        cmdDrValue = str(dr)
-        if cmdDrValue == 'DR0_SF12BW125':
-            cmdSetRx2Dr = 'CONF:PROTOCOL:RX2_DR DR0_SF12BW125' + '\n'
+        verList1 = ['1.150', '1.160']
+        verList2 = [
+            '1.170', '1.200', '1.203', '1.204', 
+            '1.206', '1.210', '1.220', '1.221', 
+            '1.222', '1.300', '1.305']
+        drList1 = [
+            'DR_0', 'DR_1', 'DR_2', 'DR_3', 
+            'DR_4', 'DR_5', 'DR_6', 'DR_7']
+        drList2 = [
+            'DR0_SF12BW125', 'DR1_SF11BW125', 
+            'DR2_SF10BW125', 'DR3_SF9BW125', 
+            'DR4_SF8BW125', 'DR5_SF7BW125', 
+            'DR6_SF7BW250', 'DR7_FSK50']
+        swVersion = self.query_sysversion()
+
+        if swVersion in verList1 and dr in drList1:
+            cmdSetRx2Dr = 'CONF:PROTOCOL:RX2_DR ' + dr + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetRx2Dr)
             return result
-        elif cmdDrValue == 'DR1_SF11BW125':
-            cmdSetRx2Dr = 'CONF:PROTOCOL:RX2_DR DR1_SF11BW125' + '\n'
-            result = RwcSerialSetup.transceive(self, cmdSetRx2Dr)
-            return result
-        elif cmdDrValue == 'DR2_SF10BW125':
-            cmdSetRx2Dr = 'CONF:PROTOCOL:RX2_DR DR2_SF10BW125' + '\n'
-            result = RwcSerialSetup.transceive(self, cmdSetRx2Dr)
-            return result
-        elif cmdDrValue == 'DR3_SF9BW125':
-            cmdSetRx2Dr = 'CONF:PROTOCOL:RX2_DR DR3_SF9BW125' + '\n'
-            result = RwcSerialSetup.transceive(self, cmdSetRx2Dr)
-            return result
-        elif cmdDrValue == 'DR4_SF8BW125':
-            cmdSetRx2Dr = 'CONF:PROTOCOL:RX2_DR DR4_SF8BW125' + '\n'
-            result = RwcSerialSetup.transceive(self, cmdSetRx2Dr)
-            return result
-        elif cmdDrValue == 'DR5_SF7BW125':
-            cmdSetRx2Dr = 'CONF:PROTOCOL:RX2_DR DR5_SF7BW125' + '\n'
-            result = RwcSerialSetup.transceive(self, cmdSetRx2Dr)
-            return result
-        elif cmdDrValue == 'DR6_SF7BW250':
-            cmdSetRx2Dr = 'CONF:PROTOCOL:RX2_DR DR6_SF7BW250' + '\n'
-            result = RwcSerialSetup.transceive(self, cmdSetRx2Dr)
-            return result
-        elif cmdDrValue == 'DR7_FSK50':
-            cmdSetRx2Dr = 'CONF:PROTOCOL:RX2_DR DR7_FSK50' + '\n'
+        elif swVersion in verList2 and dr in drList2:
+            cmdSetRx2Dr = 'CONF:PROTOCOL:RX2_DR ' + dr + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetRx2Dr)
             return result
         else:
@@ -2232,7 +2464,8 @@ class RWCTesterApi(RwcSerialSetup):
         if period >= 0 and period <= 7:
             cmdPingPeriodicity = str(period)
             cmdSetPingPeriodicityVal = 'CONF:PROTOCOL:PING_PERIODICITY ' \
-            + cmdPingPeriodicity + '\n'
+                                        + cmdPingPeriodicity \
+                                        + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetPingPeriodicityVal)
             return result
         else:
@@ -2262,18 +2495,18 @@ class RWCTesterApi(RwcSerialSetup):
         '''
         cmdProtocolVersion = version
         if cmdProtocolVersion == 'LoRaWAN1.0.2':
-            cmdSetProtocolVersion \
-            = 'CONF:PROTOCOL:PROTOCOL_VER LoRaWAN1.0.2' + '\n'
+            cmdSetProtocolVersion = 'CONF:PROTOCOL:PROTOCOL_VER LoRaWAN1.0.2' \
+                                        + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetProtocolVersion)
             return result
         elif cmdProtocolVersion == 'LoRaWAN1.0.3':
-            cmdSetProtocolVersion \
-            = 'CONF:PROTOCOL:PROTOCOL_VER LoRaWAN1.0.3' + '\n'
+            cmdSetProtocolVersion = 'CONF:PROTOCOL:PROTOCOL_VER LoRaWAN1.0.3' \
+                                        + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetProtocolVersion)
             return result
         elif cmdProtocolVersion == 'LoRaWAN1.1':
             cmdSetProtocolVersion = 'CONF:PROTOCOL:PROTOCOL_VER LoRaWAN1.1' \
-            + '\n'
+                                        + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetProtocolVersion)
             return result
         else:
@@ -2285,7 +2518,8 @@ class RWCTesterApi(RwcSerialSetup):
 
         :param: Query only
 
-        :return: It returns the LoRaWAN protocol version; NAK on failure
+        :return: It returns the LoRaWAN protocol version; 
+                 NAK on failure
         
         '''
         cmdGetProtocolVersion = 'READ:PROTOCOL:PROTOCOL_VER?' + '\n'
@@ -2336,7 +2570,8 @@ class RWCTesterApi(RwcSerialSetup):
         if (cmdValue >= 0 and cmdValue <= 2**128 - 1):
             cmdHexValue = hex(cmdValue)
             cmdSetFNwkSKeyVal = 'CONF:PROTOCOL:FNWKS_IKEY ' \
-            + cmdHexValue + '\n'
+                                    + cmdHexValue \
+                                    + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetFNwkSKeyVal)
             return result
         else:
@@ -2368,7 +2603,8 @@ class RWCTesterApi(RwcSerialSetup):
         if (cmdValue >= 0 and cmdValue <= 2**128 - 1):
             cmdHexValue = hex(cmdValue)
             cmdSetSNwkSKeyVal = 'CONF:PROTOCOL:SNWKS_IKEY ' \
-            + cmdHexValue + '\n'
+                                    + cmdHexValue \
+                                    + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetSNwkSKeyVal)
             return result
         else:
@@ -2400,7 +2636,8 @@ class RWCTesterApi(RwcSerialSetup):
         if (cmdValue >= 0 and cmdValue <= 2**128 - 1):
             cmdHexValue = hex(cmdValue)
             cmdSetNwkSEncKeyVal = 'CONF:PROTOCOL:NWKS_EKEY ' \
-            + cmdHexValue + '\n'
+                                    + cmdHexValue \
+                                    + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetNwkSEncKeyVal)
             return result
         else:
@@ -2598,21 +2835,22 @@ class RWCTesterApi(RwcSerialSetup):
 
     def protocol_setduttype(self, duttype):
         '''
-        Configure the type of DUT, which determines whether the frame is for 
-        uplink or downlink
+        Configure the type of DUT, which determines whether the frame 
+        is for uplink or downlink. (Supported version: v1.15 - v1.21)
 
         :param duttype: END_DEVICE, GATEWAY
 
         :return: ACK on success, NAK on failure
         
         '''
-        cmdDutType = duttype
-        if cmdDutType == 'END_DEVICE':
-            cmdSetDutType = 'CONF:PROTOCOL:DUT_TYPE END_DEVICE' + '\n'
-            result = RwcSerialSetup.transceive(self, cmdSetDutType)
-            return result
-        elif cmdDutType == 'GATEWAY':
-            cmdSetDutType = 'CONF:PROTOCOL:DUT_TYPE GATEWAY' + '\n'
+        dutTypeList = ['END_DEVICE', 'GATEWAY']
+        cmdSupportedVersion = [
+            '1.150', '1.160', '1.170', '1.200', 
+            '1.203', '1.204', '1.206', '1.210']
+        verStatus = self.validate_sys_swversion(cmdSupportedVersion)
+
+        if verStatus and duttype in dutTypeList:
+            cmdSetDutType = 'CONF:PROTOCOL:DUT_TYPE ' + duttype + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetDutType)
             return result
         else:
@@ -2621,34 +2859,41 @@ class RWCTesterApi(RwcSerialSetup):
     def protocol_getduttype(self):
         '''
         Read the type of DUT, which determines whether the frame is for 
-        uplink or downlink
+        uplink or downlink. (Supported version: v1.15 - v1.21)
 
         :param: Query only
 
         :return: It returns the DUT type; NAK on failure
         
         '''
-        cmdGetDutType = 'READ:PROTOCOL:DUT_TYPE?' + '\n'
-        result = RwcSerialSetup.transceive(self, cmdGetDutType)
-        return result
+        cmdSupportedVersion = [
+            '1.150', '1.160', '1.170', '1.200', 
+            '1.204', '1.203', '1.206', '1.210']
+        verStatus = self.validate_sys_swversion(cmdSupportedVersion)
+
+        if verStatus:
+            cmdGetDutType = 'READ:PROTOCOL:DUT_TYPE?' + '\n'
+            result = RwcSerialSetup.transceive(self, cmdGetDutType)
+            return result
 
     def protocol_setmacformatflag(self, macformatflag):
         '''
-        Configure the flag whether to use MAC protocol parameters in LoRa 
-        test frame in NST mode
+        Configure the flag whether to use MAC protocol parameters in 
+        LoRa test frame in NST mode (Supported version: v1.15 - v1.17)
 
         :param macformatflag: OFF, ON
 
         :return: ACK on success, NAK on failure
         
         '''
-        cmdMacFormatFlag = macformatflag
-        if cmdMacFormatFlag == 'OFF':
-            cmdSetMacFormatFlag = 'CONF:PROTOCOL:MAC_FORMAT OFF' + '\n'
-            result = RwcSerialSetup.transceive(self, cmdSetMacFormatFlag)
-            return result
-        elif cmdMacFormatFlag == 'ON':
-            cmdSetMacFormatFlag = 'CONF:PROTOCOL:MAC_FORMAT ON' + '\n'
+        macFormatFlagList = ['OFF', 'ON']
+        cmdSupportedVersion = ['1.150', '1.160', '1.170']
+        verStatus = self.validate_sys_swversion(cmdSupportedVersion)
+
+        if verStatus and macformatflag in macFormatFlagList:
+            cmdSetMacFormatFlag = 'CONF:PROTOCOL:MAC_FORMAT ' \
+                                    + macformatflag \
+                                    + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetMacFormatFlag)
             return result
         else:
@@ -2656,28 +2901,35 @@ class RWCTesterApi(RwcSerialSetup):
 
     def protocol_getmacformatflag(self):
         '''
-        Read the flag whether to use MAC protocol parameters in LoRa test 
-        frame in NST mode
+        Read the flag whether to use MAC protocol parameters in LoRa 
+        test frame in NST mode (Supported version: v1.15 - v1.17)
 
         :param: Query only
 
         :return: It returns the flag status; NAK on failure
         
         '''
-        cmdGetMacFormatFlag = 'READ:PROTOCOL:MAC_FORMAT?' + '\n'
-        result = RwcSerialSetup.transceive(self, cmdGetMacFormatFlag)
-        return result
+        cmdSupportedVersion = ['1.150', '1.160', '1.170']
+        verStatus = self.validate_sys_swversion(cmdSupportedVersion)
+        if verStatus:
+            cmdGetMacFormatFlag = 'READ:PROTOCOL:MAC_FORMAT?' + '\n'
+            result = RwcSerialSetup.transceive(self, cmdGetMacFormatFlag)
+            return result
 
     def protocol_setnstfcnt(self, nstfcnt):
         '''
-        Configure the FCnt field of LoRa test frame in NST mode
+        Configure the FCnt field of LoRa test frame in NST mode 
+        (Supported version: v1.15 - v1.17)
 
         :param nstfcnt: 0 ~ 65535
 
         :return: ACK on success, NAK on failure
         
         '''
-        if nstfcnt >= 0 and nstfcnt <= 65535:
+        cmdSupportedVersion = ['1.150', '1.160', '1.170']
+        verStatus = self.validate_sys_swversion(cmdSupportedVersion)
+
+        if verStatus and (nstfcnt >= 0 and nstfcnt <= 65535):
             cmdNstFCnt = str(nstfcnt)
             cmdSetNstFCntVal = 'CONF:PROTOCOL:FCNT ' + cmdNstFCnt + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetNstFCntVal)
@@ -2687,34 +2939,38 @@ class RWCTesterApi(RwcSerialSetup):
 
     def protocol_getnstfcnt(self):
         '''
-        Read the FCnt field of LoRa test frame in NST mode
+        Read the FCnt field of LoRa test frame in NST mode 
+        (Supported version: v1.15 - v1.17)
 
         :param: Query only
 
         :return: It returns the FCnt value; NAK on failure
         
         '''
-        cmdGetNstFcnt = 'READ:PROTOCOL:FCNT?' + '\n'
-        result = RwcSerialSetup.transceive(self, cmdGetNstFcnt)
-        return result
+        cmdSupportedVersion = ['1.150', '1.160', '1.170']
+        verStatus = self.validate_sys_swversion(cmdSupportedVersion)
+
+        if verStatus:
+            cmdGetNstFcnt = 'READ:PROTOCOL:FCNT?' + '\n'
+            result = RwcSerialSetup.transceive(self, cmdGetNstFcnt)
+            return result
 
     def protocol_setnstfcntmode(self, fcntmode):
         '''
-        Configure the operation mode of FCnt field of LoRa test frame in 
-        NST mode
+        Configure the operation mode of FCnt field of LoRa test frame 
+        in NST mode (Supported version: v1.15 - v1.17)
 
         :param fcntmode: FIXED, INCREASING
 
         :return: ACK on success, NAK on failure
         
         '''
-        cmdFcntMode = fcntmode
-        if cmdFcntMode == 'FIXED':
-            cmdSetFcntMode = 'CONF:PROTOCOL:FCNT_MODE FIXED' + '\n'
-            result = RwcSerialSetup.transceive(self, cmdSetFcntMode)
-            return result
-        elif cmdFcntMode == 'INCREASING':
-            cmdSetFcntMode = 'CONF:PROTOCOL:FCNT_MODE INCREASING' + '\n'
+        fcntModeList = ['FIXED', 'INCREASING']
+        cmdSupportedVersion = ['1.150', '1.160', '1.170']
+        verStatus = self.validate_sys_swversion(cmdSupportedVersion)
+
+        if verStatus and fcntmode in fcntModeList:
+            cmdSetFcntMode = 'CONF:PROTOCOL:FCNT_MODE ' + fcntmode + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetFcntMode)
             return result
         else:
@@ -2722,33 +2978,38 @@ class RWCTesterApi(RwcSerialSetup):
 
     def protocol_getnstfcntmode(self):
         '''
-        Read the operation mode of FCnt field of LoRa test frame in NST mode
+        Read the operation mode of FCnt field of LoRa test frame in 
+        NST mode (Supported version: v1.15 - v1.17)
 
         :param: Query only
 
         :return: It returns the FCnt mode; NAK on failure
         
         '''
-        cmdGetNstFcntMode = 'READ:PROTOCOL:FCNT_MODE?' + '\n'
-        result = RwcSerialSetup.transceive(self, cmdGetNstFcntMode)
-        return result
+        cmdSupportedVersion = ['1.150', '1.160', '1.170']
+        verStatus = self.validate_sys_swversion(cmdSupportedVersion)
+
+        if verStatus:
+            cmdGetNstFcntMode = 'READ:PROTOCOL:FCNT_MODE?' + '\n'
+            result = RwcSerialSetup.transceive(self, cmdGetNstFcntMode)
+            return result
 
     def protocol_setnstack(self, nstack):
         '''
-        Configure the ACK field of LoRa test frame in NST mode
+        Configure the ACK field of LoRa test frame in NST mode 
+        (Supported version: v1.15 - v1.21)
 
         :param nstack: OFF, ON
 
         :return: ACK on success, NAK on failure
         
         '''
-        cmdNstAck = nstack
-        if cmdNstAck == 'OFF':
-            cmdSetNstAck = 'CONF:PROTOCOL:ACK OFF' + '\n'
-            result = RwcSerialSetup.transceive(self, cmdSetNstAck)
-            return result
-        elif cmdNstAck == 'ON':
-            cmdSetNstAck = 'CONF:PROTOCOL:ACK ON' + '\n'
+        nstAckList = ['OFF', 'ON']
+        cmdSupportedVersion = ['1.150', '1.160', '1.170']
+        verStatus = self.validate_sys_swversion(cmdSupportedVersion)
+
+        if verStatus and nstack in nstAckList:
+            cmdSetNstAck = 'CONF:PROTOCOL:ACK ' + nstack + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetNstAck)
             return result
         else:
@@ -2756,33 +3017,38 @@ class RWCTesterApi(RwcSerialSetup):
 
     def protocol_getnstack(self):
         '''
-        Read the ACK field of LoRa test frame in NST mode
+        Read the ACK field of LoRa test frame in NST mode 
+        (Supported version: v1.15 - v1.17)
 
         :param: Query only
 
         :return: It returns the NST ACK status; NAK on failure
         
         '''
-        cmdGetNstAck = 'READ:PROTOCOL:ACK?' + '\n'
-        result = RwcSerialSetup.transceive(self, cmdGetNstAck)
-        return result
+        cmdSupportedVersion = ['1.150', '1.160', '1.170']
+        verStatus = self.validate_sys_swversion(cmdSupportedVersion)
+
+        if verStatus:
+            cmdGetNstAck = 'READ:PROTOCOL:ACK?' + '\n'
+            result = RwcSerialSetup.transceive(self, cmdGetNstAck)
+            return result
 
     def protocol_setnst_adrackreq(self, adrackreq):
         '''
-        Configure the ADRACKReq field of LoRa test frame in NST mode
+        Configure the ADRACKReq field of LoRa test frame in NST mode 
+        (Supported version: v1.15 - v1.17)
 
         :param adrackreq: OFF, ON
 
         :return: ACK on success, NAK on failure
         
         '''
-        cmdAdrAckReq = adrackreq
-        if cmdAdrAckReq == 'OFF':
-            cmdSetAdrAckReq = 'CONF:PROTOCOL:ADR_ACK_REQ OFF' + '\n'
-            result = RwcSerialSetup.transceive(self, cmdSetAdrAckReq)
-            return result
-        elif cmdAdrAckReq == 'ON':
-            cmdSetAdrAckReq = 'CONF:PROTOCOL:ADR_ACK_REQ ON' + '\n'
+        adrAckReqList = ['OFF', 'ON']
+        cmdSupportedVersion = ['1.150', '1.160', '1.170']
+        verStatus = self.validate_sys_swversion(cmdSupportedVersion)
+
+        if verStatus and adrackreq in adrAckReqList:
+            cmdSetAdrAckReq = 'CONF:PROTOCOL:ADR_ACK_REQ ' + adrackreq + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetAdrAckReq)
             return result
         else:
@@ -2790,33 +3056,38 @@ class RWCTesterApi(RwcSerialSetup):
 
     def protocol_getnst_adrackreq(self):
         '''
-        Read the ADRACKReq field of LoRa test frame in NST mode
+        Read the ADRACKReq field of LoRa test frame in NST mode 
+        (Supported version: v1.15 - v1.17)
 
         :param: Query only
 
         :return: It returns the ADRACKReq status; NAK on failure
         
         '''
-        cmdGetNstAdrAckReq = 'READ:PROTOCOL:ADR_ACK_REQ?' + '\n'
-        result = RwcSerialSetup.transceive(self, cmdGetNstAdrAckReq)
-        return result
+        cmdSupportedVersion = ['1.150', '1.160', '1.170']
+        verStatus = self.validate_sys_swversion(cmdSupportedVersion)
+
+        if verStatus:
+            cmdGetNstAdrAckReq = 'READ:PROTOCOL:ADR_ACK_REQ?' + '\n'
+            result = RwcSerialSetup.transceive(self, cmdGetNstAdrAckReq)
+            return result
 
     def protocol_setnstfpending(self, fpending):
         '''
-        Configure the FPending field of LoRa test frame in NST mode
+        Configure the FPending field of LoRa test frame in NST mode 
+        (Supported version: v1.15 - v1.17)
 
         :param fpending: OFF, ON
 
         :return: ACK on success, NAK on failure
         
         '''
-        cmdNstFpending = fpending
-        if cmdNstFpending == 'OFF':
-            cmdSetNstFpending = 'CONF:PROTOCOL:FPENDING OFF' + '\n'
-            result = RwcSerialSetup.transceive(self, cmdSetNstFpending)
-            return result
-        elif cmdNstFpending == 'ON':
-            cmdSetNstFpending = 'CONF:PROTOCOL:FPENDING ON' + '\n'
+        fpendingList = ['OFF', 'ON']
+        cmdSupportedVersion = ['1.150', '1.160', '1.170']
+        verStatus = self.validate_sys_swversion(cmdSupportedVersion)
+
+        if verStatus and fpending in fpendingList:
+            cmdSetNstFpending = 'CONF:PROTOCOL:FPENDING ' + fpending + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetNstFpending)
             return result
         else:
@@ -2824,16 +3095,21 @@ class RWCTesterApi(RwcSerialSetup):
 
     def protocol_getnstfpending(self):
         '''
-        Read the FPending field of LoRa test frame in NST mode
+        Read the FPending field of LoRa test frame in NST mode 
+        (Supported version: v1.15 - v1.17)
 
         :param: Query only
 
         :return: It returns the NST Fpending status; NAK on failure
         
         '''
-        cmdGetNstFpending = 'READ:PROTOCOL:FPENDING?' + '\n'
-        result = RwcSerialSetup.transceive(self, cmdGetNstFpending)
-        return result
+        cmdSupportedVersion = ['1.150', '1.160', '1.170']
+        verStatus = self.validate_sys_swversion(cmdSupportedVersion)
+
+        if verStatus:
+            cmdGetNstFpending = 'READ:PROTOCOL:FPENDING?' + '\n'
+            result = RwcSerialSetup.transceive(self, cmdGetNstFpending)
+            return result
 
     def protocol_setedtperiodiclink(self, periodicdownlink):
         '''
@@ -2846,18 +3122,18 @@ class RWCTesterApi(RwcSerialSetup):
         '''
         cmdEdtPeriodicDownlink = periodicdownlink
         if cmdEdtPeriodicDownlink == 'NONE':
-            cmdSetEdtPeriodicDownlink \
-            = 'CONF:PROTOCOL:PERIODIC_DOWNLINK NONE' + '\n'
+            cmdSetEdtPeriodicDownlink = 'CONF:PROTOCOL:PERIODIC_DOWNLINK NONE' \
+                                            + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetEdtPeriodicDownlink)
             return result
         elif cmdEdtPeriodicDownlink == 'CONFIRMED_DOWN':
-            cmdSetEdtPeriodicDownlink \
-            = 'CONF:PROTOCOL:PERIODIC_DOWNLINK CONFIRMED_DOWN' + '\n'
+            cmdSetEdtPeriodicDownlink = 'CONF:PROTOCOL:PERIODIC_DOWNLINK CONFIRMED_DOWN' \
+                                            + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetEdtPeriodicDownlink)
             return result
         elif cmdEdtPeriodicDownlink == 'UNCONFIRMED_DOWN':
-            cmdSetEdtPeriodicDownlink \
-            = 'CONF:PROTOCOL:PERIODIC_DOWNLINK UNCONFIRMED_DOWN' + '\n'
+            cmdSetEdtPeriodicDownlink = 'CONF:PROTOCOL:PERIODIC_DOWNLINK UNCONFIRMED_DOWN' \
+                                            + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetEdtPeriodicDownlink)
             return result
         else:
@@ -2869,8 +3145,8 @@ class RWCTesterApi(RwcSerialSetup):
 
         :param: Query only
 
-        :return: It returns the periodic downlink mode for class B; NAK on
-                 failure
+        :return: It returns the periodic downlink mode for class B; 
+                 NAK on failure
         
         '''
         cmdGetEdtPeriodicDownlink = 'READ:PROTOCOL:PERIODIC_DOWNLINK?' + '\n'
@@ -3016,7 +3292,8 @@ class RWCTesterApi(RwcSerialSetup):
         if value >= -1000 and value <= 1000:
             cmdParam = str(value)
             cmdSetPingTimeOffset = 'CONF:PROTOCOL:PING_TIME_OFFSET ' \
-            + cmdParam + '\n'
+                                    + cmdParam \
+                                    + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetPingTimeOffset)
             return result
         else:
@@ -3047,7 +3324,8 @@ class RWCTesterApi(RwcSerialSetup):
         slotlist = ['RX1', 'RX2']
         if slotvalue in slotlist:
             cmdSetMacRspSlot = 'CONF:PROTOCOL:MAC_RSP_SLOT ' \
-            + slotvalue + '\n'
+                                + slotvalue \
+                                + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetMacRspSlot)
             return result
         else:
@@ -3127,7 +3405,8 @@ class RWCTesterApi(RwcSerialSetup):
 
         :Parameters: Query only
 
-        :return: It returns the activation procedure status; NAK on failure
+        :return: It returns the activation procedure status; 
+                 NAK on failure
         
         '''
         cmdGetActivationStatus = 'READ:LINK:ACTIVATION_STATUS?' + '\n'
@@ -3269,6 +3548,10 @@ class RWCTesterApi(RwcSerialSetup):
             cmdSetMacField = 'CONF:LINK:MAC_CMD_FIELD FOPTS' + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetMacField)
             return result
+        elif cmdMacField == 'FOPTION':
+            cmdSetMacField = 'CONF:LINK:MAC_CMD_FIELD FOPTS' + '\n'
+            result = RwcSerialSetup.transceive(self, cmdSetMacField)
+            return result
         else:
             raise Exception('Invalid parameter received.')
 
@@ -3294,8 +3577,9 @@ class RWCTesterApi(RwcSerialSetup):
                        RX_PARAM_SETUP, TX_PARAM_SETUP, NEW_CHANNEL, 
                        DL_CHANNEL, RX_TIMING_SETUP, USER_DEFINED, 
                        ACTIVATE_TM, DEACTIVATE_TM, CONFIRMED_TM,
-                       UNCONFIRMED_TM, ECHO_REQUEST_TM, TRIGGER_JOIN_REQ_TM,
-                       ENABLE_CW_MODE_TM, BEACON_FREQ, PING_SLOT_CH, 
+                       UNCONFIRMED_TM, ECHO_REQUEST_TM, 
+                       TRIGGER_JOIN_REQ_TM, ENABLE_CW_MODE_TM, 
+                       BEACON_FREQ, PING_SLOT_CH, 
                        FORCE_REJOIN, REJOIN_SETUP, ADR_SETUP
 
                        For GWT, LINK_CHECK, DEVICE_TIME, DEVICE_MODE, 
@@ -3309,127 +3593,177 @@ class RWCTesterApi(RwcSerialSetup):
         
         if cmdMacDut == 'DEV_STATUS':
             cmdSetMacDut = 'CONF:LINK:INSTANT_MAC_CMD ' \
-            + cmdMacNum + ' DEV_STATUS' + '\n'
+                            + cmdMacNum \
+                            + ' DEV_STATUS' \
+                            + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetMacDut)
             return result
         elif cmdMacDut == 'LINK_ADR':
             cmdSetMacDut = 'CONF:LINK:INSTANT_MAC_CMD ' \
-            + cmdMacNum + ' LINK_ADR' + '\n'
+                            + cmdMacNum \
+                            + ' LINK_ADR' \
+                            + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetMacDut)
             return result
         elif cmdMacDut == 'DUTY_CYCLE':
             cmdSetMacDut = 'CONF:LINK:INSTANT_MAC_CMD ' \
-            + cmdMacNum + ' DUTY_CYCLE' + '\n'
+                            + cmdMacNum \
+                            + ' DUTY_CYCLE' \
+                            + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetMacDut)
             return result
         elif cmdMacDut == 'RX_PARAM_SETUP':
             cmdSetMacDut = 'CONF:LINK:INSTANT_MAC_CMD ' \
-            + cmdMacNum + ' RX_PARAM_SETUP' + '\n'
+                            + cmdMacNum \
+                            + ' RX_PARAM_SETUP' \
+                            + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetMacDut)
             return result
         elif cmdMacDut == 'TX_PARAM_SETUP':
             cmdSetMacDut = 'CONF:LINK:INSTANT_MAC_CMD ' \
-            + cmdMacNum + ' TX_PARAM_SETUP' + '\n'
+                            + cmdMacNum \
+                            + ' TX_PARAM_SETUP' \
+                            + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetMacDut)
             return result
         elif cmdMacDut == 'NEW_CHANNEL':
             cmdSetMacDut = 'CONF:LINK:INSTANT_MAC_CMD ' \
-            + cmdMacNum + ' NEW_CHANNEL' + '\n'
+                            + cmdMacNum \
+                            + ' NEW_CHANNEL' \
+                            + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetMacDut)
             return result
         elif cmdMacDut == 'DL_CHANNEL':
             cmdSetMacDut = 'CONF:LINK:INSTANT_MAC_CMD ' \
-            + cmdMacNum + ' DL_CHANNEL' + '\n'
+                            + cmdMacNum \
+                            + ' DL_CHANNEL' \
+                            + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetMacDut)
             return result
         elif cmdMacDut == 'RX_TIMING_SETUP':
             cmdSetMacDut = 'CONF:LINK:INSTANT_MAC_CMD ' \
-            + cmdMacNum + ' RX_TIMING_SETUP' + '\n'
+                            + cmdMacNum \
+                            + ' RX_TIMING_SETUP' \
+                            + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetMacDut)
             return result
         elif cmdMacDut == 'USER_DEFINED':
             cmdSetMacDut = 'CONF:LINK:INSTANT_MAC_CMD ' \
-            + cmdMacNum + ' USER_DEFINED' + '\n'
+                            + cmdMacNum \
+                            + ' USER_DEFINED' \
+                            + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetMacDut)
             return result
         elif cmdMacDut == 'ACTIVATE_TM':
             cmdSetMacDut = 'CONF:LINK:INSTANT_MAC_CMD ' \
-            + cmdMacNum + ' ACTIVATE_TM' + '\n'
+                            + cmdMacNum \
+                            + ' ACTIVATE_TM' \
+                            + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetMacDut)
             return result
         elif cmdMacDut == 'DEACTIVATE_TM':
             cmdSetMacDut = 'CONF:LINK:INSTANT_MAC_CMD ' \
-            + cmdMacNum + ' DEACTIVATE_TM' + '\n'
+                            + cmdMacNum \
+                            + ' DEACTIVATE_TM' \
+                            + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetMacDut)
             return result
         elif cmdMacDut == 'CONFIRMED_TM':
             cmdSetMacDut = 'CONF:LINK:INSTANT_MAC_CMD ' \
-            + cmdMacNum + ' CONFIRMED_TM' + '\n'
+                            + cmdMacNum \
+                            + ' CONFIRMED_TM' \
+                            + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetMacDut)
             return result
         elif cmdMacDut == 'UNCONFIRMED_TM':
             cmdSetMacDut = 'CONF:LINK:INSTANT_MAC_CMD ' \
-            + cmdMacNum + ' UNCONFIRMED_TM' + '\n'
+                            + cmdMacNum \
+                            + ' UNCONFIRMED_TM' \
+                            + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetMacDut)
             return result
         elif cmdMacDut == 'ECHO_REQUEST_TM':
             cmdSetMacDut = 'CONF:LINK:INSTANT_MAC_CMD ' \
-            + cmdMacNum + ' ECHO_REQUEST_TM' + '\n'
+                            + cmdMacNum \
+                            + ' ECHO_REQUEST_TM' \
+                            + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetMacDut)
             return result
         elif cmdMacDut == 'TRIGGER_JOIN_REQ_TM':
             cmdSetMacDut = 'CONF:LINK:INSTANT_MAC_CMD ' \
-            + cmdMacNum + ' TRIGGER_JOIN_REQ_TM' + '\n'
+                            + cmdMacNum \
+                            + ' TRIGGER_JOIN_REQ_TM' \
+                            + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetMacDut)
             return result
         elif cmdMacDut == 'ENABLE_CW_MODE_TM':
             cmdSetMacDut = 'CONF:LINK:INSTANT_MAC_CMD ' \
-            + cmdMacNum + ' ENABLE_CW_MODE_TM' + '\n'
+                            + cmdMacNum \
+                            + ' ENABLE_CW_MODE_TM' \
+                            + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetMacDut)
             return result
         elif cmdMacDut == 'BEACON_FREQ':
             cmdSetMacDut = 'CONF:LINK:INSTANT_MAC_CMD ' \
-            + cmdMacNum + ' BEACON_FREQ' + '\n'
+                            + cmdMacNum \
+                            + ' BEACON_FREQ' \
+                            + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetMacDut)
             return result
         elif cmdMacDut == 'PING_SLOT_CH':
             cmdSetMacDut = 'CONF:LINK:INSTANT_MAC_CMD ' \
-            + cmdMacNum + ' PING_SLOT_CH' + '\n'
+                            + cmdMacNum \
+                            + ' PING_SLOT_CH' \
+                            + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetMacDut)
             return result
         elif cmdMacDut == 'FORCE_REJOIN':
             cmdSetMacDut = 'CONF:LINK:INSTANT_MAC_CMD ' \
-            + cmdMacNum + ' FORCE_REJOIN' + '\n'
+                            + cmdMacNum \
+                            + ' FORCE_REJOIN' \
+                            + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetMacDut)
             return result
         elif cmdMacDut == 'REJOIN_SETUP':
             cmdSetMacDut = 'CONF:LINK:INSTANT_MAC_CMD ' \
-            + cmdMacNum + ' REJOIN_SETUP' + '\n'
+                            + cmdMacNum \
+                            + ' REJOIN_SETUP' \
+                            + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetMacDut)
             return result
         elif cmdMacDut == 'ADR_SETUP':
             cmdSetMacDut = 'CONF:LINK:INSTANT_MAC_CMD ' \
-            + cmdMacNum + ' ADR_SETUP' + '\n'
+                            + cmdMacNum \
+                            + ' ADR_SETUP' \
+                            + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetMacDut)
             return result
         elif cmdMacDut == 'LINK_CHECK':
             cmdSetMacDut = 'CONF:LINK:INSTANT_MAC_CMD ' \
-            + cmdMacNum + ' LINK_CHECK' + '\n'
+                            + cmdMacNum \
+                            + ' LINK_CHECK' \
+                            + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetMacDut)
             return result
         elif cmdMacDut == 'DEVICE_TIME':
             cmdSetMacDut = 'CONF:LINK:INSTANT_MAC_CMD ' \
-            + cmdMacNum + ' DEVICE_TIME' + '\n'
+                            + cmdMacNum \
+                            + ' DEVICE_TIME' \
+                            + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetMacDut)
             return result
         elif cmdMacDut == 'DEVICE_MODE':
             cmdSetMacDut = 'CONF:LINK:INSTANT_MAC_CMD ' \
-            + cmdMacNum + ' DEVICE_MODE' + '\n'
+                            + cmdMacNum \
+                            + ' DEVICE_MODE' \
+                            + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetMacDut)
             return result
         elif cmdMacDut == 'RESET_IND':
             cmdSetMacDut = 'CONF:LINK:INSTANT_MAC_CMD ' \
-            + cmdMacNum + ' RESET_IND' + '\n'
+                            + cmdMacNum \
+                            + ' RESET_IND' \
+                            + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetMacDut)
             return result
         else:
@@ -3473,7 +3807,8 @@ class RWCTesterApi(RwcSerialSetup):
 
     def link_getmic_errdisplay(self):
         '''
-        Read the flag whether to display erroneous messages in link Analyzer
+        Read the flag whether to display erroneous messages in 
+        link Analyzer
 
         :param: Query only
 
@@ -3490,12 +3825,16 @@ class RWCTesterApi(RwcSerialSetup):
 
         :param macnum: MAC Command Number
         :param drval: DR0_SF12BW125, DR1_SF11BW125, DR2_SF10BW125, 
-        DR3_SF9BW125, DR4_SF8BW125, DR5_SF7BW125, DR6_SF7BW250, DR7_FSK50
+                      DR3_SF9BW125, DR4_SF8BW125, DR5_SF7BW125, 
+                      DR6_SF7BW250, DR7_FSK50
 
         :return: ACK on success, NAK on failure
         
         '''
         cmdMacNum = str(macnum)
+        cmdVersion = self.query_sysversion()
+        numVersion = float(cmdVersion)
+        lowVersionDrvallist = [0, 1, 2, 3, 4, 5, 6, 7]
         drvallist = [
             'DR0_SF12BW125', 
             'DR1_SF11BW125', 
@@ -3504,12 +3843,26 @@ class RWCTesterApi(RwcSerialSetup):
             'DR4_SF8BW125', 
             'DR5_SF7BW125', 
             'DR6_SF7BW250', 
-            'DR7_FSK50'
-            ]
-        if drval in drvallist:
+            'DR7_FSK50']
+        
+        if (cmdVersion == '1.150' 
+                or cmdVersion == '1.160') and (int(drval) 
+                    in lowVersionDrvallist):
             cmdDrVal = str(drval)
             cmdSetAdrDrVal = 'CONF:LINK:ADR_DR ' \
-            + cmdMacNum + ' ' + cmdDrVal + '\n'
+                                + cmdMacNum \
+                                + ' ' \
+                                + cmdDrVal \
+                                + '\n'
+            result = RwcSerialSetup.transceive(self, cmdSetAdrDrVal)
+            return result
+        elif numVersion > 1.160 and drval in drvallist:
+            cmdDrVal = str(drval)
+            cmdSetAdrDrVal = 'CONF:LINK:ADR_DR ' \
+                                + cmdMacNum \
+                                + ' ' \
+                                + cmdDrVal \
+                                + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetAdrDrVal)
             return result
         else:
@@ -3543,7 +3896,10 @@ class RWCTesterApi(RwcSerialSetup):
         if txpowval >= 0 and txpowval <= 7:
             cmdTxPowVal = str(txpowval)
             cmdSetTxPowVal = 'CONF:LINK:ADR_TXPOW ' \
-            + cmdMacNum + ' ' + cmdTxPowVal + '\n'
+                                + cmdMacNum \
+                                + ' ' \
+                                + cmdTxPowVal \
+                                + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetTxPowVal)
             return result
         else:
@@ -3563,7 +3919,7 @@ class RWCTesterApi(RwcSerialSetup):
         result = RwcSerialSetup.transceive(self, cmdGetTxPowVal)
         return result
 
-    def link_setadr_channelmask(self, index, macnum, value): #index(1 - 3)
+    def link_setadr_channelmask(self, index, macnum, value):
         '''
         Configure CH_MASK value for LinkADRReq
 
@@ -3581,7 +3937,8 @@ class RWCTesterApi(RwcSerialSetup):
             if (cmdValue >= 0 and cmdValue <= 2**8 - 1):
                 cmdHexValue = hex(cmdValue)
                 cmdSetAdrChMask = 'CONF:LINK:ADR_CH_MASK ' \
-                + cmdMacNum + ' ' + cmdHexValue + '\n'
+                                    + cmdMacNum + ' ' \
+                                    + cmdHexValue + '\n'
                 result = RwcSerialSetup.transceive(self, cmdSetAdrChMask)
                 return result
             else:
@@ -3590,7 +3947,9 @@ class RWCTesterApi(RwcSerialSetup):
             if (cmdValue >= 0 and cmdValue <= 2**8 - 1):
                 cmdHexValue = hex(cmdValue)
                 cmdSetAdrChMask = 'CONF:LINK:ADR_CH_MASK' \
-                + str(cmdIndex) + ' ' + cmdMacNum + ' ' + cmdHexValue + '\n'
+                                    + str(cmdIndex) + ' ' \
+                                    + cmdMacNum + ' ' \
+                                    + cmdHexValue + '\n'
                 result = RwcSerialSetup.transceive(self, cmdSetAdrChMask)
                 return result
             else:
@@ -3598,7 +3957,7 @@ class RWCTesterApi(RwcSerialSetup):
         else:
             raise Exception('Invalid parameter received.')
 
-    def link_getadr_channelmask(self, index, macnum): #index(1 - 3)
+    def link_getadr_channelmask(self, index, macnum):
         '''
         Read CH_MASK value for LinkADRReq
 
@@ -3622,7 +3981,7 @@ class RWCTesterApi(RwcSerialSetup):
         else:
             raise Exception('Invalid parameter received.')
 
-    def link_setadr_maskctrl(self, index, macnum, value): #index(1 - 3)
+    def link_setadr_maskctrl(self, index, macnum, value):
         '''
         Configure MASK_CTRL value for LinkADRReq
 
@@ -3640,7 +3999,8 @@ class RWCTesterApi(RwcSerialSetup):
             if (cmdValue >= 0 and cmdValue <= 2**8 - 1):
                 cmdHexValue = hex(cmdValue)
                 cmdSetAdrMaskCtrl = 'CONF:LINK:ADR_MASK_CTRL ' \
-                + cmdMacNum + ' ' + cmdHexValue + '\n'
+                                        + cmdMacNum + ' ' \
+                                        + cmdHexValue + '\n'
                 result = RwcSerialSetup.transceive(self, cmdSetAdrMaskCtrl)
                 return result
             else:
@@ -3649,8 +4009,9 @@ class RWCTesterApi(RwcSerialSetup):
             if (cmdValue >= 0 and cmdValue <= 2**8 - 1):
                 cmdHexValue = hex(cmdValue)
                 cmdSetAdrMaskCtrl = 'CONF:LINK:ADR_MASK' \
-                + str(cmdIndex) + '_CTRL ' + cmdMacNum \
-                + ' ' + cmdHexValue + '\n'
+                                        + str(cmdIndex) + '_CTRL ' \
+                                        + cmdMacNum + ' ' \
+                                        + cmdHexValue + '\n'
                 result = RwcSerialSetup.transceive(self, cmdSetAdrMaskCtrl)
                 return result
             else:
@@ -3658,7 +4019,7 @@ class RWCTesterApi(RwcSerialSetup):
         else:
             raise Exception('Invalid parameter received.')
 
-    def link_getadr_maskctrl(self, index, macnum): #index(1 - 3)
+    def link_getadr_maskctrl(self, index, macnum):
         '''
         Read MASK_CTRL value for LinkADRReq
 
@@ -3676,7 +4037,8 @@ class RWCTesterApi(RwcSerialSetup):
             return result
         elif (cmdIndex > 1 and cmdIndex <= 3):
             cmdGetAdrMaskCtrl = 'READ:LINK:ADR_MASK' \
-            + str(cmdIndex) + '_CTRL? ' + cmdMacNum + '\n'
+                                    + str(cmdIndex) + '_CTRL? ' \
+                                    + cmdMacNum + '\n'
             result = RwcSerialSetup.transceive(self, cmdGetAdrMaskCtrl)
             return result
         else:
@@ -3684,7 +4046,8 @@ class RWCTesterApi(RwcSerialSetup):
 
     def link_setadr_morechannelmask(self, chmaskval):
         '''
-        Configure ADD_MORE_CH_MASK value for LinkADRReq for CLAA mode only
+        Configure ADD_MORE_CH_MASK value for LinkADRReq for 
+        CLAA mode only
 
         :param chmaskval: OFF, ON
 
@@ -3723,6 +4086,7 @@ class RWCTesterApi(RwcSerialSetup):
         :param value: 0x01 ~ 0x80
 
         :return: ACK on success, NAK on failure
+
         '''
         cmdValue = int(value)
         if (cmdValue >= 1 and cmdValue <= 2**7):
@@ -3742,6 +4106,7 @@ class RWCTesterApi(RwcSerialSetup):
         :parameters: N/A (Query only)
 
         :return: It returns CH_MASK value; NAK on failure
+
         '''
         cmdGetAdrChMaskOptDr = 'READ:LINK:ADR_CH_MASK_OPT_DR?' + '\n'
         result = RwcSerialSetup.transceive(self, cmdGetAdrChMaskOptDr)
@@ -3761,7 +4126,8 @@ class RWCTesterApi(RwcSerialSetup):
         if nbtransval >= 0 and nbtransval <= 15:
             cmdNbTransVal = str(nbtransval)
             cmdSetNbTransVal = 'CONF:LINK:ADR_NB_TRANS ' \
-            + cmdMacNum + ' ' + cmdNbTransVal + '\n'
+                                    + cmdMacNum + ' ' \
+                                    + cmdNbTransVal + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetNbTransVal)
             return result
         else:
@@ -3795,7 +4161,8 @@ class RWCTesterApi(RwcSerialSetup):
         if dutycycleval >= 0 and dutycycleval <= 15:
             cmdMaxDutyCycleVal = str(dutycycleval)
             cmdSetMaxDutyCycleVal = 'CONF:LINK:MAX_DUTY_CYCLE ' \
-            + cmdMacNum + ' ' + cmdMaxDutyCycleVal + '\n'
+                                        + cmdMacNum + ' ' \
+                                        + cmdMaxDutyCycleVal + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetMaxDutyCycleVal)
             return result
         else:
@@ -3822,19 +4189,24 @@ class RWCTesterApi(RwcSerialSetup):
 
         :param macnum: MAC Command Number
         :param value: 8, 10, 12, 13, 14, 16, 18, 20, 21, 24, 26, 27, 29, 
-        30, 33, 36
+                      30, 33, 36
 
         :return: ACK on success, NAK on failure
         
         '''
         cmdMacNum = str(macnum)
-        eirplist \
-        = [8, 10, 12, 13, 14, 16, 18, 20, 21, 24, 26, 27, 29, 30, 33, 36]
+        eirplist = [
+            8, 10, 12, 13, 
+            14, 16, 18, 20, 
+            21, 24, 26, 27, 
+            29, 30, 33, 36]
         cmdValue = int(value)
+
         if cmdValue in eirplist:
             cmdEirpValue = str(cmdValue)
             cmdSetMaxEirpVal = 'CONF:LINK:MAX_EIRP ' \
-            + cmdMacNum + ' ' + cmdEirpValue + '\n'
+                                + cmdMacNum + ' ' \
+                                + cmdEirpValue + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetMaxEirpVal)
             return result
         else:
@@ -3868,12 +4240,14 @@ class RWCTesterApi(RwcSerialSetup):
         cmdUlDwellTimeVal = dwelltimeval
         if cmdUlDwellTimeVal == 'NO_LIMIT':
             cmdSetUlDwellTimeVal = 'CONF:LINK:UL_DWELL_TIME ' \
-            + cmdMacNum + ' NO_LIMIT' + '\n'
+                                    + cmdMacNum \
+                                    + ' NO_LIMIT' + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetUlDwellTimeVal)
             return result
         elif cmdUlDwellTimeVal == '400ms':
             cmdSetUlDwellTimeVal = 'CONF:LINK:UL_DWELL_TIME ' \
-            + cmdMacNum + ' 400ms' + '\n'
+                                    + cmdMacNum \
+                                    + ' 400ms' + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetUlDwellTimeVal)
             return result
         else:
@@ -3907,12 +4281,14 @@ class RWCTesterApi(RwcSerialSetup):
         cmdDlDwellTimeVal = dwelltimeval
         if cmdDlDwellTimeVal == 'NO_LIMIT':
             cmdSetDlDwellTimeVal = 'CONF:LINK:DL_DWELL_TIME ' \
-            + cmdMacNum + ' NO_LIMIT' + '\n'
+                                    + cmdMacNum \
+                                    + ' NO_LIMIT' + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetDlDwellTimeVal)
             return result
         elif cmdDlDwellTimeVal == '400ms':
             cmdSetDlDwellTimeVal = 'CONF:LINK:DL_DWELL_TIME ' \
-            + cmdMacNum + ' 400ms' + '\n'
+                                    + cmdMacNum \
+                                    + ' 400ms' + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetDlDwellTimeVal)
             return result
         else:
@@ -3946,12 +4322,14 @@ class RWCTesterApi(RwcSerialSetup):
         cmdNewChMode = mode
         if cmdNewChMode == 'CREATE':
             cmdSetNewChMode = 'CONF:LINK:NEW_CH_MODE ' \
-            + cmdMacNum + ' CREATE' + '\n'
+                                + cmdMacNum \
+                                + ' CREATE' + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetNewChMode)
             return result
         elif cmdNewChMode == 'DELETE':
             cmdSetNewChMode = 'CONF:LINK:NEW_CH_MODE ' \
-            + cmdMacNum + ' DELETE' + '\n'
+                                + cmdMacNum \
+                                + ' DELETE' + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetNewChMode)
             return result
         else:
@@ -3985,7 +4363,8 @@ class RWCTesterApi(RwcSerialSetup):
         if chindex >= 0 and chindex <= 7:
             cmdNewChannelIndex = str(chindex)
             cmdSetNewChannelIndexVal = 'CONF:LINK:NEW_CH_INDEX ' \
-            + cmdMacNum + ' ' + cmdNewChannelIndex + '\n'
+                                        + cmdMacNum + ' ' \
+                                        + cmdNewChannelIndex + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetNewChannelIndexVal)
             return result
         else:
@@ -4002,7 +4381,7 @@ class RWCTesterApi(RwcSerialSetup):
         '''
         cmdMacNum = str(macnum)
         cmdGetNewChannelIndexVal = 'READ:LINK:NEW_CH_INDEX? ' \
-        + cmdMacNum + '\n'
+                                    + cmdMacNum + '\n'
         result = RwcSerialSetup.transceive(self, cmdGetNewChannelIndexVal)
         return result
 
@@ -4020,7 +4399,8 @@ class RWCTesterApi(RwcSerialSetup):
         if drval >= 0 and drval <= 7:
             cmdNewChannelMaxDr = str(drval)
             cmdSetNewChannelMaxDrVal = 'CONF:LINK:NEW_CH_MAX_DR ' \
-            + cmdMacNum + ' ' + cmdNewChannelMaxDr + '\n'
+                                        + cmdMacNum + ' ' \
+                                        + cmdNewChannelMaxDr + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetNewChannelMaxDrVal)
             return result
         else:
@@ -4037,7 +4417,7 @@ class RWCTesterApi(RwcSerialSetup):
         '''
         cmdMacNum = str(macnum)
         cmdGetNewChannelMaxDrVal = 'READ:LINK:NEW_CH_MAX_DR? ' \
-        + cmdMacNum + '\n'
+                                    + cmdMacNum + '\n'
         result = RwcSerialSetup.transceive(self, cmdGetNewChannelMaxDrVal)
         return result
 
@@ -4055,7 +4435,8 @@ class RWCTesterApi(RwcSerialSetup):
         if drval >= 0 and drval <= 7:
             cmdNewChannelMinDr = str(drval)
             cmdSetNewChannelMinDrVal = 'CONF:LINK:NEW_CH_MIN_DR ' \
-            + cmdMacNum + ' ' + cmdNewChannelMinDr + '\n'
+                                        + cmdMacNum + ' ' \
+                                        + cmdNewChannelMinDr + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetNewChannelMinDrVal)
             return result
         else:
@@ -4072,7 +4453,7 @@ class RWCTesterApi(RwcSerialSetup):
         '''
         cmdMacNum = str(macnum)
         cmdGetNewChannelMinDrVal = 'READ:LINK:NEW_CH_MIN_DR? ' \
-        + cmdMacNum + '\n'
+                                    + cmdMacNum + '\n'
         result = RwcSerialSetup.transceive(self, cmdGetNewChannelMinDrVal)
         return result
 
@@ -4120,7 +4501,8 @@ class RWCTesterApi(RwcSerialSetup):
         if chindex >= 0 and chindex <= 7:
             cmdDlChannelIndex = str(chindex)
             cmdSetDlChannelIndexVal = 'CONF:LINK:DL_CH_INDEX ' \
-            + cmdMacNum + ' ' + cmdDlChannelIndex + '\n'
+                                        + cmdMacNum + ' ' \
+                                        + cmdDlChannelIndex + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetDlChannelIndexVal)
             return result
         else:
@@ -4151,13 +4533,16 @@ class RWCTesterApi(RwcSerialSetup):
         
         '''
         cmdMacNum = str(macnum)
-        if (chfreq >= 400 and chfreq <= 510
-        ) or (chfreq >= 862 and chfreq <= 960):
+        if (chfreq >= 400 
+                and chfreq <= 510) or (chfreq >= 862 
+                    and chfreq <= 960):
             cmdDlChannelFrequency = str(chfreq)
             cmdSetDlChannelFrequencyVal = 'CONF:LINK:DL_CH_FREQ ' \
-            + cmdMacNum + ' ' + cmdDlChannelFrequency + '\n'
-            result \
-            = RwcSerialSetup.transceive(self, cmdSetDlChannelFrequencyVal)
+                                            + cmdMacNum + ' ' \
+                                            + cmdDlChannelFrequency + '\n'
+            result = RwcSerialSetup.transceive(
+                self, 
+                cmdSetDlChannelFrequencyVal)
             return result
         else:
             raise Exception('Invalid parameter received.')
@@ -4175,6 +4560,48 @@ class RWCTesterApi(RwcSerialSetup):
         cmdGetChannelFrequency = 'READ:LINK:DL_CH_FREQ? ' + cmdMacNum + '\n'
         result = RwcSerialSetup.transceive(self, cmdGetChannelFrequency)
         return result
+
+    def link_setpayloadtype(self, payloadtype):
+        '''
+        Configure the message type of user-defined MAC command
+        (Supported version: v1.15)
+
+        :param payloadtype: 0000_0000, 1111_1111, 1111_0000, 
+                            1010_1010, PRBS, USER
+
+        :return: ACK on success, NAK on failure
+
+        '''
+        payloadTypeList = [
+            '0000_0000', '1111_1111', 
+            '1111_0000', '1010_1010', 
+            'PRBS', 'USER']
+        cmdSupportedVersion = ['1.150']
+        verStatus = self.validate_sys_swversion(cmdSupportedVersion)
+
+        if verStatus and payloadtype in payloadTypeList:
+            cmdSetPayloadType = 'CONF:LINK:PAYLOAD_TYPE ' + payloadtype + '\n'
+            result = RwcSerialSetup.transceive(self, cmdSetPayloadType)
+            return result
+        else:
+            raise Exception('Invalid link payload type parameter received')
+
+    def link_getpayloadtype(self):
+        '''
+        Read the message type of user-defined MAC command
+        (Supported version: v1.15)
+
+        :param: Query only
+
+        :return: It returns link payload type; NAK on failure
+
+        '''
+        cmdSupportedVersion = ['1.150']
+        verStatus = self.validate_sys_swversion(cmdSupportedVersion)
+        if verStatus:
+            cmdGetPayloadType = 'READ:LINK:PAYLOAD_TYPE?' + '\n'
+            result = RwcSerialSetup.transceive(self, cmdGetPayloadType)
+            return result
 
     def link_setfport(self, fport):
         '''
@@ -4208,7 +4635,8 @@ class RWCTesterApi(RwcSerialSetup):
 
     def link_setpayloadsize(self, length):
         '''
-        Configure the Message length in byte of user-defined MAC command
+        Configure the Message length in byte of user-defined 
+        MAC command
 
         :param length: 1 ~ 128
 
@@ -4240,13 +4668,13 @@ class RWCTesterApi(RwcSerialSetup):
         '''
         Configure the Message data of user-defined MAC command
 
-        :param value: 128-byte HEX value
+        :param value: 250-byte HEX value
 
         :return: ACK on success, NAK on failure
         
         '''
         cmdValue = int(value)
-        if (cmdValue >= 0 and cmdValue <= 2**128 -1) :
+        if (cmdValue >= 0 and cmdValue <= 2**250 -1) :
             cmdHexValue = hex(cmdValue)
             cmdSetPayload = 'CONF:LINK:PAYLOAD ' + cmdHexValue + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetPayload)
@@ -4269,7 +4697,8 @@ class RWCTesterApi(RwcSerialSetup):
 
     def link_setfoptssize(self, length):
         '''
-        Configure the Message length in byte of user-defined FOpts field
+        Configure the Message length in byte of user-defined 
+        FOpts field
 
         :param length: 1 ~ 15
 
@@ -4328,209 +4757,241 @@ class RWCTesterApi(RwcSerialSetup):
         result = RwcSerialSetup.transceive(self, cmdGetMsgData)
         return result
 
-    def link_setbeaconfrequency(self, macnum, freq):
+    def link_setbeaconfrequency(self, *args):
         '''
         Configure the frequency value of Beacon frame
 
-        :param macnum: MAC Command Number
-        :param freq: 0, 862 ~ 960 MHz
+        :param *args: For version below 1.17
+                      only frequency required (0, 862 ~ 960 MHz)
+
+                      For version 1.17 and above:
+                      first parameter should be a MAC command number,
+                      second parameter should be frequency 
+                      (0, 862 ~ 960 MHz)
 
         :return: ACK on success, NAK on failure
         
         '''
-        cmdMacNum = str(macnum)
-        if (freq == 0) or (freq >= 862 and freq <= 960):
-            cmdBeaconFrequency = str(freq)
+        if len(args) == 1 and (args[0] == 0 
+                or (args[0] >= 862 and args[0] <= 960)):
+            cmdFreq = str(args[0])
             cmdSetBeaconFrequencyVal = 'CONF:LINK:BEACON_FREQ ' \
-            + cmdMacNum + ' ' + cmdBeaconFrequency + '\n'
+                                        + cmdFreq + '\n'
+            result = RwcSerialSetup.transceive(self, cmdSetBeaconFrequencyVal)
+            return result
+        elif len(args) == 2 and (args[1] >= 400 
+                and args[1] <= 510) or (args[1] >= 862 and args[1] <= 960):
+            cmdMacNum = str(args[0])
+            cmdBeaconFrequency = str(args[1])
+            cmdSetBeaconFrequencyVal = 'CONF:LINK:BEACON_FREQ ' \
+                                        + cmdMacNum + ' ' \
+                                        + cmdBeaconFrequency + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetBeaconFrequencyVal)
             return result
         else:
             raise Exception('Invalid parameter received.')
 
-    def link_getbeaconfrequency(self, macnum):
+    def link_getbeaconfrequency(self, *args):
         '''
         Read the frequency value of Beacon frame
 
-        :param macnum: MAC Command Number
-        :param: Query only
+        :param *args: MAC Command Number required if version 1.17 and 
+                      above otherwise parameter not required
 
         :return: It returns the frequency value; NAK on failure
         
         '''
-        cmdMacNum = str(macnum)
-        cmdGetBeaconFrequency = 'READ:LINK:BEACON_FREQ? ' + cmdMacNum + '\n'
-        result = RwcSerialSetup.transceive(self, cmdGetBeaconFrequency)
-        return result
+        if len(args) == 0:
+            cmdGetBeaconFrequency = 'READ:LINK:BEACON_FREQ?' + '\n'
+            result = RwcSerialSetup.transceive(self, cmdGetBeaconFrequency)
+            return result
+        elif len(args) == 1:
+            cmdMacNum = str(args[0])
+            cmdGetBeaconFrequency = 'READ:LINK:BEACON_FREQ? ' \
+                                        + cmdMacNum + '\n'
+            result = RwcSerialSetup.transceive(self, cmdGetBeaconFrequency)
+            return result
+        else:
+            raise Exception('Invalid parameter received.')
 
-    #def link_setbeacondatarate(self, framedr):
-    #    '''
-    #    Configure the data rate of Beacon frame
-
-    #    :param framedr: DR_0 ~ DR_6
-
-    #    :return: ACK on success, NAK on failure
-        
-    #    '''
-    #    cmdFrameDr = framedr
-    #    if cmdFrameDr == 'DR_0':
-    #        cmdSetFrameDr = 'CONF:LINK:BEACON_DR DR_0' + '\n'
-    #        result = RwcSerialSetup.transceive(self, cmdSetFrameDr)
-    #        return result
-    #    elif cmdFrameDr == 'DR_1':
-    #        cmdSetFrameDr = 'CONF:LINK:BEACON_DR DR_1' + '\n'
-    #        result = RwcSerialSetup.transceive(self, cmdSetFrameDr)
-    #        return result
-    #    elif cmdFrameDr == 'DR_2':
-    #        cmdSetFrameDr = 'CONF:LINK:BEACON_DR DR_2' + '\n'
-    #        result = RwcSerialSetup.transceive(self, cmdSetFrameDr)
-    #        return result
-    #    elif cmdFrameDr == 'DR_3':
-    #        cmdSetFrameDr = 'CONF:LINK:BEACON_DR DR_3' + '\n'
-    #        result = RwcSerialSetup.transceive(self, cmdSetFrameDr)
-    #        return result
-    #    elif cmdFrameDr == 'DR_4':
-    #        cmdSetFrameDr = 'CONF:LINK:BEACON_DR DR_4' + '\n'
-    #        result = RwcSerialSetup.transceive(self, cmdSetFrameDr)
-    #        return result
-    #    elif cmdFrameDr == 'DR_5':
-    #        cmdSetFrameDr = 'CONF:LINK:BEACON_DR DR_5' + '\n'
-    #        result = RwcSerialSetup.transceive(self, cmdSetFrameDr)
-    #        return result
-    #    elif cmdFrameDr == 'DR_6':
-    #        cmdSetFrameDr = 'CONF:LINK:BEACON_DR DR_6' + '\n'
-    #        result = RwcSerialSetup.transceive(self, cmdSetFrameDr)
-    #        return result
-    #    else:
-    #        raise Exception('Invalid parameter received.')
-
-    #def link_getbeacondatarate(self):
-    #    '''
-    #    Read the data rate of Beacon frame
-
-    #    :param: Query only
-
-    #   :return: It returns the data rate; NAK on failure
-
-    #    '''
-    #    cmdGetBeaconDr = 'READ:LINK:BEACON_DR?' + '\n'
-    #    result = RwcSerialSetup.transceive(self, cmdGetBeaconDr)
-    #    return result
-
-    def link_setpingdatarate(self, macnum, datarate):
+    def link_setbeacondatarate(self, framedr):
         '''
-        Configure the index of the Data Rate used for ping-slot 
-        downlinks for PingSlotChannelReq
+        Configure the data rate of Beacon frame 
+        (RWC supported version: v1.15 and v1.16)
 
-        :param macnum: MAC Command Number
-        :param datarate: DR0_SF12BW125, DR1_SF11BW125, DR2_SF10BW125, 
-        DR3_SF9BW125, DR4_SF8BW125, DR5_SF7BW125, DR6_SF7BW250, DR7_FSK50
+        :param framedr: DR_0 ~ DR_6
 
         :return: ACK on success, NAK on failure
         
         '''
-        cmdMacNum = str(macnum)
-        cmdPingDr = datarate
-        if cmdPingDr == 'DR0_SF12BW125':
+        cmdSupportedVersion = ['1.150', '1.160']
+        frameDrList = [
+            'DR_0', 'DR_1', 
+            'DR_2', 'DR_3', 
+            'DR_4', 'DR_5', 
+            'DR_6']
+        verStatus = self.validate_sys_swversion(cmdSupportedVersion)
+
+        if verStatus and framedr in frameDrList:
+            cmdSetFrameDr = 'CONF:LINK:BEACON_DR ' + framedr + '\n'
+            result = RwcSerialSetup.transceive(self, cmdSetFrameDr)
+            return result
+        else:
+            raise Exception('Invalid parameter received.')
+
+    def link_getbeacondatarate(self):
+        '''
+        Read the data rate of Beacon frame 
+        (RWC supported version: v1.15 and v1.16)
+
+        :param: Query only
+
+        :return: It returns the data rate; NAK on failure
+
+        '''
+        cmdSupportedVersion = ['1.150', '1.160']
+        verStatus = self.validate_sys_swversion(cmdSupportedVersion)
+
+        if verStatus:
+            cmdGetBeaconDr = 'READ:LINK:BEACON_DR?' + '\n'
+            result = RwcSerialSetup.transceive(self, cmdGetBeaconDr)
+            return result
+
+    def link_setpingdatarate(self, *args):
+        '''
+        Configure the index of the Data Rate used for ping-slot 
+        downlinks for PingSlotChannelReq (above v1.160)
+
+        :param *args: For version below 1.17
+                      only datarate required
+
+                      For version 1.17 and above:
+                      first parameter should be a MAC command number,
+                      second parameter should be datarate
+
+                      (DR0_SF12BW125, DR1_SF11BW125, 
+                       DR2_SF10BW125, DR3_SF9BW125, 
+                       DR4_SF8BW125, DR5_SF7BW125, 
+                       DR6_SF7BW250, DR7_FSK50)
+
+        :return: ACK on success, NAK on failure
+        
+        '''
+        drList = [
+            'DR0_SF12BW125', 'DR1_SF11BW125', 
+            'DR2_SF10BW125', 'DR3_SF9BW125', 
+            'DR4_SF8BW125', 'DR5_SF7BW125', 
+            'DR6_SF7BW250', 'DR7_FSK50']
+
+        if len(args) == 1 and args[0] in drList:
+            cmdDr = str(args[0])
             cmdSetPingDr = 'CONF:LINK:PING_DR ' \
-            + cmdMacNum + ' DR0_SF12BW125' + '\n'
+                            + cmdDr + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetPingDr)
             return result
-        elif cmdPingDr == 'DR1_SF11BW125':
+        elif len(args) == 2 and args[1] in drList:
+            cmdMacNum = str(args[0])
+            cmdDr = str(args[1])
             cmdSetPingDr = 'CONF:LINK:PING_DR ' \
-            + cmdMacNum + ' DR1_SF11BW125' + '\n'
-            result = RwcSerialSetup.transceive(self, cmdSetPingDr)
-            return result
-        elif cmdPingDr == 'DR2_SF10BW125':
-            cmdSetPingDr = 'CONF:LINK:PING_DR ' \
-            + cmdMacNum + ' DR2_SF10BW125' + '\n'
-            result = RwcSerialSetup.transceive(self, cmdSetPingDr)
-            return result
-        elif cmdPingDr == 'DR3_SF9BW125':
-            cmdSetPingDr = 'CONF:LINK:PING_DR ' \
-            + cmdMacNum + ' DR3_SF9BW125' + '\n'
-            result = RwcSerialSetup.transceive(self, cmdSetPingDr)
-            return result
-        elif cmdPingDr == 'DR4_SF8BW125':
-            cmdSetPingDr = 'CONF:LINK:PING_DR ' \
-            + cmdMacNum + ' DR4_SF8BW125' + '\n'
-            result = RwcSerialSetup.transceive(self, cmdSetPingDr)
-            return result
-        elif cmdPingDr == 'DR5_SF7BW125':
-            cmdSetPingDr = 'CONF:LINK:PING_DR ' \
-            + cmdMacNum + ' DR5_SF7BW125' + '\n'
-            result = RwcSerialSetup.transceive(self, cmdSetPingDr)
-            return result
-        elif cmdPingDr == 'DR6_SF7BW250':
-            cmdSetPingDr = 'CONF:LINK:PING_DR ' \
-            + cmdMacNum + ' DR6_SF7BW250' + '\n'
-            result = RwcSerialSetup.transceive(self, cmdSetPingDr)
-            return result
-        elif cmdPingDr == 'DR7_FSK50':
-            cmdSetPingDr = 'CONF:LINK:PING_DR ' \
-            + cmdMacNum + ' DR7_FSK50' + '\n'
+                            + cmdMacNum + ' ' \
+                            + cmdDr + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetPingDr)
             return result
         else:
             raise Exception('Invalid parameter received.')
     
-    def link_getpingdatarate(self, macnum):
+    def link_getpingdatarate(self, *args):
         '''
         Read the index of the Data Rate used for ping-slot downlinks 
-        for PingSlotChannelReq
+        for PingSlotChannelReq (above v1.160)
 
-        :param macnum: MAC Command Number
+        :param *args: MAC Command Number required if version is 1.17 
+                      and above otherwise parameter not required
 
         :return: It returns the data rate; NAK on failure
         
         '''
-        cmdMacNum = str(macnum)
-        cmdGetPingDr = 'READ:LINK:PING_DR? ' + cmdMacNum + '\n'
-        result = RwcSerialSetup.transceive(self, cmdGetPingDr)
-        return result
+        if len(args) == 0:
+            cmdGetPingDr = 'READ:LINK:PING_DR?' + '\n'
+            result = RwcSerialSetup.transceive(self, cmdGetPingDr)
+            return result
+        elif len(args) == 1:
+            cmdMacNum = str(args[0])
+            cmdGetPingDr = 'READ:LINK:PING_DR? ' + cmdMacNum + '\n'
+            result = RwcSerialSetup.transceive(self, cmdGetPingDr)
+            return result
+        else:
+            raise Exception('Invalid parameter received.')
 
-    def link_setpingfrequency(self, macnum, freq):
+    def link_setpingfrequency(self, *args):
         '''
         Configure the frequency used for ping-slot downlinks 
         for PingSlotChannelReq
 
-        :param macnum: MAC Command Number
-        :param freq: 400 ~ 510, 862 ~ 960 MHz
+        :param *args: For version below 1.17
+                      only frequency required 
+                      (400 ~ 510, 862 ~ 960 MHz)
+
+                      For version 1.17 and above:
+                      first parameter should be a MAC command number,
+                      second parameter should be frequency 
+                      (400 ~ 510, 862 ~ 960 MHz)
 
         :return: ACK on success, NAK on failure
         
         '''
-        cmdMacNum = str(macnum)
-        if (freq >= 400 and freq <= 510) or (freq >= 862 and freq <= 960):
-            cmdPingFrequency = str(freq)
+        if len(args) == 1 and (args[0] == 0 
+                or (args[0] >= 862 and args[0] <= 960)):
+            cmdFreq = str(args[0])
             cmdSetPingFrequencyVal = 'CONF:LINK:PING_FREQ ' \
-            + cmdMacNum + ' ' + cmdPingFrequency + '\n'
+                                        + cmdFreq + '\n'
+            result = RwcSerialSetup.transceive(self, cmdSetPingFrequencyVal)
+            return result
+        elif len(args) == 2 and (args[1] >= 400 
+                and args[1] <= 510) or (args[1] >= 862 
+                    and args[1] <= 960):
+            cmdMacNum = str(args[0])
+            cmdPingFrequency = str(args[1])
+            cmdSetPingFrequencyVal = 'CONF:LINK:PING_FREQ ' \
+                                        + cmdMacNum + ' ' \
+                                        + cmdPingFrequency + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetPingFrequencyVal)
             return result
         else:
             raise Exception('Invalid parameter received.')
 
-    def link_getpingfrequency(self, macnum):
+    def link_getpingfrequency(self, *args):
         '''
-        Read the frequency used for ping-slot downlinks for PingSlotChannelReq
+        Read the frequency used for ping-slot downlinks 
+        for PingSlotChannelReq
 
-        :param macnum: MAC Command Number
+        :param *args: MAC Command Number required if version is 1.17 
+                      and above otherwise parameter not required
 
         :return: It returns the frequency value; NAK on failure
         
         '''
-        cmdMacNum = str(macnum)
-        cmdGetPingFreq = 'READ:LINK:PING_FREQ? ' + cmdMacNum + '\n'
-        result = RwcSerialSetup.transceive(self, cmdGetPingFreq)
-        return result
+        if len(args) == 0:
+            cmdGetPingFreq = 'READ:LINK:PING_FREQ?' + '\n'
+            result = RwcSerialSetup.transceive(self, cmdGetPingFreq)
+            return result
+        elif len(args) == 1:
+            cmdMacNum = str(args[0])
+            cmdGetPingFreq = 'READ:LINK:PING_FREQ? ' + cmdMacNum + '\n'
+            result = RwcSerialSetup.transceive(self, cmdGetPingFreq)
+            return result
+        else:
+            raise Exception('Invalid parameter received.')
 
     def link_setrx2datarate(self, macnum, datarate):
         '''
         Configure the Data Rate used for RX2 channel
 
         :param macnum: MAC Command Number
-        :param datarate: DR0_SF12BW125, DR1_SF11BW125, DR2_SF10BW125, 
-        DR3_SF9BW125, DR4_SF8BW125, DR5_SF7BW125, DR6_SF7BW250, DR7_FSK50
+        :param datarate: DR0_SF12BW125, DR1_SF11BW125, 
+                         DR2_SF10BW125, DR3_SF9BW125, 
+                         DR4_SF8BW125, DR5_SF7BW125, 
+                         DR6_SF7BW250, DR7_FSK50
 
         :return: ACK on success, NAK on failure
         
@@ -4539,42 +5000,42 @@ class RWCTesterApi(RwcSerialSetup):
         cmdRx2Dr = datarate
         if cmdRx2Dr == 'DR0_SF12BW125':
             cmdSetRx2Dr = 'CONF:LINK:RX2_DR ' \
-            + cmdMacNum + ' DR0_SF12BW125' + '\n'
+                            + cmdMacNum + ' DR0_SF12BW125' + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetRx2Dr)
             return result
         elif cmdRx2Dr == 'DR1_SF11BW125':
             cmdSetRx2Dr = 'CONF:LINK:RX2_DR ' \
-            + cmdMacNum + ' DR1_SF11BW125' + '\n'
+                            + cmdMacNum + ' DR1_SF11BW125' + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetRx2Dr)
             return result
         elif cmdRx2Dr == 'DR2_SF10BW125':
             cmdSetRx2Dr = 'CONF:LINK:RX2_DR ' \
-            + cmdMacNum + ' DR2_SF10BW125' + '\n'
+                            + cmdMacNum + ' DR2_SF10BW125' + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetRx2Dr)
             return result
         elif cmdRx2Dr == 'DR3_SF9BW125':
             cmdSetRx2Dr = 'CONF:LINK:RX2_DR ' \
-            + cmdMacNum + ' DR3_SF9BW125' + '\n'
+                            + cmdMacNum + ' DR3_SF9BW125' + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetRx2Dr)
             return result
         elif cmdRx2Dr == 'DR4_SF8BW125':
             cmdSetRx2Dr = 'CONF:LINK:RX2_DR ' \
-            + cmdMacNum + ' DR4_SF8BW125' + '\n'
+                            + cmdMacNum + ' DR4_SF8BW125' + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetRx2Dr)
             return result
         elif cmdRx2Dr == 'DR5_SF7BW125':
             cmdSetRx2Dr = 'CONF:LINK:RX2_DR ' \
-            + cmdMacNum + ' DR5_SF7BW125' + '\n'
+                            + cmdMacNum + ' DR5_SF7BW125' + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetRx2Dr)
             return result
         elif cmdRx2Dr == 'DR6_SF7BW250':
             cmdSetRx2Dr = 'CONF:LINK:RX2_DR ' \
-            + cmdMacNum + ' DR6_SF7BW250' + '\n'
+                            + cmdMacNum + ' DR6_SF7BW250' + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetRx2Dr)
             return result
         elif cmdRx2Dr == 'DR7_FSK50':
             cmdSetRx2Dr = 'CONF:LINK:RX2_DR ' \
-            + cmdMacNum + ' DR7_FSK50' + '\n'
+                            + cmdMacNum + ' DR7_FSK50' + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetRx2Dr)
             return result
         else:
@@ -4604,11 +5065,13 @@ class RWCTesterApi(RwcSerialSetup):
         
         '''
         cmdMacNum = str(macnum)
-        if (freq >= 400 and freq <= 510
-        ) or (freq >= 862 and freq <= 960):
+        if (freq >= 400 
+                and freq <= 510) or (freq >= 862 
+                    and freq <= 960):
             cmdRx2Frequency = str(freq)
             cmdSetRx2FrequencyVal = 'CONF:LINK:RX2_FREQ ' \
-            + cmdMacNum + ' ' + cmdRx2Frequency + '\n'
+                                        + cmdMacNum + ' ' \
+                                        + cmdRx2Frequency + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetRx2FrequencyVal)
             return result
         else:
@@ -4620,7 +5083,8 @@ class RWCTesterApi(RwcSerialSetup):
 
         :param macnum: MAC Command Number
 
-        :return: It returns the RX2 channel frequency value; NAK on failure
+        :return: It returns the RX2 channel frequency value; 
+                 NAK on failure
         
         '''
         cmdMacNum = str(macnum)
@@ -4641,7 +5105,8 @@ class RWCTesterApi(RwcSerialSetup):
         if (value >= 1 and value <= 10):
             cmdDelayValue = str(value)
             cmdSetReceiveDelayVal = 'CONF:LINK:RECEIVE_DELAY ' \
-            + cmdMacNum + ' ' + cmdDelayValue + '\n'
+                                        + cmdMacNum + ' ' \
+                                        + cmdDelayValue + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetReceiveDelayVal)
             return result
         else:
@@ -4658,7 +5123,7 @@ class RWCTesterApi(RwcSerialSetup):
         '''
         cmdMacNum = str(macnum)
         cmdGetReceiveDelayValue = 'READ:LINK:RECEIVE_DELAY? ' \
-        + cmdMacNum + '\n'
+                                    + cmdMacNum + '\n'
         result = RwcSerialSetup.transceive(self, cmdGetReceiveDelayValue)
         return result
 
@@ -4675,7 +5140,8 @@ class RWCTesterApi(RwcSerialSetup):
         if (value >= 0 and value <= 7):
             cmdOffsetValue = str(value)
             cmdSetRx1DrOffsetVal = 'CONF:LINK:RX1_DR_OFFSET ' \
-            + cmdMacNum + ' ' + cmdOffsetValue + '\n'
+                                    + cmdMacNum + ' ' \
+                                    + cmdOffsetValue + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetRx1DrOffsetVal)
             return result
         else:
@@ -4692,7 +5158,7 @@ class RWCTesterApi(RwcSerialSetup):
         '''
         cmdMacNum = str(macnum)
         cmdGetRx1DrOffsetValue = 'READ:LINK:RX1_DR_OFFSET? ' \
-        + cmdMacNum + '\n'
+                                    + cmdMacNum + '\n'
         result = RwcSerialSetup.transceive(self, cmdGetRx1DrOffsetValue)
         return result
 
@@ -4701,52 +5167,38 @@ class RWCTesterApi(RwcSerialSetup):
         Configure the Data Rate value for ForceRejoinReq
 
         :param macnum: MAC Command Number
-        :param datarate: DR0_SF12BW125, DR1_SF11BW125, DR2_SF10BW125, 
-        DR3_SF9BW125, DR4_SF8BW125, DR5_SF7BW125, DR6_SF7BW250, DR7_FSK50
+        :param datarate: DR0_SF12BW125, DR1_SF11BW125, 
+                         DR2_SF10BW125, DR3_SF9BW125, 
+                         DR4_SF8BW125, DR5_SF7BW125, 
+                         DR6_SF7BW250, DR7_FSK50
 
         :return: ACK on success, NAK on failure
         
         '''
         cmdMacNum = str(macnum)
-        cmdRejoinDr = datarate
-        if cmdRejoinDr == 'DR0_SF12BW125':
+        lowVersionDrList = [
+            'DR_0', 'DR_1', 
+            'DR_2', 'DR_3', 
+            'DR_4', 'DR_5', 
+            'DR_6']
+        drList = [
+            'DR0_SF12BW125', 'DR1_SF11BW125', 
+            'DR2_SF10BW125', 'DR3_SF9BW125', 
+            'DR4_SF8BW125', 'DR5_SF7BW125', 
+            'DR6_SF7BW250', 'DR7_FSK50']
+        cmdVersion = self.query_sysversion()
+        numVersion = float(cmdVersion)
+        
+        if numVersion < 1.170 and datarate in lowVersionDrList:
             cmdSetRejoinDr = 'CONF:LINK:REJOIN_DR ' \
-            + cmdMacNum + ' DR0_SF12BW125' + '\n'
+                                + cmdMacNum + ' ' \
+                                + datarate + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetRejoinDr)
             return result
-        elif cmdRejoinDr == 'DR1_SF11BW125':
+        elif numVersion > 1.160 and datarate in drList:
             cmdSetRejoinDr = 'CONF:LINK:REJOIN_DR ' \
-            + cmdMacNum + ' DR1_SF11BW125' + '\n'
-            result = RwcSerialSetup.transceive(self, cmdSetRejoinDr)
-            return result
-        elif cmdRejoinDr == 'DR2_SF10BW125':
-            cmdSetRejoinDr = 'CONF:LINK:REJOIN_DR ' \
-            + cmdMacNum + ' DR2_SF10BW125' + '\n'
-            result = RwcSerialSetup.transceive(self, cmdSetRejoinDr)
-            return result
-        elif cmdRejoinDr == 'DR3_SF9BW125':
-            cmdSetRejoinDr = 'CONF:LINK:REJOIN_DR ' \
-            + cmdMacNum + ' DR3_SF9BW125' + '\n'
-            result = RwcSerialSetup.transceive(self, cmdSetRejoinDr)
-            return result
-        elif cmdRejoinDr == 'DR4_SF8BW125':
-            cmdSetRejoinDr = 'CONF:LINK:REJOIN_DR ' \
-            + cmdMacNum + ' DR4_SF8BW125' + '\n'
-            result = RwcSerialSetup.transceive(self, cmdSetRejoinDr)
-            return result
-        elif cmdRejoinDr == 'DR5_SF7BW125':
-            cmdSetRejoinDr = 'CONF:LINK:REJOIN_DR ' \
-            + cmdMacNum + ' DR5_SF7BW125' + '\n'
-            result = RwcSerialSetup.transceive(self, cmdSetRejoinDr)
-            return result
-        elif cmdRejoinDr == 'DR6_SF7BW250':
-            cmdSetRejoinDr = 'CONF:LINK:REJOIN_DR ' \
-            + cmdMacNum + ' DR6_SF7BW250' + '\n'
-            result = RwcSerialSetup.transceive(self, cmdSetRejoinDr)
-            return result
-        elif cmdRejoinDr == 'DR7_FSK50':
-            cmdSetRejoinDr = 'CONF:LINK:REJOIN_DR ' \
-            + cmdMacNum + ' DR7_FSK50' + '\n'
+                                + cmdMacNum + ' ' \
+                                + datarate + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetRejoinDr)
             return result
         else:
@@ -4780,12 +5232,12 @@ class RWCTesterApi(RwcSerialSetup):
         cmdRejoinType = rejointype
         if cmdRejoinType == 'TYPE_0':
             cmdSetRejoinType = 'CONF:LINK:REJOIN_TYPE ' \
-            + cmdMacNum + ' TYPE_0' + '\n'
+                                + cmdMacNum + ' TYPE_0' + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetRejoinType)
             return result
         elif cmdRejoinType == 'TYPE_2':
             cmdSetRejoinType = 'CONF:LINK:REJOIN_TYPE ' \
-            + cmdMacNum + ' TYPE_2' + '\n'
+                                + cmdMacNum + ' TYPE_2' + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetRejoinType)
             return result
         else:
@@ -4819,7 +5271,8 @@ class RWCTesterApi(RwcSerialSetup):
         if retryval >= 0 and retryval <= 7:
             cmdRejoinRetryVal = str(retryval)
             cmdSetRejoinRetryVal = 'CONF:LINK:REJOIN_RETRY ' \
-            + cmdMacNum + ' ' + cmdRejoinRetryVal + '\n'
+                                    + cmdMacNum + ' ' \
+                                    + cmdRejoinRetryVal + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetRejoinRetryVal)
             return result
         else:
@@ -4853,7 +5306,8 @@ class RWCTesterApi(RwcSerialSetup):
         if period >= 0 and period <= 7:
             cmdRejoinPeriodVal = str(period)
             cmdSetRejoinPeriodVal = 'CONF:LINK:REJOIN_PERIOD ' \
-            + cmdMacNum + ' ' + cmdRejoinPeriodVal + '\n'
+                                        + cmdMacNum + ' ' \
+                                        + cmdRejoinPeriodVal + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetRejoinPeriodVal)
             return result
         else:
@@ -4887,7 +5341,8 @@ class RWCTesterApi(RwcSerialSetup):
         if maxtimeval >= 0 and maxtimeval <= 15:
             cmdRejoinMaxTimeVal = str(maxtimeval)
             cmdSetRejoinMaxTimeVal = 'CONF:LINK:REJOIN_MAX_TIME_N ' \
-            + cmdMacNum + ' ' + cmdRejoinMaxTimeVal + '\n'
+                                        + cmdMacNum + ' ' \
+                                        + cmdRejoinMaxTimeVal + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetRejoinMaxTimeVal)
             return result
         else:
@@ -4904,7 +5359,7 @@ class RWCTesterApi(RwcSerialSetup):
         '''
         cmdMacNum = str(macnum)
         cmdGetRejoinMaxTimeVal = 'READ:LINK:REJOIN_MAX_TIME_N? ' \
-        + cmdMacNum + '\n'
+                                    + cmdMacNum + '\n'
         result = RwcSerialSetup.transceive(self, cmdGetRejoinMaxTimeVal)
         return result
 
@@ -4922,7 +5377,8 @@ class RWCTesterApi(RwcSerialSetup):
         if maxcnt >= 0 and maxcnt <= 15:
             cmdRejoinMaxCntVal = str(maxcnt)
             cmdSetRejoinMaxCntVal = 'CONF:LINK:REJOIN_MAX_CNT_N ' \
-            + cmdMacNum + ' ' + cmdRejoinMaxCntVal + '\n'
+                                        + cmdMacNum + ' ' \
+                                        + cmdRejoinMaxCntVal + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetRejoinMaxCntVal)
             return result
         else:
@@ -4939,7 +5395,7 @@ class RWCTesterApi(RwcSerialSetup):
         '''
         cmdMacNum = str(macnum)
         cmdGetRejoinMaxCntVal = 'READ:LINK:REJOIN_MAX_CNT_N? ' \
-        + cmdMacNum + '\n'
+                                    + cmdMacNum + '\n'
         result = RwcSerialSetup.transceive(self, cmdGetRejoinMaxCntVal)
         return result
 
@@ -4958,7 +5414,8 @@ class RWCTesterApi(RwcSerialSetup):
         if limit >= 0 and limit <= 15:
             cmdAdrLimitExpVal = str(limit)
             cmdSetAdrLimitExpVal = 'CONF:LINK:ADR_LIMIT_EXP ' \
-            + cmdMacNum + ' ' + cmdAdrLimitExpVal + '\n'
+                                    + cmdMacNum + ' ' \
+                                    + cmdAdrLimitExpVal + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetAdrLimitExpVal)
             return result
         else:
@@ -4994,7 +5451,8 @@ class RWCTesterApi(RwcSerialSetup):
         if delay >= 0 and delay <= 15:
             cmdAdrDelayExpVal = str(delay)
             cmdSetAdrDelayExpVal = 'CONF:LINK:ADR_DELAY_EXP ' \
-            + cmdMacNum + ' ' + cmdAdrDelayExpVal + '\n'
+                                    + cmdMacNum + ' ' \
+                                    + cmdAdrDelayExpVal + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetAdrDelayExpVal)
             return result
         else:
@@ -5075,7 +5533,8 @@ class RWCTesterApi(RwcSerialSetup):
 
     def link_getfcntdisplay(self):
         '''
-        Read the flag whether to display FCnt field in Link Analyzer screen
+        Read the flag whether to display FCnt field in Link 
+        Analyzer screen
 
         :param: Query only
 
@@ -5110,7 +5569,8 @@ class RWCTesterApi(RwcSerialSetup):
 
     def link_getadrdisplay(self):
         '''
-        Read the flag whether to display ADR field in Link Analyzer screen
+        Read the flag whether to display ADR field in Link 
+        Analyzer screen
 
         :param: Query only
 
@@ -5145,7 +5605,8 @@ class RWCTesterApi(RwcSerialSetup):
 
     def link_getackdisplay(self):
         '''
-        Read the flag whether to display ACK field in Link Analyzer screen
+        Read the flag whether to display ACK field in Link 
+        Analyzer screen
 
         :param: Query only
 
@@ -5180,7 +5641,8 @@ class RWCTesterApi(RwcSerialSetup):
 
     def link_getclassb_display(self):
         '''
-        Read the flag whether to display Class B field in Link Analyzer screen
+        Read the flag whether to display Class B field in Link 
+        Analyzer screen
 
         :param: Query only
 
@@ -5215,7 +5677,8 @@ class RWCTesterApi(RwcSerialSetup):
 
     def link_getportdisplay(self):
         '''
-        Read the flag whether to display FPort field in Link Analyzer screen
+        Read the flag whether to display FPort field in Link 
+        Analyzer screen
 
         :param: Query only
 
@@ -5300,7 +5763,8 @@ class RWCTesterApi(RwcSerialSetup):
 
     def link_setdrdisplay(self, flag):
         '''
-        Configure the flag whether to display DR value in Link Analyzer screen
+        Configure the flag whether to display DR value in Link 
+        Analyzer screen
 
         :param flag: OFF, ON
 
@@ -5321,7 +5785,8 @@ class RWCTesterApi(RwcSerialSetup):
 
     def link_getdrdisplay(self):
         '''
-        Read the flag whether to display DR value in Link Analyzer screen
+        Read the flag whether to display DR value in Link 
+        Analyzer screen
 
         :param: Query only
 
@@ -5475,19 +5940,31 @@ class RWCTesterApi(RwcSerialSetup):
         result = RwcSerialSetup.transceive(self, cmdGetDwellDisplay)
         return result
 
-    def link_setpayloadlength(self, macnum, length):
+    def link_setpayloadlength(self, *args):
         '''
         Configure the length of payload in bytes in EchoRequest Command
 
-        :param macnum: MAC Command Number
-        :param length: 1 ~ 242
+        :param *args: For version below 1.17
+                      only length required 
+                      (1 ~ 242)
+
+                      For version 1.17 and above:
+                      first parameter should be a MAC command number,
+                      second parameter should be length 
+                      (1 ~ 242)
 
         :return: ACK on success, NAK on failure
         
         '''
-        cmdMacNum = str(macnum)
-        if length >= 1 and length <= 242:
-            cmdEchoLen = str(length)
+        if len(args) == 1 and args[0] >= 1 and args[0] <= 242:
+            cmdEchoLen = str(args[0])
+            cmdSetEchoLen = 'CONF:LINK:ECHO_LEN ' \
+            + cmdEchoLen + '\n'
+            result = RwcSerialSetup.transceive(self, cmdSetEchoLen)
+            return result
+        if len(args) ==2 and args[1] >= 1 and args[1] <= 242:
+            cmdMacNum = str(args[0])
+            cmdEchoLen = str(args[1])
             cmdSetEchoLen = 'CONF:LINK:ECHO_LEN ' \
             + cmdMacNum + ' ' + cmdEchoLen + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetEchoLen)
@@ -5495,131 +5972,239 @@ class RWCTesterApi(RwcSerialSetup):
         else:
             raise Exception('Invalid parameter received.')
 
-    def link_getpayloadlength(self, macnum):
+    def link_getpayloadlength(self, *args):
         '''
         Read the length of payload in bytes in EchoRequest Command
 
-        :param macnum: MAC Command Number
+        :param *args: MAC Command Number if version is 1.17 and
+                      above, otherwise parameter not required 
 
         :return: It returns the payload length; NAK on failure
         
         '''
-        cmdMacNum = str(macnum)
-        cmdGetEchoLen = 'READ:LINK:ECHO_LEN? ' + cmdMacNum + '\n'
-        result = RwcSerialSetup.transceive(self, cmdGetEchoLen)
-        return result
+        if len(args) == 0:
+            cmdGetEchoLen = 'READ:LINK:ECHO_LEN?' + '\n'
+            result = RwcSerialSetup.transceive(self, cmdGetEchoLen)
+            return result
+        elif len(args) == 1:
+            cmdMacNum = str(args[0])
+            cmdGetEchoLen = 'READ:LINK:ECHO_LEN? ' + cmdMacNum + '\n'
+            result = RwcSerialSetup.transceive(self, cmdGetEchoLen)
+            return result
+        else:
+            raise Exception('Invalid parameter received.')
 
-    def link_setcwtimeout(self, macnum, time):
+    def link_setechopayload(self, macnum, value):
         '''
-        Configure the timeout of CW transmission in Enable Continuous 
-        Wave Mode command
+        Configure the Message data of echo request command
 
-        :param macnum: MAC Command Number
-        :param time: 1 ~ 255
+        :param value: 250-byte HEX value
 
         :return: ACK on success, NAK on failure
         
         '''
         cmdMacNum = str(macnum)
-        if time >= 1 and time <= 255:
-            cmdCwTimeout = str(time)
+        cmdValue = int(value)
+        if (cmdValue >= 0 and cmdValue <= 2**250 -1) :
+            cmdHexValue = hex(cmdValue)
+            cmdSetEchoPayload = 'CONF:LINK:ECHO_PAYLOAD ' \
+                                    + cmdMacNum + ' ' \
+                                    + cmdHexValue + '\n'
+            result = RwcSerialSetup.transceive(self, cmdSetEchoPayload)
+            return result
+        else:
+            raise Exception('Invalid parameter received.')
+
+    def link_getechopayload(self, macnum):
+        '''
+        Read the Message data of echo request command
+
+        :param: Query only
+
+        :return: It returns the payload data; NAK on failure
+        
+        '''
+        cmdMacNum = str(macnum)
+        cmdGetMsgData = 'READ:LINK:ECHO_PAYLOAD? ' + cmdMacNum + '\n'
+        result = RwcSerialSetup.transceive(self, cmdGetMsgData)
+        return result
+
+    def link_setcwtimeout(self, *args):
+        '''
+        Configure the timeout of CW transmission in Enable Continuous 
+        Wave Mode command
+
+        :param *args: For version below 1.17
+                      only time required 
+                      (1 ~ 255)
+
+                      For version 1.17 and above:
+                      first parameter should be a MAC command number,
+                      second parameter should be time 
+                      (1 ~ 255)
+
+        :return: ACK on success, NAK on failure
+        
+        '''
+        if len(args) == 1 and args[0] >= 1 and args[0] <= 255:
+            cmdCwTimeout = str(args[0])
             cmdSetCwTimeout = 'CONF:LINK:CW_TIMEOUT ' \
-            + cmdMacNum + ' ' + cmdCwTimeout + '\n'
+                                + cmdCwTimeout + '\n'
+            result = RwcSerialSetup.transceive(self, cmdSetCwTimeout)
+            return result
+        elif len(args) == 2 and args[1] >= 1 and args[1] <= 255:
+            cmdMacNum = str(args[0])
+            cmdCwTimeout = str(args[1])
+            cmdSetCwTimeout = 'CONF:LINK:CW_TIMEOUT ' \
+                                + cmdMacNum + ' ' \
+                                + cmdCwTimeout + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetCwTimeout)
             return result
         else:
             raise Exception('Invalid parameter received.')
     
-    def link_getcwtimeout(self, macnum):
+    def link_getcwtimeout(self, *args):
         '''
         Read the timeout of CW transmission in Enable Continuous 
         Wave Mode command
 
-        :param macnum: MAC Command Number
+        :param *args: MAC Command Number if version is 1.17 and
+                      above, otherwise parameter not required 
 
         :return: It returns the CW timeout value; NAK on failure
         
         '''
-        cmdMacNum = str(macnum)
-        cmdGetCwTimeout = 'READ:LINK:CW_TIMEOUT? ' + cmdMacNum + '\n'
+        if len(args) == 0:
+            cmdGetCwTimeout = 'READ:LINK:CW_TIMEOUT?' + '\n'
+        elif len(args) == 1:
+            cmdMacNum = str(args[0])
+            cmdGetCwTimeout = 'READ:LINK:CW_TIMEOUT? ' + cmdMacNum + '\n'
+        else:
+            raise Exception('Invalid parameter received.')
+
         result = RwcSerialSetup.transceive(self, cmdGetCwTimeout)
         return result
     
-    def link_setcwfrequency(self, macnum, freq):
+    def link_setcwfrequency(self, *args):
         '''
         Configure the frequency of CW signal in Enable Continuous Wave 
         Mode command
 
-        :param macnum: MAC Command Number
-        :param freq: 400 ~ 510 MHz, 862 ~ 960 MHz
+        :param *args: For version below 1.17
+                      only frequency required 
+                      (400 ~ 510 MHz, 862 ~ 960 MHz)
+
+                      For version 1.17 and above:
+                      first parameter should be a MAC command number,
+                      second parameter should be frequency 
+                      (400 ~ 510 MHz, 862 ~ 960 MHz)
 
         :return: ACK on success, NAK on failure
         
         '''
-        cmdMacNum = str(macnum)
-        if (freq >= 400 and freq <= 510) or (freq >= 862 and freq <= 960):
-            cmdCwFreq = str(freq)
+        if len(args) == 1 and (args[0] >= 400 
+                and args[0] <= 510) or (args[0] >= 862 
+                    and args[0] <= 960):
+            cmdCwFreq = str(args[0])
             cmdSetCwFreq = 'CONF:LINK:CW_FREQ ' \
-            + cmdMacNum + ' ' + cmdCwFreq + '\n'
+                            + cmdCwFreq + '\n'
+            result = RwcSerialSetup.transceive(self, cmdSetCwFreq)
+            return result
+        elif len(args) == 2 and (args[1] >= 400 
+                and args[1] <= 510) or (args[1] >= 862 
+                    and args[1] <= 960):
+            cmdMacNum = str(args[0])
+            cmdCwFreq = str(args[1])
+            cmdSetCwFreq = 'CONF:LINK:CW_FREQ ' \
+                            + cmdMacNum + ' ' \
+                            + cmdCwFreq + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetCwFreq)
             return result
         else:
             raise Exception('Invalid parameter received.')
     
-    def link_getcwfrequency(self, macnum):
+    def link_getcwfrequency(self, *args):
         '''
-        Read the frequency of CW signal in Enable Continuous Wave Mode command
+        Read the frequency of CW signal in Enable Continuous 
+        Wave Mode command
 
-        :param macnum: MAC Command Number
+        :param *args: MAC Command Number if version is 1.17 and
+                      above, otherwise parameter not required 
 
         :return: It returns the CW frequency value; NAK on failure
         
         '''
-        cmdMacNum = str(macnum)
-        cmdGetCwFrequency = 'READ:LINK:CW_FREQ? ' + cmdMacNum + '\n'
+        if len(args) == 0:
+            cmdGetCwFrequency = 'READ:LINK:CW_FREQ?' + '\n'
+        elif len(args) == 1:
+            cmdMacNum = str(args[0])
+            cmdGetCwFrequency = 'READ:LINK:CW_FREQ? ' + cmdMacNum + '\n'
+        else:
+            raise Exception('Invalid parameter received.')
+        
         result = RwcSerialSetup.transceive(self, cmdGetCwFrequency)
         return result
     
-    def link_setcwpower(self, macnum, power):
+    def link_setcwpower(self, *args):
         '''
         Configure the power of CW signal in dBm in Enable Continuous Wave 
         Mode command
 
-        :param macnum: MAC Command Number
-        :param power: 0 ~ 40
+        :param *args: For version below 1.17
+                      only power required 
+                      (0 ~ 40)
+
+                      For version 1.17 and above:
+                      first parameter should be a MAC command number,
+                      second parameter should be power 
+                      (0 ~ 40)
 
         :return: ACK on success, NAK on failure
         
         '''
-        cmdMacNum = str(macnum)
-        if power >= 0 and power <= 40:
-            cmdCwPow = str(power)
+        if len(args) == 1 and args[0] >= 0 and args[0] <= 40:
+            cmdCwPow = str(args[0])
             cmdSetCwPow = 'CONF:LINK:CW_POW ' \
-            + cmdMacNum + ' ' + cmdCwPow + '\n'
+                            + cmdCwPow + '\n'
+            result = RwcSerialSetup.transceive(self, cmdSetCwPow)
+            return result
+        elif len(args) == 2 and args[1] >= 0 and args[1] <= 40:
+            cmdMacNum = str(args[0])
+            cmdCwPow = str(args[1])
+            cmdSetCwPow = 'CONF:LINK:CW_POW ' \
+                            + cmdMacNum + ' ' \
+                            + cmdCwPow + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetCwPow)
             return result
         else:
             raise Exception('Invalid parameter received.')
 
-    def link_getcwpower(self, macnum):
+    def link_getcwpower(self, *args):
         '''
         Read the power of CW signal in dBm in Enable Continuous Wave 
         Mode command
 
-        :param macnum: MAC Command Number
+        :param *args: MAC Command Number if version is 1.17 and
+                      above, otherwise parameter not required 
 
         :return: It returns the CW power value; NAK on failure
 
         '''
-        cmdMacNum = str(macnum)
-        cmdGetCwPow = 'READ:LINK:CW_POW? ' + cmdMacNum + '\n'
+        if len(args) == 0:
+            cmdGetCwPow = 'READ:LINK:CW_POW?' + '\n'
+        elif len(args) == 1:
+            cmdMacNum = str(args[0])
+            cmdGetCwPow = 'READ:LINK:CW_POW? ' + cmdMacNum + '\n'
+        else:
+            raise Exception('Invalid parameter received.')
+
         result = RwcSerialSetup.transceive(self, cmdGetCwPow)
         return result
 
     def link_setmacinterval(self, interval):
         '''
-        Configure the minimum MAC command interval in sec. This parameter is
-        used for Periodic Downlink in Class B & C
+        Configure the minimum MAC command interval in sec. This 
+        parameter is used for Periodic Downlink in Class B & C
 
         :param interval: 5 - 60
 
@@ -5662,8 +6247,7 @@ class RWCTesterApi(RwcSerialSetup):
             'OFF', 
             'MIC_ERR', 
             'NO_RSP', 
-            'INVALID_CMD'
-            ]
+            'INVALID_CMD']
         if value in abnormalparamlist:
             cmdSetAbnormal = 'CONF:LINK:ABNORMAL ' + value + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetAbnormal)
@@ -5680,14 +6264,14 @@ class RWCTesterApi(RwcSerialSetup):
         :return: It returns the link abnormal message; NAK on failure
         
         '''
-        cmdGetAbnormalValue = 'READ:LINK:ABNORMAL? ' + '\n'
+        cmdGetAbnormalValue = 'READ:LINK:ABNORMAL?' + '\n'
         result = RwcSerialSetup.transceive(self, cmdGetAbnormalValue)
         return result
 
     def link_getmacsendresult(self, macnum):
         '''
-        Read MAC response information after sending MAC command. For multi-mac
-        response, it requires MAC_NUM parameter
+        Read MAC response information after sending MAC command. 
+        For multi-mac response, it requires MAC_NUM parameter
 
         :param macnum: MAC Command Number
 
@@ -5696,18 +6280,20 @@ class RWCTesterApi(RwcSerialSetup):
         '''
         cmdMacNum = str(macnum)
         cmdGetMacSendResult = 'READ:LINK:MAC_SENDL_RESULT? ' \
-        + cmdMacNum + '\n'
+                                + cmdMacNum + '\n'
         result = RwcSerialSetup.transceive(self, cmdGetMacSendResult)
         return result
 
     def link_getmacsendstatus(self):
         '''
-        Read MAC command sending status. There are five status defined (IDLE,
-        STARTED, SCHEDULED, GOT_RSP, TIMEOUT). Refer to following fig.
+        Read MAC command sending status. There are five status defined 
+        (IDLE, STARTED, SCHEDULED, GOT_RSP, TIMEOUT). 
+        Refer to following fig.
 
         :Parameters: N/A (Query only)
 
         :return: MAC Command status; NAK on failure
+
         '''
         cmdGetMacSendStatus = 'READ:LINK:MAC_SEND_STATUS?' + '\n'
         result = RwcSerialSetup.transceive(self, cmdGetMacSendStatus)
@@ -5721,12 +6307,706 @@ class RWCTesterApi(RwcSerialSetup):
 
         :return: Duty cycle value; NAK on failure
 
-
-        .. _powerlabel:
         '''
         cmdGetDutyCycleVal = 'READ:LINK:DUTY_CYCLE?' + '\n'
         result = RwcSerialSetup.transceive(self, cmdGetDutyCycleVal)
         return result
+
+    def link_setmalfunction(self, value):
+        '''
+        To configure malfunction activation
+
+        :param value: ON, OFF
+
+        :return: ACK on success, NAK on failure
+
+        '''
+        cmdValue = value
+        if (cmdValue == 'ON' or cmdValue == 'OFF'):
+            cmdSetMalfunction = 'CONF:LINK:MALFUNCTION ' + cmdValue + '\n'
+            result = RwcSerialSetup.transceive(self, cmdSetMalfunction)
+            return result
+        else:
+            raise Exception('Invalid malfunction parameter received.')
+
+    def link_getmalfunction(self):
+        '''
+        To read malfunction activation
+
+        :Parameters: N/A (Query only)
+
+        :return: link malfunction status; NAK on failure
+
+        '''
+        cmdGetMalfunction = 'READ:LINK:MALFUNCTION?' + '\n'
+        result = RwcSerialSetup.transceive(self, cmdGetMalfunction)
+        return result
+
+    def link_setmicerror(self, value):
+        '''
+        To configure Mic Error activation for malfunction testing
+
+        :param value: ON, OFF
+
+        :return: ACK on success, NAK on failure
+
+        '''
+        cmdValue = value
+        if (cmdValue == 'ON' or cmdValue == 'OFF'):
+            cmdSetMicError = 'CONF:LINK:MIC_ERROR ' + cmdValue + '\n'
+            result = RwcSerialSetup.transceive(self, cmdSetMicError)
+            return result
+        else:
+            raise Exception('Invalid MIC Error parameter received.')
+
+    def link_getmicerror(self):
+        '''
+        To read Mic Error activation for malfunction testing
+
+        :Parameters: N/A (Query only)
+
+        :return: link mic error activation status; NAK on failure
+
+        '''
+        cmdGetMicError = 'READ:LINK:MIC_ERROR?' + '\n'
+        result = RwcSerialSetup.transceive(self, cmdGetMicError)
+        return result
+
+    def link_setmhdrerror(self, value):
+        '''
+        To configure MAC Header Error activation for malfunction 
+        testing
+
+        :param value: ON, OFF
+
+        :return: ACK on success, NAK on failure
+
+        '''
+        cmdValue = value
+        if (cmdValue == 'ON' or cmdValue == 'OFF'):
+            cmdSetMACError = 'CONF:LINK:MHDR_ERROR ' + cmdValue + '\n'
+            result = RwcSerialSetup.transceive(self, cmdSetMACError)
+            return result
+        else:
+            raise Exception('Invalid MAC Error parameter received.')
+
+    def link_getmhdrerror(self):
+        '''
+        To read MAC header Error activation for malfunction testing
+
+        :Parameters: N/A (Query only)
+
+        :return: link MAC error activation status; NAK on failure
+
+        '''
+        cmdGetMACError = 'READ:LINK:MHDR_ERROR?' + '\n'
+        result = RwcSerialSetup.transceive(self, cmdGetMACError)
+        return result
+
+    def link_setxormhdr(self, value):
+        '''
+        To configure exclusive OR for value for MAC header
+
+        :param value: 8-bit Hex Value
+
+        :return: ACK on success, NAK on failure
+
+        '''
+        cmdValue = int(value)
+        if (cmdValue >= 0 and cmdValue <= 2**8 - 1):
+            cmdHexValue = hex(cmdValue)
+            cmdXorMHDR = 'CONF:LINK:XOR_MHDR ' + cmdHexValue + '\n'
+            result = RwcSerialSetup.transceive(self, cmdXorMHDR)
+            return result
+        else:
+            raise Exception('Invalid parameter received.')
+
+    def link_getxormhdr(self):
+        '''
+        To read exclusive OR for value for MAC header
+
+        :Parameters: N/A (Query only)
+
+        :return: link XOR MAC header value; NAK on failure
+
+        '''
+        cmdGetXorMHDR = 'READ:LINK:XOR_MHDR?' + '\n'
+        result = RwcSerialSetup.transceive(self, cmdGetXorMHDR)
+        return result
+
+    def link_setfhdrerror(self, value):
+        '''
+        To configure Frame Header Error activation for malfunction 
+        testing
+
+        :param value: ON, OFF
+
+        :return: ACK on success, NAK on failure
+
+        '''
+        cmdValue = value
+        if (cmdValue == 'ON' or cmdValue == 'OFF'):
+            cmdSetFrameError = 'CONF:LINK:FHDR_ERROR ' + cmdValue + '\n'
+            result = RwcSerialSetup.transceive(self, cmdSetFrameError)
+            return result
+        else:
+            raise Exception('Invalid FHDR Error parameter received.')
+
+    def link_getfhdrerror(self):
+        '''
+        To read frame header Error activation for malfunction testing
+
+        :Parameters: N/A (Query only)
+
+        :return: link frame error activation status; NAK on failure
+
+        '''
+        cmdGetFrameError = 'READ:LINK:FHDR_ERROR?' + '\n'
+        result = RwcSerialSetup.transceive(self, cmdGetFrameError)
+        return result
+
+    def link_setxorfhdr(self, value):
+        '''
+        To configure exclusive OR for value for Frame header
+
+        :param value: 56-bit Hex Value
+
+        :return: ACK on success, NAK on failure
+
+        '''
+        cmdValue = int(value)
+        if (cmdValue >= 0 and cmdValue <= 2**56 - 1):
+            cmdHexValue = hex(cmdValue)
+            cmdXorFHDR = 'CONF:LINK:XOR_FHDR ' + cmdHexValue + '\n'
+            result = RwcSerialSetup.transceive(self, cmdXorFHDR)
+            return result
+        else:
+            raise Exception('Invalid parameter received.')
+
+    def link_getxorfhdr(self):
+        '''
+        To read exclusive OR for value for Frame header
+
+        :Parameters: N/A (Query only)
+
+        :return: link XOR Frame header value; NAK on failure
+
+        '''
+        cmdGetXorFHDR = 'READ:LINK:XOR_FHDR?' + '\n'
+        result = RwcSerialSetup.transceive(self, cmdGetXorFHDR)
+        return result
+
+    def link_getfuotafilelength(self):
+        '''
+        To read the length of FUOTA binary file
+
+        :Parameters: N/A (Query only)
+
+        :return: FUOTA binary file length; NAK on failure
+
+        '''
+        cmdGetFUOTAFileLen = 'READ:LINK:FUOTA_FILE_LEN?' + '\n'
+        result = RwcSerialSetup.transceive(self, cmdGetFUOTAFileLen)
+        return result
+
+    def link_getfuotafilename(self):
+        '''
+        To read the name of FUOTA binary file
+
+        :Parameters: N/A (Query only)
+
+        :return: name of the FUOTA binary file; NAK on failure
+
+        '''
+        cmdGetFUOTAFileName = 'READ:LINK:FUOTA_FILE_NAME?' + '\n'
+        result = RwcSerialSetup.transceive(self, cmdGetFUOTAFileName)
+        return result
+
+    def link_setfragmentindex(self, indexval):
+        '''
+        To configure fragment index for application layer
+
+        :param indexval: 0 - 3
+
+        :return: ACK on success, NAK on failure
+
+        '''
+        if indexval >= 0 and indexval <= 3:
+            cmdIndexVal = str(indexval)
+            cmdSetFragIndex = 'CONF:LINK:FRAG_INDEX ' + cmdIndexVal + '\n'
+            result = RwcSerialSetup.transceive(self, cmdSetFragIndex)
+            return result
+        else:
+            raise Exception('Invalid fragment index parameter received.')
+
+    def link_setfragmentsize(self, fragsize):
+        '''
+        To configure fragment size for application layer
+
+        :param fragsize: 1 - 255
+
+        :return: ACK on success, NAK on failure
+
+        '''
+        if fragsize >= 1 and fragsize <= 255:
+            cmdFragSize= str(fragsize)
+            cmdSetFragSize = 'CONF:LINK:FRAG_SIZE ' + cmdFragSize + '\n'
+            result = RwcSerialSetup.transceive(self, cmdSetFragSize)
+            return result
+        else:
+            raise Exception('Invalid fragment size parameter received.')
+
+    def link_setnumberoffragment(self, fragnum):
+        '''
+        To configure number of fragment for application layer
+
+        :param fragnum: 1 - 65535
+
+        :return: ACK on success, NAK on failure
+
+        '''
+        if fragnum >= 1 and fragnum <= 65535:
+            cmdFragNum= str(fragnum)
+            cmdSetFragNum = 'CONF:LINK:NB_FRAG ' + cmdFragNum + '\n'
+            result = RwcSerialSetup.transceive(self, cmdSetFragNum)
+            return result
+        else:
+            raise Exception('Invalid fragment number parameter received.')
+
+    def link_setfragemntpadding(self, paddingval):
+        '''
+        To configure fragment padding for application layer
+
+        :param paddingval: 1 - 255
+
+        :return: ACK on success, NAK on failure
+
+        '''
+        if paddingval >= 1 and paddingval <= 255:
+            cmdPaddingval= str(paddingval)
+            cmdSetFragPadding = 'CONF:LINK:FRAG_PADDING ' \
+                                    + cmdPaddingval + '\n'
+            result = RwcSerialSetup.transceive(self, cmdSetFragPadding)
+            return result
+        else:
+            raise Exception('Invalid fragment padding parameter received.')
+
+    def link_setfragmentdescriptor(self, descval):
+        '''
+        To configure fragment descriptor for application layer
+
+        :param descval: 0x0 - 0xFFFFFFFF
+
+        :return: ACK on success, NAK on failure
+
+        '''
+        cmdDescVal = int(descval)
+        if (cmdDescVal >= 0 and cmdDescVal <= 2**32 - 1):
+            cmdHexValue = hex(cmdDescVal)
+            cmdSetFragDesc = 'CONF:LINK:FRAG_DESCRIPTOR ' + cmdHexValue + '\n'
+            result = RwcSerialSetup.transceive(self, cmdSetFragDesc)
+            return result
+        else:
+            raise Exception('Invalid Fragment descriptor parameter received.')
+
+    def link_setfragmentalgorithm(self, algoval):
+        '''
+        To configure fragment algorithm for application layer
+
+        :param algoval: 0 - 7
+
+        :return: ACK on success, NAK on failure
+
+        '''
+        if algoval >= 0 and algoval <= 7:
+            cmdAlgoVal= str(algoval)
+            cmdSetFragAlgo = 'CONF:LINK:FRAG_ALGO ' + cmdAlgoVal + '\n'
+            result = RwcSerialSetup.transceive(self, cmdSetFragAlgo)
+            return result
+        else:
+            raise Exception('Invalid fragment algorithm parameter received.')
+
+    def link_getfragmentprocessingstatus(self):
+        '''
+        To read the status of fragment progressing for 
+        application layer
+
+        :Parameters: NA (Query only)
+
+        :return: It returns fragment progressing status, NAK on failure
+
+        '''
+        cmdGetFragProcessStatus = 'READ:LINK:FRAG_PROGRESS?' + '\n'
+        result = RwcSerialSetup.transceive(self, cmdGetFragProcessStatus)
+        return result
+
+    def link_setmulticastkey(self, value):
+        '''
+        To configure multicast key value for application layer
+
+        :param value: 128-bit Hex value
+
+        :return: ACK on success, NAK on failure
+
+        '''
+        cmdValue = int(value)
+        if (cmdValue >= 0 and cmdValue <= 2**128 - 1):
+            cmdHexValue = hex(cmdValue)
+            cmdSetMcKey = 'CONF:LINK:MC_KEY ' + cmdHexValue + '\n'
+            result = RwcSerialSetup.transceive(self, cmdSetMcKey)
+            return result
+        else:
+            raise Exception('Invalid Multicast key parameter received.')
+
+    def link_setmulticastgroupid(self, groupid):
+        '''
+        To configure multicast group id for application layer
+
+        :param groupid: 0 - 3
+
+        :return: ACK on success, NAK on failure
+
+        '''
+        if groupid >= 0 and groupid <= 3:
+            cmdGroupId= str(groupid)
+            cmdSetMcGroupId = 'CONF:LINK:MC_GROUP_ID ' + cmdGroupId + '\n'
+            result = RwcSerialSetup.transceive(self, cmdSetMcGroupId)
+            return result
+        else:
+            raise Exception('Invalid Multicast Group ID parameter received.')
+
+    def link_setmulticastaddress(self, mcaddrval):
+        '''
+        To configure multicast address for application layer
+
+        :param mcaddrval: 0x0 - 0xFFFFFFFF
+
+        :return: ACK on success, NAK on failure
+
+        '''
+        cmdMcAddrVal = int(mcaddrval)
+        if (cmdMcAddrVal >= 0 and cmdMcAddrVal <= 2**32 - 1):
+            cmdHexValue = hex(cmdMcAddrVal)
+            cmdSetMcAddrval = 'CONF:LINK:MC_ADDR ' + cmdHexValue + '\n'
+            result = RwcSerialSetup.transceive(self, cmdSetMcAddrval)
+            return result
+        else:
+            raise Exception('Invalid Multicast address parameter received.')
+
+    def link_setmulticastfrequency(self, freqval):
+        '''
+        To configure multicast frequency for application layer
+
+        :param freqval: 400 - 510, 862 - 960 MHz
+
+        :return: ACK on success, NAK on failure
+
+        '''
+        if (freqval >= 400 and freqval <= 510) or (freqval >= 862 
+                and freqval <= 960):
+            cmdFreq= str(freqval)
+            cmdSetMcFreq = 'CONF:LINK:MC_FREQ ' + cmdFreq + '\n'
+            result = RwcSerialSetup.transceive(self, cmdSetMcFreq)
+            return result
+        else:
+            raise Exception('Invalid Multicast Frequency parameter received.')
+
+    def link_setmulticastdr(self, drval):
+        '''
+        To configure multicast data rate for application layer
+
+        :param drval: 'DR0_SF12BW125', 'DR1_SF11BW125', 
+                      'DR2_SF10BW125', 'DR3_SF9BW125', 
+                      'DR4_SF8BW125', 'DR5_SF7BW125', 
+                      'DR6_SF7BW250', 'DR7_FSK50'
+
+        :return: ACK on success, NAK on failure
+
+        '''
+        drlist = [
+            'DR0_SF12BW125', 
+            'DR1_SF11BW125', 
+            'DR2_SF10BW125',
+            'DR3_SF9BW125', 
+            'DR4_SF8BW125', 
+            'DR5_SF7BW125', 
+            'DR6_SF7BW250', 
+            'DR7_FSK50']
+        if drval in drlist:
+            cmdSetMcDr = 'CONF:LINK:MC_DR ' + drval + '\n'
+            result = RwcSerialSetup.transceive(self, cmdSetMcDr)
+            return result
+        else:
+            raise Exception('Invalid multicast data rate Parameter received.')
+
+    def link_setmulticastoption(self, optval):
+        '''
+        To configure multicast option for application layer
+
+        :param optval: 0 - 1
+
+        :return: ACK on success, NAK on failure
+
+        '''
+        if optval == 0 or optval == 1:
+            cmdOptVal= str(optval)
+            cmdSetMcOption = 'CONF:LINK:MC_OPTION ' + cmdOptVal + '\n'
+            result = RwcSerialSetup.transceive(self, cmdSetMcOption)
+            return result
+        else:
+            raise Exception('Invalid Multicast option parameter received.')
+
+    def link_setmulticastinterval(self, interval):
+        '''
+        To configure multicast interval between multicast packets 
+        for application layer
+
+        :param interval: 1 - 10000
+
+        :return: ACK on success, NAK on failure
+
+        '''
+        if interval >= 1 and interval <= 10000:
+            cmdInterval= str(interval)
+            cmdSetMcInterval = 'CONF:LINK:MC_INTERVAL ' + cmdInterval + '\n'
+            result = RwcSerialSetup.transceive(self, cmdSetMcInterval)
+            return result
+        else:
+            raise Exception('Invalid Multicast Interval parameter received.')
+
+    def link_setfirmwarereboottimemode(self, mode):
+        '''
+        To configure firmware management reboot time mode for 
+        application layer
+
+        :param mode: TIME, ASAP, CANCEL
+
+        :return: ACK on success, NAK on failure
+        
+        '''
+        reboottimemodelist = ['TIME', 'ASAP', 'CANCEL']
+        if mode in reboottimemodelist:
+            cmdSetFMRebootTimeMode = 'CONF:LINK:FM_REBOOT_TIME_MODE ' \
+                                        + mode + '\n'
+            result = RwcSerialSetup.transceive(self, cmdSetFMRebootTimeMode)
+            return result
+        else:
+            raise Exception('Invalid firmware reboot time mode ' \
+                            'Parameter received.')
+
+    def link_setfirmwarerebootyear(self, yearval):
+        '''
+        To configure firmware management reboot time (year) for 
+        application layer
+
+        :param yearval: 1900 - 2300
+
+        :return: ACK on success, NAK on failure
+
+        '''
+        if yearval >= 1900 and yearval <= 2300:
+            cmdYearVal= str(yearval)
+            cmdSetFMRebootYear = 'CONF:LINK:FM_REBOOT_YEAR ' \
+                                    + cmdYearVal + '\n'
+            result = RwcSerialSetup.transceive(self, cmdSetFMRebootYear)
+            return result
+        else:
+            raise Exception('Invalid reboot year parameter received.')
+
+    def link_setfirmwarerebootmonth(self, monthval):
+        '''
+        To configure firmware management reboot time (month) for 
+        application layer
+
+        :param monthval: 1 - 12
+
+        :return: ACK on success, NAK on failure
+
+        '''
+        if monthval >= 1 and monthval <= 12:
+            cmdMonthVal= str(monthval)
+            cmdSetFMRebootMonth = 'CONF:LINK:FM_REBOOT_MONTH ' \
+                                    + cmdMonthVal + '\n'
+            result = RwcSerialSetup.transceive(self, cmdSetFMRebootMonth)
+            return result
+        else:
+            raise Exception('Invalid reboot month parameter received.')
+
+    def link_setfirmwarerebootday(self, dayval):
+        '''
+        To configure firmware management reboot time (day) for 
+        application layer
+
+        :param dayval: 1 - 31
+
+        :return: ACK on success, NAK on failure
+
+        '''
+        if dayval >= 1 and dayval <= 31:
+            cmdDayVal= str(dayval)
+            cmdSetFMRebootDay = 'CONF:LINK:FM_REBOOT_DAY ' + cmdDayVal + '\n'
+            result = RwcSerialSetup.transceive(self, cmdSetFMRebootDay)
+            return result
+        else:
+            raise Exception('Invalid reboot day parameter received.')
+
+    def link_setfirmwarereboothour(self, hourval):
+        '''
+        To configure firmware management reboot time (hour) for 
+        application layer
+
+        :param hourval: 0 - 23
+
+        :return: ACK on success, NAK on failure
+
+        '''
+        if hourval >= 0 and hourval <= 23:
+            cmdHourVal= str(hourval)
+            cmdSetFMRebootHour = 'CONF:LINK:FM_REBOOT_HOUR ' \
+                                    + cmdHourVal + '\n'
+            result = RwcSerialSetup.transceive(self, cmdSetFMRebootHour)
+            return result
+        else:
+            raise Exception('Invalid reboot hour parameter received.')
+
+    def link_setfirmwarerebootminute(self, minval):
+        '''
+        To configure firmware management reboot time (minute) for 
+        application layer
+
+        :param minval: 0 - 59
+
+        :return: ACK on success, NAK on failure
+
+        '''
+        if minval >= 0 and minval <= 59:
+            cmdMinVal= str(minval)
+            cmdSetFMRebootMinute = 'CONF:LINK:FM_REBOOT_MINUTE ' \
+                                    + cmdMinVal + '\n'
+            result = RwcSerialSetup.transceive(self, cmdSetFMRebootMinute)
+            return result
+        else:
+            raise Exception('Invalid reboot minute parameter received.')
+
+    def link_setfirmwarerebootsecond(self, secval):
+        '''
+        To configure firmware management reboot time (second) for 
+        application layer
+
+        :param secval: 0 - 59
+
+        :return: ACK on success, NAK on failure
+
+        '''
+        if secval >= 0 and secval <= 59:
+            cmdSecVal= str(secval)
+            cmdSetFMRebootSecond = 'CONF:LINK:FM_REBOOT_SECOND ' \
+                                    + cmdSecVal + '\n'
+            result = RwcSerialSetup.transceive(self, cmdSetFMRebootSecond)
+            return result
+        else:
+            raise Exception('Invalid reboot second parameter received.')
+
+    def link_setfirmwarerebootcountdownval(self, cdval):
+        '''
+        To configure firmware management reboot count down value for 
+        application layer
+
+        :param cdval: 0x0 - 0xFFFFFF
+
+        :return: ACK on success, NAK on failure
+
+        '''
+        cmdCdVal = int(cdval)
+        if (cmdCdVal >= 0 and cmdCdVal <= 2**24 - 1):
+            cmdHexValue = hex(cmdCdVal)
+            cmdSetFmCdVal = 'CONF:LINK:FM_REBOOT_CD ' + cmdHexValue + '\n'
+            result = RwcSerialSetup.transceive(self, cmdSetFmCdVal)
+            return result
+        else:
+            raise Exception('Invalid reboot countdown parameter received.')
+
+    def link_setnextfirmwareversion(self, nextfmver):
+        '''
+        To configure next firmware version of firmware management for 
+        application layer
+
+        :param nextfmver: 0x0 - 0xFFFFFFFF
+
+        :return: ACK on success, NAK on failure
+
+        '''
+        cmdNxtFmVerVal = int(nextfmver)
+        if (cmdNxtFmVerVal >= 0 and cmdNxtFmVerVal <= 2**32 - 1):
+            cmdHexValue = hex(cmdNxtFmVerVal)
+            cmdSetNextFmVerVal = 'CONF:LINK:FM_NEXT_FW_VER ' \
+                                    + cmdHexValue + '\n'
+            result = RwcSerialSetup.transceive(self, cmdSetNextFmVerVal)
+            return result
+        else:
+            raise Exception('Invalid next firmware version ' \
+                            'parameter received.')
+
+    def link_deletefirmwareversion(self, delfmver):
+        '''
+        To configure delete firmware version of firmware management 
+        for application layer
+
+        :param delfmver: 0x0 - 0xFFFFFFFF
+
+        :return: ACK on success, NAK on failure
+
+        '''
+        cmdDelFmVerVal = int(delfmver)
+        if (cmdDelFmVerVal >= 0 and cmdDelFmVerVal <= 2**32 - 1):
+            cmdHexValue = hex(cmdDelFmVerVal)
+            cmdSetDelFmVerVal = 'CONF:LINK:FM_DEL_FW_VER ' \
+                                    + cmdHexValue + '\n'
+            result = RwcSerialSetup.transceive(self, cmdSetDelFmVerVal)
+            return result
+        else:
+            raise Exception('Invalid delete firmware version ' \
+                            'parameter received.')
+
+    def link_setapptimeperiod(self, timeperiodval):
+        '''
+        To configure the application layer time request period
+
+        :param timeperiodval: 0 - 15
+
+        :return: ACK on success, NAK on failure
+
+        '''
+        if timeperiodval >= 0 and timeperiodval <= 15:
+            cmdTimePeriodVal = str(timeperiodval)
+            cmdSetAppTimePeriod = 'CONF:LINK:APP_TIME_PERIOD ' \
+                                    + cmdTimePeriodVal + '\n'
+            result = RwcSerialSetup.transceive(self, cmdSetAppTimePeriod)
+            return result
+        else:
+            raise Exception('Invalid time request period parameter received.')
+
+    def link_setapptimetransnumber(self, timesynctransnumber):
+        '''
+        To configure the number of transfers for time synchronization 
+        application layer
+
+        :param timesynctransnumber: 0 - 7
+
+        :return: ACK on success, NAK on failure
+ 
+
+        .. _powerlabel:
+        '''
+        if timesynctransnumber >= 0 and timesynctransnumber <= 7:
+            cmdTimeSyncTransVal = str(timesynctransnumber)
+            cmdSetAppTimeSyncTransNo = 'CONF:LINK:APP_TIME_NB_TRANS ' \
+                                        + cmdTimeSyncTransVal + '\n'
+            result = RwcSerialSetup.transceive(self, cmdSetAppTimeSyncTransNo)
+            return result
+        else:
+            raise Exception('Invalid time sync transfer number ' \
+                            'parameter received.')
 
     #Power Command Methods
     def power_setscalemode(self, mode):
@@ -5877,11 +7157,11 @@ class RWCTesterApi(RwcSerialSetup):
         result = RwcSerialSetup.transceive(self, cmdGetMinDut)
         return result
 
-    def power_getnumofpkts_dut_sf(self, index): #index(7 - 12)
+    def power_getnumofpkts_dut_sf(self, index):
         '''
         Read the number of received packets 
 
-        :Parameters: Query only
+        :param index: 7 - 12
 
         :return: It returns number of packets received; NAK on failure
         
@@ -5895,11 +7175,11 @@ class RWCTesterApi(RwcSerialSetup):
         else:
             raise Exception('Invalid parameter received.')
 
-    def power_getmaxdutpower_sf(self, index): #index(7 - 12)
+    def power_getmaxdutpower_sf(self, index):
         '''
         Read the maximum DUT power using SF* of all the measured 
 
-        :Parameters: Query only
+        :param index: 7 - 12
 
         :return: It returns max DUT power; NAK on failure
         
@@ -5913,11 +7193,11 @@ class RWCTesterApi(RwcSerialSetup):
         else:
             raise Exception('Invalid parameter received.')
     
-    def power_getavgdutpower_sf(self, index): #index(7 - 12)
+    def power_getavgdutpower_sf(self, index):
         '''
         Read the average DUT power using SF* of all the measured
 
-        :Parameters: Query only
+        :param index: 7 - 12
 
         :return: It returns average DUT power; NAK on failure
         
@@ -5931,11 +7211,11 @@ class RWCTesterApi(RwcSerialSetup):
         else:
             raise Exception('Invalid parameter received.')
 
-    def power_getmindutpower_sf(self, index): #index(7 - 12)
+    def power_getmindutpower_sf(self, index):
         '''
         Read the minimum DUT power using SF* of all the measured 
 
-        :Parameters: Query only
+        :param index: 7 - 12
 
         :return: It returns minimum DUT power; NAK on failure
         
@@ -5949,11 +7229,11 @@ class RWCTesterApi(RwcSerialSetup):
         else:
             raise Exception('Invalid parameter received.')
 
-    def power_getnumofpkts_dut_ch(self, index): #index(0 - 7)
+    def power_getnumofpkts_dut_ch(self, index):
         '''
         Read the number of received packets
 
-        :Parameters: Query only
+        :param index: 0 - 7
 
         :return: It returns number of packets received; NAK on failure
         
@@ -5967,11 +7247,11 @@ class RWCTesterApi(RwcSerialSetup):
         else:
             raise Exception('Invalid parameter received.')
 
-    def power_getmaxdutpower_ch(self, index): #index(0 - 7)
+    def power_getmaxdutpower_ch(self, index):
         '''
         Read the maximum DUT power using CH_* of all the measured
 
-        :Parameters: Query only
+        :param index: 0 - 7
 
         :return: It returns max DUT power; NAK on failure
         
@@ -5985,11 +7265,11 @@ class RWCTesterApi(RwcSerialSetup):
         else:
             raise Exception('Invalid parameter received.')
 
-    def power_getavgdutpower_ch(self, index): #index(0 - 7)
+    def power_getavgdutpower_ch(self, index):
         '''
         Read the average DUT power using CH_* of all the measured
 
-        :Parameters: Query only
+        :param index: 0 - 7
 
         :return: It returns average DUT power; NAK on failure
         
@@ -6003,11 +7283,11 @@ class RWCTesterApi(RwcSerialSetup):
         else:
             raise Exception('Invalid parameter received.')
 
-    def power_getmindutpower_ch(self, index): #index(0 - 7)
+    def power_getmindutpower_ch(self, index):
         '''
         Read the minimum DUT power using CH_* of all the measured
 
-        :Parameters: Query only
+        :param index: 0 - 7
 
         :return: It returns minimum DUT power; NAK on failure
         
@@ -6122,7 +7402,8 @@ class RWCTesterApi(RwcSerialSetup):
 
         :param: Query only
 
-        :return: It returns the mode of power measure test; NAK on failure
+        :return: It returns the mode of power measure test; 
+                 NAK on failure
         
         '''
         cmdGetModeValue = 'READ:POWER:MODE? ' + '\n'
@@ -6152,7 +7433,8 @@ class RWCTesterApi(RwcSerialSetup):
 
         :param: Query only
 
-        :return: It returns the scenario of power measure test; NAK on failure
+        :return: It returns the scenario of power measure test; 
+                 NAK on failure
         
         '''
         cmdGetScenarioValue = 'READ:POWER:SCENARIO? ' + '\n'
@@ -6161,8 +7443,9 @@ class RWCTesterApi(RwcSerialSetup):
 
     def power_settargetchmask(self, value):
         '''
-        Configure the channel mask value to be used in power measure test. 
-        This parameter allows power measure testing for specific channels
+        Configure the channel mask value to be used in power 
+        measure test. This parameter allows power measure testing 
+        for specific channels
 
         :param value: 0x00 ~ 0xFF
 
@@ -6173,7 +7456,7 @@ class RWCTesterApi(RwcSerialSetup):
         if (value >= 0 and value <= 2**8 - 1):
             cmdHexValue = hex(cmdValue)
             cmdSetTargetChMaskVal = 'CONF:POWER:TARGET_CH_MASK ' \
-            + cmdHexValue + '\n'
+                                        + cmdHexValue + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetTargetChMaskVal)
             return result
         else:
@@ -6185,8 +7468,8 @@ class RWCTesterApi(RwcSerialSetup):
 
         :param: Query only
 
-        :return: It returns the channel mask value of power measure test; 
-        NAK on failure
+        :return: It returns the channel mask value of power measure  
+                 test; NAK on failure
         
         '''
         cmdGetTargetChMaskValue = 'READ:POWER:TARGET_CH_MASK? ' + '\n'
@@ -6207,7 +7490,7 @@ class RWCTesterApi(RwcSerialSetup):
         if (value >= 1 and value <= 2**7):
             cmdHexValue = hex(cmdValue)
             cmdSetTargetChMaskOptVal = 'CONF:POWER:TARGET_CH_MASK_OPT ' \
-            + cmdHexValue + '\n'
+                                        + cmdHexValue + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetTargetChMaskOptVal)
             return result
         else:
@@ -6215,12 +7498,13 @@ class RWCTesterApi(RwcSerialSetup):
 
     def power_gettargetchmaskopt(self):
         '''
-        Read the channel mask value for optional DR for power measurement.
+        Read the channel mask value for optional DR for 
+        power measurement.
 
         :param: Query only
 
-        :return: It returns the channel mask value of power measurement; 
-        NAK on failure
+        :return: It returns the channel mask value of 
+                 power measurement; NAK on failure
         
         '''
         cmdGetTargetChMaskOptValue = 'READ:POWER:TARGET_CH_MASK_OPT? ' + '\n'
@@ -6240,7 +7524,7 @@ class RWCTesterApi(RwcSerialSetup):
         if (value >= 1 and value <= 10):
             cmdAdrPowerValue = str(value)
             cmdSetAdrPowerVal = 'CONF:POWER:ADR_POWER ' \
-            + cmdAdrPowerValue + '\n'
+                                    + cmdAdrPowerValue + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetAdrPowerVal)
             return result
         else:
@@ -6264,7 +7548,8 @@ class RWCTesterApi(RwcSerialSetup):
         Configure the Data Rate to be used in power measure test
 
         :param datarate: DR0_SF12BW125, DR1_SF11BW125, DR2_SF10BW125, 
-        DR3_SF9BW125, DR4_SF8BW125, DR5_SF7BW125, DR6_SF7BW250, DR7_FSK50
+                         DR3_SF9BW125, DR4_SF8BW125, DR5_SF7BW125, 
+                         DR6_SF7BW250, DR7_FSK50
 
         :return: ACK on success, NAK on failure
         
@@ -6329,7 +7614,7 @@ class RWCTesterApi(RwcSerialSetup):
         
         '''
     
-        if (value >= 3 and value <= 10):
+        if (value >= 3 and value <= 100):
             cmdPktNumValue = str(value)
             cmdSetPktNumVal = 'CONF:POWER:PKT_NUM ' + cmdPktNumValue + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetPktNumVal)
@@ -6339,7 +7624,8 @@ class RWCTesterApi(RwcSerialSetup):
 
     def power_getpacketnum(self):
         '''
-        Read the minimum packet number for each channel in power measure test.
+        Read the minimum packet number for each channel in 
+        power measure test.
 
         :param: Query only
 
@@ -6352,7 +7638,8 @@ class RWCTesterApi(RwcSerialSetup):
 
     def power_setcwtimeout(self, value):
         '''
-        Configure the CW Timeout for CERTI_CW scenario in power measure test
+        Configure the CW Timeout for CERTI_CW scenario in 
+        power measure test
 
         :param value: 5 ~ 65535
 
@@ -6363,7 +7650,7 @@ class RWCTesterApi(RwcSerialSetup):
         if (value >= 5 and value <= 65535):
             cmdTimeoutValue = str(value)
             cmdSetTimeoutVal = 'CONF:POWER:CW_TIMEOUT ' \
-            + cmdTimeoutValue + '\n'
+                                + cmdTimeoutValue + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetTimeoutVal)
             return result
         else:
@@ -6371,7 +7658,8 @@ class RWCTesterApi(RwcSerialSetup):
 
     def power_getcwtimeout(self):
         '''
-        Read the CW Timeout for CERTI_CW scenario in power measure test.
+        Read the CW Timeout for CERTI_CW scenario in power 
+        measure test.
 
         :param: Query only
 
@@ -6384,7 +7672,8 @@ class RWCTesterApi(RwcSerialSetup):
 
     def power_setcwfrequency(self, value):
         '''
-        Configure the CW frequency for CERTI_CW scenario in power measure test
+        Configure the CW frequency for CERTI_CW scenario in 
+        power measure test
 
         :param value: 400 ~ 510, 862 ~ 960 MHz
 
@@ -6402,7 +7691,8 @@ class RWCTesterApi(RwcSerialSetup):
 
     def power_getcwfrequency(self):
         '''
-        Read the CW frequency for CERTI_CW scenario in power measure test.
+        Read the CW frequency for CERTI_CW scenario in power 
+        measure test.
 
         :param: Query only
 
@@ -6460,7 +7750,7 @@ class RWCTesterApi(RwcSerialSetup):
         result = RwcSerialSetup.transceive(self, cmdGetPowerValue)
         return result
 
-    #Sensitivity Command Methods
+    # Sensitivity Command Methods
     def sensitivity_run(self):
         '''
         Start the sensitivity test
@@ -6511,13 +7801,13 @@ class RWCTesterApi(RwcSerialSetup):
         '''
         cmdOperatingMode = opmode
         if cmdOperatingMode == 'CERTI_ECHO':
-            cmdSetOperatingMode \
-            = 'CONF:SENSITIVITY:SCENARIO CERTI_ECHO' + '\n'
+            cmdSetOperatingMode = 'CONF:SENSITIVITY:SCENARIO CERTI_ECHO' \
+                                    + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetOperatingMode)
             return result
         elif cmdOperatingMode == 'NORMAL_UL':
-            cmdSetOperatingMode \
-            = 'CONF:SENSITIVITY:SCENARIO NORMAL_UL' + '\n'
+            cmdSetOperatingMode = 'CONF:SENSITIVITY:SCENARIO NORMAL_UL' \
+                                    + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetOperatingMode)
             return result
         else:
@@ -6548,7 +7838,7 @@ class RWCTesterApi(RwcSerialSetup):
         if packetnum >= 5 and packetnum <= 1000:
             cmdRepetitionNum = str(packetnum)
             cmdSetRepetitionNum = 'CONF:SENSITIVITY:PACKET_NUM ' \
-            + cmdRepetitionNum + '\n'
+                                    + cmdRepetitionNum + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetRepetitionNum)
             return result
         else:
@@ -6653,7 +7943,7 @@ class RWCTesterApi(RwcSerialSetup):
         if power >= 1 and power <= 20:
             cmdStepPower = str(power)
             cmdSetStepPower = 'CONF:SENSITIVITY:STEP_POW ' \
-            + cmdStepPower + '\n'
+                                + cmdStepPower + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetStepPower)
             return result
         else:
@@ -6685,7 +7975,7 @@ class RWCTesterApi(RwcSerialSetup):
         if (cmdValue >= 0.000 and cmdValue <= 0.999):
             cmdPerValue = str(cmdValue)
             cmdSetTargetPer = 'CONF:SENSITIVITY:TARGET_PER ' \
-            + cmdPerValue + '\n'
+                                + cmdPerValue + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetTargetPer)
             return result
         else:
@@ -6710,7 +8000,8 @@ class RWCTesterApi(RwcSerialSetup):
 
         :param: N/A (Query only)
 
-        :return: It returns the status of sensitivity test; NAK on failure
+        :return: It returns the status of sensitivity test; 
+                 NAK on failure
         
         '''
         cmdGetCurrentStatus = 'READ:SENSITIVITY:STATUS?' + '\n'
@@ -6760,8 +8051,13 @@ class RWCTesterApi(RwcSerialSetup):
         '''
         Configure the selection of downlink slot (RX window)
 
-        :param slotval: For EDT, RX1, RX2, PING (Class B), RXC (Class C)
-                        For GWT, RX1, RX2, RX1&RX2
+        :param slotval: For EDT, RX1, 
+                                 RX2, 
+                                 PING (Class B), 
+                                 RXC (Class C)
+                        For GWT, RX1, 
+                                 RX2, 
+                                 RX1&RX2
 
         :return: ACK on success, NAK on failure
         
@@ -6776,8 +8072,8 @@ class RWCTesterApi(RwcSerialSetup):
             result = RwcSerialSetup.transceive(self, cmdSetDownlinkSlot)
             return result
         elif cmdSlotValue == 'RX1&RX2':
-            cmdSetDownlinkSlot \
-            = 'CONF:SENSITIVITY:DOWNLINK_SLOT RX1&RX2' + '\n'
+            cmdSetDownlinkSlot = 'CONF:SENSITIVITY:DOWNLINK_SLOT RX1&RX2' \
+                                    + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetDownlinkSlot)
             return result
         elif cmdSlotValue == 'PING':
@@ -6829,8 +8125,8 @@ class RWCTesterApi(RwcSerialSetup):
 
         :param: Query only
 
-        :return: It returns the mask value to be used in Sensitivity test; 
-        NAK on failure
+        :return: It returns the mask value to be used in 
+                 Sensitivity test; NAK on failure
         
         '''
         cmdGetTargetChMask = 'READ:SENSITIVITY:TARGET_CH_MASK?' + '\n'
@@ -6850,9 +8146,8 @@ class RWCTesterApi(RwcSerialSetup):
         cmdValue = int(value)
         if (value >= 1 and value <= 2**7):
             cmdHexValue = hex(cmdValue)
-            cmdSetTargetChMaskOptVal \
-            = 'CONF:SENSITIVITY:TARGET_CH_MASK_OPT ' \
-            + cmdHexValue + '\n'
+            cmdSetTargetChMaskOptVal = 'CONF:SENSITIVITY:TARGET_CH_MASK_OPT ' \
+                                        + cmdHexValue + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetTargetChMaskOptVal)
             return result
         else:
@@ -6860,7 +8155,8 @@ class RWCTesterApi(RwcSerialSetup):
 
     def sensitivity_gettargetchmaskopt(self):
         '''
-        Read the channel mask value for optional DR for sensitivity test.
+        Read the channel mask value for optional DR for 
+        sensitivity test.
 
         :param: Query only
 
@@ -6868,7 +8164,7 @@ class RWCTesterApi(RwcSerialSetup):
         
         '''
         cmdGetTargetChMaskOptValue = 'READ:SENSITIVITY:TARGET_CH_MASK_OPT? ' \
-        + '\n'
+                                        + '\n'
         result = RwcSerialSetup.transceive(self, cmdGetTargetChMaskOptValue)
         return result
 
@@ -6877,7 +8173,7 @@ class RWCTesterApi(RwcSerialSetup):
         Configure the DR value to be used in sensitivity test
 
         :param drvalue: DR0_SF12BW125, DR1_SF11BW125, DR2_SF10BW125, 
-        DR3_SF9BW125, DR4_SF8BW125, DR5_SF7BW125
+                        DR3_SF9BW125, DR4_SF8BW125, DR5_SF7BW125
 
         :return: ACK on success, NAK on failure
         
@@ -6890,6 +8186,7 @@ class RWCTesterApi(RwcSerialSetup):
             'DR4_SF8BW125', 
             'DR5_SF7BW125'
             ]
+
         if drvalue in drvallist:
             cmdSetTargetDr = 'CONF:SENSITIVITY:TARGET_DR ' + drvalue + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetTargetDr)
@@ -6904,7 +8201,7 @@ class RWCTesterApi(RwcSerialSetup):
         :param: Query only
 
         :return: It returns the DR value to be used in sensitivity test; 
-        NAK on failure
+                 NAK on failure
         
         '''
         cmdGetTargetDr = 'READ:SENSITIVITY:TARGET_DR?' + '\n'
@@ -6923,29 +8220,33 @@ class RWCTesterApi(RwcSerialSetup):
         
         '''
         cmdChNum = str(chnum)
-        if (freq >= 400 and freq <= 510) or (freq >= 862 and freq <= 960):
+        if (freq >= 400 and freq <= 510) or (freq >= 862 
+                and freq <= 960):
             cmdChFrequency = str(freq)
             cmdSetTargetDlChFrequencyVal = 'CONF:SENSITIVITY:TARGET_DL_CH ' \
-            + cmdChNum + ' ' + cmdChFrequency + '\n'
-            result \
-            = RwcSerialSetup.transceive(self, cmdSetTargetDlChFrequencyVal)
+                                            + cmdChNum + ' ' \
+                                            + cmdChFrequency + '\n'
+            result = RwcSerialSetup.transceive(
+                self, 
+                cmdSetTargetDlChFrequencyVal)
             return result
         else:
             raise Exception('Invalid parameter received.')
 
     def sensitivity_gettargetdlch(self, chnum):
         '''
-        Read the Downlink frequency channel to be used in sensitivity test
+        Read the Downlink frequency channel to be used in 
+        sensitivity test
 
         :param chnum: Channel Number
 
         :return: It returns the downlink channel frequency value; 
-        NAK on failure
+                 NAK on failure
         
         '''
         cmdChNum = str(chnum)
         cmdGetTargetDlChFreq = 'READ:SENSITIVITY:TARGET_DL_CH? ' \
-        + cmdChNum + '\n'
+                                + cmdChNum + '\n'
         result = RwcSerialSetup.transceive(self, cmdGetTargetDlChFreq)
         return result
 
@@ -6954,35 +8255,35 @@ class RWCTesterApi(RwcSerialSetup):
         Configure the Message type of user-defined MAC command
 
         :param msgtype: MAC Command Message type 
-        (0000_0000, 1111_1111, 1111_0000, 1010_1010, PRBS, USER)
+                        (0000_0000, 1111_1111, 1111_0000, 
+                        1010_1010, PRBS, USER)
 
         :return: ACK on success, NAK on failure
         
         '''
         cmdPayloadType = msgtype
         if cmdPayloadType == '0000_0000':
-            cmdSetPayloadType \
-            = 'CONF:SENSITIVITY:PAYLOAD_TYPE 0000_0000' + '\n'
+            cmdSetPayloadType = 'CONF:SENSITIVITY:PAYLOAD_TYPE 0000_0000' \
+                                    + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetPayloadType)
             return result
         elif cmdPayloadType == '1111_1111':
-            cmdSetPayloadType \
-            = 'CONF:SENSITIVITY:PAYLOAD_TYPE 1111_1111' + '\n'
+            cmdSetPayloadType = 'CONF:SENSITIVITY:PAYLOAD_TYPE 1111_1111' \
+                                    + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetPayloadType)
             return result
         elif cmdPayloadType == '1111_0000':
-            cmdSetPayloadType \
-            = 'CONF:SENSITIVITY:PAYLOAD_TYPE 1111_0000' + '\n'
+            cmdSetPayloadType = 'CONF:SENSITIVITY:PAYLOAD_TYPE 1111_0000' \
+                                    + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetPayloadType)
             return result
         elif cmdPayloadType == '1010_1010':
-            cmdSetPayloadType \
-            = 'CONF:SENSITIVITY:PAYLOAD_TYPE 1010_1010' + '\n'
+            cmdSetPayloadType = 'CONF:SENSITIVITY:PAYLOAD_TYPE 1010_1010' \
+                                    + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetPayloadType)
             return result
         elif cmdPayloadType == 'PRBS':
-            cmdSetPayloadType \
-            = 'CONF:SENSITIVITY:PAYLOAD_TYPE PRBS' + '\n'
+            cmdSetPayloadType = 'CONF:SENSITIVITY:PAYLOAD_TYPE PRBS' + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetPayloadType)
             return result
         elif cmdPayloadType == 'USER':
@@ -7037,7 +8338,8 @@ class RWCTesterApi(RwcSerialSetup):
 
     def sensitivity_setpayloadsize(self, length):
         '''
-        Configure the Message length in byte of user-defined MAC command
+        Configure the Message length in byte of user-defined 
+        MAC command
 
         :param length: MAC Command Message length (1 ~ 128)
 
@@ -7047,7 +8349,7 @@ class RWCTesterApi(RwcSerialSetup):
         if length >= 1 and length <= 128:
             cmdMsgLength = str(length)
             cmdSetMsgLength = 'CONF:SENSITIVITY:PAYLOAD_SIZE ' \
-            + cmdMsgLength + '\n'
+                                + cmdMsgLength + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetMsgLength)
             return result
         else:
@@ -7123,7 +8425,7 @@ class RWCTesterApi(RwcSerialSetup):
         result = RwcSerialSetup.transceive(self, cmdGetRxFrequency)
         return result
 
-    #NST Command Methods
+    # NST Command Methods
     def nst_tx_run(self):
         '''
         Run the Signal Generator to transmit test packets to DUT
@@ -7165,8 +8467,8 @@ class RWCTesterApi(RwcSerialSetup):
     
     def nst_tx_status(self):
         '''
-        Read number of packets transmitted after started. It will return IDLE 
-        if not started
+        Read number of packets transmitted after started. It will 
+        return IDLE if not started
 
         :Parameters: N/A
 
@@ -7179,7 +8481,8 @@ class RWCTesterApi(RwcSerialSetup):
 
     def nst_tx_setrepeatnum(self, num):
         '''
-        Configure the number of repetition; 0 means infinite transmission
+        Configure the number of repetition; 0 means infinite 
+        transmission
 
         :param num: 0 ~ 10000
 
@@ -7417,7 +8720,8 @@ class RWCTesterApi(RwcSerialSetup):
         '''
         Configure the Payload type of LoRa TX frame
 
-        :param msgtype: 0000_0000, 1111_1111, 1111_0000, 1010_1010, PRBS, USER
+        :param msgtype: 0000_0000, 1111_1111, 1111_0000, 
+                        1010_1010, PRBS, USER
 
         :return: ACK on success, NAK on failure
         
@@ -7475,7 +8779,7 @@ class RWCTesterApi(RwcSerialSetup):
         if length >= 8 and length <= 256:
             cmdMsgLength = str(length)
             cmdSetMsgLength = 'CONF:SENSITIVITY:PAYLOAD_SIZE ' \
-            + cmdMsgLength + '\n'
+                                + cmdMsgLength + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetMsgLength)
             return result
         else:
@@ -7640,7 +8944,7 @@ class RWCTesterApi(RwcSerialSetup):
         if (cmdValue >= 1 and cmdValue <= 8):
             cmdParam = str(cmdValue)
             cmdSetSyncWordSize = 'CONF:NST:TX:SYNC_WORD_SIZE ' \
-            + cmdParam + '\n'
+                                    + cmdParam + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetSyncWordSize)
             return result
         else:
@@ -7668,15 +8972,14 @@ class RWCTesterApi(RwcSerialSetup):
         :return: ACK on success, NAK on failure
 
         '''
-        #cmdValue = int(sizevalue)
-        #if (cmdValue >= 1 and cmdValue <= 8):
-        #    cmdParam = str(cmdValue)
-        #    cmdSetSyncWord = 'CONF:NST:TX:SYNC_WORD ' + cmdParam + '\n'
-        #    result = RwcSerialSetup.transceive(self, cmdSetSyncWord)
-        #    return result
-        #else:
-        #    raise Exception('Invalid Parameter received.')
-        pass
+        cmdValue = int(value)
+        if (cmdValue >= 1 and cmdValue <= 8):
+           cmdParam = str(cmdValue)
+           cmdSetSyncWord = 'CONF:NST:TX:SYNC_WORD ' + cmdParam + '\n'
+           result = RwcSerialSetup.transceive(self, cmdSetSyncWord)
+           return result
+        else:
+           raise Exception('Invalid Parameter received.')
 
     def nst_tx_getsyncword(self):
         '''
@@ -7687,10 +8990,9 @@ class RWCTesterApi(RwcSerialSetup):
         :return: It returns Sync Word; NAK on failure
         
         '''
-        #cmdGetSyncWord = 'CONF:NST:TX:SYNC_WORD?' + '\n'
-        #result = RwcSerialSetup.transceive(self, cmdGetSyncWord)
-        #return result
-        pass
+        cmdGetSyncWord = 'CONF:NST:TX:SYNC_WORD?' + '\n'
+        result = RwcSerialSetup.transceive(self, cmdGetSyncWord)
+        return result
 
     def nst_tx_setpolarity(self, polaritytype):
         '''
@@ -7704,7 +9006,7 @@ class RWCTesterApi(RwcSerialSetup):
         polaritytypelist = ['NORMAL', 'INVERSE']
         if polaritytype in polaritytypelist:
             cmdSetTxPolarity = 'CONF:NST:TX:TX_POLARITY ' \
-            + polaritytype + '\n'
+                                + polaritytype + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetTxPolarity)
             return result
         else:
@@ -7725,7 +9027,8 @@ class RWCTesterApi(RwcSerialSetup):
 
     def nst_tx_setduttype(self, duttype):
         '''
-        Configure the DUT Type for TX NST test
+        Configure the DUT Type for TX NST test 
+        (RWC supported version: v1.15 - v1.21)
 
         :param duttype: END_DEVICE, GATEWAY, UNKNOWN
 
@@ -7733,7 +9036,14 @@ class RWCTesterApi(RwcSerialSetup):
 
         '''
         duttypelist = ['END_DEVICE', 'GATEWAY', 'UNKNOWN']
-        if duttype in duttypelist:
+        cmdSupportedVersion = [
+            '1.150', '1.160', 
+            '1.170', '1.200', 
+            '1.203', '1.204', 
+            '1.206', '1.210']
+        verStatus = self.validate_sys_swversion(cmdSupportedVersion)
+
+        if verStatus and duttype in duttypelist:
             cmdSetDutType = 'CONF:NST:TX:DUT_TYPE ' + duttype + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetDutType)
             return result
@@ -7742,16 +9052,25 @@ class RWCTesterApi(RwcSerialSetup):
 
     def nst_tx_getduttype(self):
         '''
-        Read the DUT Type for TX NST test
+        Read the DUT Type for TX NST test 
+        (RWC supported version: v1.15 - v1.21)
 
         :Parameters: Query only
 
         :return: It returns DUT type; NAK on failure
         
         '''
-        cmdGetDutType = 'CONF:NST:TX:DUT_TYPE?' + '\n'
-        result = RwcSerialSetup.transceive(self, cmdGetDutType)
-        return result
+        cmdSupportedVersion = [
+            '1.150', '1.160', 
+            '1.170', '1.200', 
+            '1.203', '1.204', 
+            '1.206', '1.210']
+        verStatus = self.validate_sys_swversion(cmdSupportedVersion)
+
+        if verStatus:
+            cmdGetDutType = 'CONF:NST:TX:DUT_TYPE?' + '\n'
+            result = RwcSerialSetup.transceive(self, cmdGetDutType)
+            return result
 
     def nst_rx_run(self):
         '''
@@ -7873,8 +9192,7 @@ class RWCTesterApi(RwcSerialSetup):
             'SF10', 
             'SF11', 
             'SF12', 
-            'ANY'
-            ]
+            'ANY']
         if index in sflist:
             cmdSetRxSf = 'CONF:NST:RX:SF ' + index + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetRxSf)
@@ -7935,6 +9253,37 @@ class RWCTesterApi(RwcSerialSetup):
         result = RwcSerialSetup.transceive(self, cmdGetRxNwkType)
         return result
 
+    def nst_rx_setpreamblesize(self, preamblesize):
+        '''
+        Configure the preamble size of LoRa RX frame
+
+        :param preamblesize: 2 ~ 12
+
+        :return: ACK on success, NAK on failure
+        
+        '''
+        if preamblesize >= 2 and preamblesize <= 12:
+            cmdPreambleSize = str(preamblesize)
+            cmdSetRxPreambleSize = 'CONF:NST:RX:PREAMBLE_SIZE ' \
+            + cmdPreambleSize + '\n'
+            result = RwcSerialSetup.transceive(self, cmdSetRxPreambleSize)
+            return result
+        else:
+            raise Exception('Invalid parameter received.')
+
+    def nst_rx_getpreamblesize(self):
+        '''
+        Read the preamble size of LoRa RX frame
+
+        :Parameters: Query only
+
+        :return: It returns the preamble size; NAK on failure
+        
+        '''
+        cmdGetRxPreambleSize = 'READ:NST:RX:PREAMBLE_SIZE?' + '\n'
+        result = RwcSerialSetup.transceive(self, cmdGetRxPreambleSize)
+        return result
+
     def nst_rx_setcr(self, codingrate):
         '''
         Configure the Coding Rate of LoRa RX frame
@@ -7987,7 +9336,8 @@ class RWCTesterApi(RwcSerialSetup):
 
         :Parameters: Query only
 
-        :return: It returns RX number of received packets; NAK on failure
+        :return: It returns RX number of received packets; 
+                 NAK on failure
         
         '''
         cmdGetRxNumPkts = 'READ:NST:RX:POW_NUM?' + '\n'
@@ -8103,7 +9453,7 @@ class RWCTesterApi(RwcSerialSetup):
         if (cmdValue >= 1 and cmdValue <= 8):
             cmdParam = str(cmdValue)
             cmdSetSyncWordSize = 'CONF:NST:RX:SYNC_WORD_SIZE ' \
-            + cmdParam + '\n'
+                                    + cmdParam + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetSyncWordSize)
             return result
         else:
@@ -8122,7 +9472,7 @@ class RWCTesterApi(RwcSerialSetup):
         result = RwcSerialSetup.transceive(self, cmdGetSyncWordSize)
         return result
 
-    def nst_rx_setsyncword(self):
+    def nst_rx_setsyncword(self, sizevalue):
         '''
         Configure the Sync Word for FSK Modulation
 
@@ -8131,15 +9481,14 @@ class RWCTesterApi(RwcSerialSetup):
         :return: ACK on success, NAK on failure
 
         '''
-        #cmdValue = int(sizevalue)
-        #if (cmdValue >= 1 and cmdValue <= 8):
-        #    cmdParam = str(cmdValue)
-        #    cmdSetSyncWord = 'CONF:NST:RX:SYNC_WORD ' + cmdParam + '\n'
-        #    result = RwcSerialSetup.transceive(self, cmdSetSyncWord)
-        #    return result
-        #else:
-        #    raise Exception('Invalid Parameter received.')
-        pass
+        cmdValue = int(sizevalue)
+        if (cmdValue >= 1 and cmdValue <= 8):
+           cmdParam = str(cmdValue)
+           cmdSetSyncWord = 'CONF:NST:RX:SYNC_WORD ' + cmdParam + '\n'
+           result = RwcSerialSetup.transceive(self, cmdSetSyncWord)
+           return result
+        else:
+           raise Exception('Invalid Parameter received.')
 
     def nst_rx_getsyncword(self):
         '''
@@ -8150,10 +9499,9 @@ class RWCTesterApi(RwcSerialSetup):
         :return: It returns Sync Word; NAK on failure
         
         '''
-        #cmdGetSyncWord = 'CONF:NST:RX:SYNC_WORD?' + '\n'
-        #result = RwcSerialSetup.transceive(self, cmdGetSyncWord)
-        #return result
-        pass
+        cmdGetSyncWord = 'CONF:NST:RX:SYNC_WORD?' + '\n'
+        result = RwcSerialSetup.transceive(self, cmdGetSyncWord)
+        return result
 
     def nst_rx_settxpolarity(self, polaritytype):
         '''
@@ -8167,7 +9515,7 @@ class RWCTesterApi(RwcSerialSetup):
         polaritytypelist = ['NORMAL', 'INVERSE']
         if polaritytype in polaritytypelist:
             cmdSetRxPolarity = 'CONF:NST:RX:TX_POLARITY ' \
-            + polaritytype + '\n'
+                                + polaritytype + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetRxPolarity)
             return result
         else:
@@ -8189,6 +9537,7 @@ class RWCTesterApi(RwcSerialSetup):
     def nst_rx_setduttype(self, duttype):
         '''
         Configure the DUT Type for RX NST test
+        (RWC supported version: v1.15 - v1.21)
 
         :param duttype: END_DEVICE, GATEWAY, UNKNOWN
 
@@ -8196,7 +9545,14 @@ class RWCTesterApi(RwcSerialSetup):
 
         '''
         duttypelist = ['END_DEVICE', 'GATEWAY', 'UNKNOWN']
-        if duttype in duttypelist:
+        cmdSupportedVersion = [
+            '1.150', '1.160', 
+            '1.170', '1.200', 
+            '1.203', '1.204', 
+            '1.206', '1.210']
+        verStatus = self.validate_sys_swversion(cmdSupportedVersion)
+
+        if verStatus and duttype in duttypelist:
             cmdSetDutType = 'CONF:NST:RX:DUT_TYPE ' + duttype + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetDutType)
             return result
@@ -8206,19 +9562,29 @@ class RWCTesterApi(RwcSerialSetup):
     def nst_rx_getduttype(self):
         '''
         Read the DUT Type for RX NST test
+        (RWC supported version: v1.15 - v1.21)
 
         :Parameters: Query only
 
         :return: It returns DUT type; NAK on failure
         
         '''
-        cmdGetDutType = 'CONF:NST:RX:DUT_TYPE?' + '\n'
-        result = RwcSerialSetup.transceive(self, cmdGetDutType)
-        return result
+        cmdSupportedVersion = [
+            '1.150', '1.160', 
+            '1.170', '1.200', 
+            '1.203', '1.204', 
+            '1.206', '1.210']
+        verStatus = self.validate_sys_swversion(cmdSupportedVersion)
+
+        if verStatus:
+            cmdGetDutType = 'CONF:NST:RX:DUT_TYPE?' + '\n'
+            result = RwcSerialSetup.transceive(self, cmdGetDutType)
+            return result
 
     def nst_mfg_setduttype(self, duttype):
         '''
         Configure the DUT Type for MFG NST test
+        (RWC supported version: v1.15 - v1.21)
 
         :param duttype: END_DEVICE, GATEWAY, UNKNOWN
 
@@ -8226,7 +9592,14 @@ class RWCTesterApi(RwcSerialSetup):
 
         '''
         duttypelist = ['END_DEVICE', 'GATEWAY', 'UNKNOWN']
-        if duttype in duttypelist:
+        cmdSupportedVersion = [
+            '1.150', '1.160', 
+            '1.170', '1.200', 
+            '1.203', '1.204', 
+            '1.206', '1.210']
+        verStatus = self.validate_sys_swversion(cmdSupportedVersion)
+
+        if verStatus and duttype in duttypelist:
             cmdSetDutType = 'CONF:NST:MFG:DUT_TYPE ' + duttype + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetDutType)
             return result
@@ -8236,15 +9609,24 @@ class RWCTesterApi(RwcSerialSetup):
     def nst_mfg_getduttype(self):
         '''
         Read the DUT Type for MFG NST test
+        (RWC supported version: v1.15 - v1.21)
 
         :Parameters: Query only
 
         :return: It returns DUT type; NAK on failure
         
         '''
-        cmdGetDutType = 'CONF:NST:MFG:DUT_TYPE?' + '\n'
-        result = RwcSerialSetup.transceive(self, cmdGetDutType)
-        return result
+        cmdSupportedVersion = [
+            '1.150', '1.160', 
+            '1.170', '1.200', 
+            '1.203', '1.204', 
+            '1.206', '1.210']
+        verStatus = self.validate_sys_swversion(cmdSupportedVersion)
+
+        if verStatus:
+            cmdGetDutType = 'CONF:NST:MFG:DUT_TYPE?' + '\n'
+            result = RwcSerialSetup.transceive(self, cmdGetDutType)
+            return result
 
     def nst_mfg_setusercriteria(self, value):
         '''
@@ -8259,7 +9641,7 @@ class RWCTesterApi(RwcSerialSetup):
         if (cmdValue >= 0.001 and cmdValue <= 1.000):
             cmdPerCriteriaValue = str(cmdValue)
             cmdSetPerCriteria = 'CONF:NST:MFG:PER_CRITERIA ' \
-            + cmdPerCriteriaValue + '\n'
+                                    + cmdPerCriteriaValue + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetPerCriteria)
             return result
         else:
@@ -8289,10 +9671,11 @@ class RWCTesterApi(RwcSerialSetup):
         '''
         if power >= -150 and power <= 30:
             cmdPower = str(power)
-            cmdSetMfgPowUpperCriteria \
-            = 'CONF:NST:MFG:POW_CRITERIA_UPPER' + cmdPower + '\n'
-            result \
-            = RwcSerialSetup.transceive(self, cmdSetMfgPowUpperCriteria)
+            cmdSetMfgPowUpperCriteria = 'CONF:NST:MFG:POW_CRITERIA_UPPER' \
+                                            + cmdPower + '\n'
+            result = RwcSerialSetup.transceive(
+                self, 
+                cmdSetMfgPowUpperCriteria)
             return result
         else:
             raise Exception('Invalid parameter received.')
@@ -8322,7 +9705,7 @@ class RWCTesterApi(RwcSerialSetup):
         if power >= -150 and power <= 30:
             cmdPower = str(power)
             cmdSetMfgPowLowerCriteria = 'CONF:NST:MFG:POW_CRITERIA_LOWER' \
-            + cmdPower + '\n'
+                                            + cmdPower + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetMfgPowLowerCriteria)
             return result
         else:
@@ -8459,7 +9842,7 @@ class RWCTesterApi(RwcSerialSetup):
         if (cmdValue >= 0.05 and cmdValue <= 1000.00):
             cmdIntervalValue = str(cmdValue)
             cmdSetInterval = 'CONF:NST:MFG:INTERVAL ' \
-            + cmdIntervalValue + '\n'
+                                + cmdIntervalValue + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetInterval)
             return result
         else:
@@ -8525,8 +9908,7 @@ class RWCTesterApi(RwcSerialSetup):
             'SF10', 
             'SF11', 
             'SF12', 
-            'ANY'
-            ]
+            'ANY']
         if index in sflist:
             cmdSetMfgSf = 'CONF:NST:MFG:SF ' + index + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetMfgSf)
@@ -8605,7 +9987,7 @@ class RWCTesterApi(RwcSerialSetup):
         if length >= 0 and length <= 250:
             cmdMsgLength = str(length)
             cmdSetMsgLength = 'CONF:NST:MFG:PAYLOAD_SIZE ' \
-            + cmdMsgLength + '\n'
+                                + cmdMsgLength + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetMsgLength)
             return result
         else:
@@ -8659,7 +10041,8 @@ class RWCTesterApi(RwcSerialSetup):
         '''
         Configure the Payload type of LoRa TX frame in MFG test
 
-        :param msgtype: 0000_0000, 1111_1111, 1111_0000, 1010_1010, PRBS, USER
+        :param msgtype: 0000_0000, 1111_1111, 1111_0000, 
+                        1010_1010, PRBS, USER
 
         :return: ACK on success, NAK on failure
         
@@ -8717,7 +10100,7 @@ class RWCTesterApi(RwcSerialSetup):
         if preamblesize >= 2 and preamblesize <= 12:
             cmdPreambleSize = str(preamblesize)
             cmdSetMfgPreambleSize = 'CONF:NST:MFG:PREAMBLE_SIZE ' \
-            + cmdPreambleSize + '\n'
+                                        + cmdPreambleSize + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetMfgPreambleSize)
             return result
         else:
@@ -8774,7 +10157,7 @@ class RWCTesterApi(RwcSerialSetup):
         if num >= 0 and num <= 10000:
             cmdRepeatNum = str(num)
             cmdSetMfgRepeatNum = 'CONF:NST:MFG:REPEAT_NUM ' \
-            + cmdRepeatNum + '\n'
+                                    + cmdRepeatNum + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetMfgRepeatNum)
             return result
         else:
@@ -8786,7 +10169,8 @@ class RWCTesterApi(RwcSerialSetup):
 
         :Parameters: Query only
 
-        :return: It returns the number of frame transmission; NAK on failure
+        :return: It returns the number of frame transmission; 
+                 NAK on failure
         
         '''
         cmdRepeatNum = 'READ:NST:MFG:REPEAT_NUM?' + '\n'
@@ -8908,7 +10292,7 @@ class RWCTesterApi(RwcSerialSetup):
         if (cmdValue >= 1 and cmdValue <= 8):
             cmdParam = str(cmdValue)
             cmdSetSyncWordSize = 'CONF:NST:MFG:SYNC_WORD_SIZE ' \
-            + cmdParam + '\n'
+                                    + cmdParam + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetSyncWordSize)
             return result
         else:
@@ -8927,7 +10311,7 @@ class RWCTesterApi(RwcSerialSetup):
         result = RwcSerialSetup.transceive(self, cmdGetSyncWordSize)
         return result
 
-    def nst_mfg_setsyncword(self):
+    def nst_mfg_setsyncword(self, sizevalue):
         '''
         Configure the Sync Word for FSK Modulation
 
@@ -8936,15 +10320,14 @@ class RWCTesterApi(RwcSerialSetup):
         :return: ACK on success, NAK on failure
 
         '''
-        #cmdValue = int(sizevalue)
-        #if (cmdValue >= 1 and cmdValue <= 8):
-        #    cmdParam = str(cmdValue)
-        #    cmdSetSyncWord = 'CONF:NST:MFG:SYNC_WORD ' + cmdParam + '\n'
-        #    result = RwcSerialSetup.transceive(self, cmdSetSyncWord)
-        #    return result
-        #else:
-        #    raise Exception('Invalid Parameter received.')
-        pass
+        cmdValue = int(sizevalue)
+        if (cmdValue >= 1 and cmdValue <= 8):
+           cmdParam = str(cmdValue)
+           cmdSetSyncWord = 'CONF:NST:MFG:SYNC_WORD ' + cmdParam + '\n'
+           result = RwcSerialSetup.transceive(self, cmdSetSyncWord)
+           return result
+        else:
+           raise Exception('Invalid Parameter received.')
 
     def nst_mfg_getsyncword(self):
         '''
@@ -8955,10 +10338,9 @@ class RWCTesterApi(RwcSerialSetup):
         :return: It returns Sync Word; NAK on failure
         
         '''
-        #cmdGetSyncWord = 'CONF:NST:MFG:SYNC_WORD?' + '\n'
-        #result = RwcSerialSetup.transceive(self, cmdGetSyncWord)
-        #return result
-        pass
+        cmdGetSyncWord = 'CONF:NST:MFG:SYNC_WORD?' + '\n'
+        result = RwcSerialSetup.transceive(self, cmdGetSyncWord)
+        return result
 
     def nst_mfg_settxpolarity(self, polaritytype):
         '''
@@ -8972,7 +10354,7 @@ class RWCTesterApi(RwcSerialSetup):
         polaritytypelist = ['NORMAL', 'INVERSE']
         if polaritytype in polaritytypelist:
             cmdSetMfgTxPolarity = 'CONF:NST:MFG:TX_POLARITY ' \
-            + polaritytype + '\n'
+                                    + polaritytype + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetMfgTxPolarity)
             return result
         else:
@@ -9038,7 +10420,7 @@ class RWCTesterApi(RwcSerialSetup):
         result = RwcSerialSetup.transceive(self, cmdGetMfgDutInfo)
         return result
             
-    #System Command Methods
+    # System Command Methods
     def query_sysversion(self):
         '''
         Read the software version
@@ -9079,7 +10461,8 @@ class RWCTesterApi(RwcSerialSetup):
 
         :Parameters: N/A (Query only)
 
-        :return: It returns the selected reference clock; NAK on failure
+        :return: It returns the selected reference clock; 
+                 NAK on failure
 
         '''
         cmdGetSysRefClock = 'READ:SYSTEM:REF_CLK?' + '\n'
@@ -9140,7 +10523,8 @@ class RWCTesterApi(RwcSerialSetup):
 
     def query_eucertoptinfo(self):
         '''
-        Read the software option information about Certification test of EU
+        Read the software option information about Certification 
+        test of EU
 
         :Parameters: N/A (Query only)
 
@@ -9153,7 +10537,8 @@ class RWCTesterApi(RwcSerialSetup):
 
     def query_sktcertoptinfo(self):
         '''
-        Read the software option information about Certification test of SKT
+        Read the software option information about Certification 
+        test of SKT
 
         :Parameters: N/A (Query only)
 
@@ -9166,7 +10551,8 @@ class RWCTesterApi(RwcSerialSetup):
 
     def query_uscertoptinfo(self):
         '''
-        Read the software option information about Certification test of US
+        Read the software option information about Certification 
+        test of US
 
         :Parameters: N/A (Query only)
 
@@ -9179,7 +10565,8 @@ class RWCTesterApi(RwcSerialSetup):
 
     def query_ascertoptinfo(self):
         '''
-        Read the software option information about Certification test of AS
+        Read the software option information about Certification 
+        test of AS
 
         :Parameters: N/A (Query only)
 
@@ -9192,7 +10579,8 @@ class RWCTesterApi(RwcSerialSetup):
 
     def query_krcertoptinfo(self):
         '''
-        Read the software option information about Certification test of KR
+        Read the software option information about Certification 
+        test of KR
 
         :Parameters: N/A (Query only)
 
@@ -9202,3 +10590,75 @@ class RWCTesterApi(RwcSerialSetup):
         cmdGetKRCertiOptInfo = 'READ:SYSTEM:OPTION_CERTI_KR?' + '\n'
         result = RwcSerialSetup.transceive(self, cmdGetKRCertiOptInfo)
         return result
+
+    def sys_setiptype(self, ipType):
+        '''
+        To configure the IP type
+
+        :param fieldType: DYNAMIC, STATIC
+
+        :return: ACK on success, NAK on failure
+        
+        '''
+        ipTypelist = ['DYNAMIC', 'STATIC']
+        if ipType in ipTypelist:
+            cmdSetIPType = 'CONF:SYSTEM:IP_TYPE ' + ipType + '\n'
+            result = RwcSerialSetup.transceive(self, cmdSetIPType)
+            return result
+        else:
+            raise Exception('Invalid IP type parameter received.')
+
+    def sys_getiptype(self):
+        '''
+        To read the IP type
+
+        :Parameters: N/A (Query only)
+
+        :return: It returns the IP type of tester; NAK on failure
+
+        '''
+        cmdGetIPType = 'READ:SYSTEM:IP_TYPE?' + '\n'
+        result = RwcSerialSetup.transceive(self, cmdGetIPType)
+        return result
+
+    def sys_setipaddress(self, ipval):
+        '''
+        To configure the ip address (IPV4).
+        It should be executed via RS232C
+
+        :param ipval: IPV4 address
+        
+        :return: ACK on success, NAK on failure
+
+        '''
+        try:
+            ip = ipaddress.ip_address(ipval)
+            if(ip.version == 4):
+                cmdSetIpAddress = 'CONF:SYSTEM:IP_ADDR ' + ipval + '\n'
+                result = RwcSerialSetup.transceive(self, cmdSetIpAddress)
+                return result
+            else:
+                raise Exception('Invalid IP version parameter received')
+        except ValueError:
+            print ('Invalid IP address parameter received')
+
+    def sys_getipaddress(self):
+        '''
+        To read the IP address
+
+        :Parameters: N/A (Query only)
+
+        :return: It returns the IP address of tester; NAK on failure
+
+        '''
+        cmdGetIPAddr = 'READ:SYSTEM:IP_ADDR?' + '\n'
+        result = RwcSerialSetup.transceive(self, cmdGetIPAddr)
+        return result
+
+    def validate_sys_swversion(self, versionlist):
+        currVersion = self.query_sysversion()
+        if currVersion in versionlist:
+            return True
+        else:
+            raise Exception('Command not supported in current version')
+        
