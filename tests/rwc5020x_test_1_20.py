@@ -12,14 +12,10 @@
 #         3520 Krums Corners Road
 #         Ithaca, NY  14850
 #
-#     Released under the MIT license.
+#     See accompanying LICENSE file for copyright and license information.
 #
 # Author:
 #     Sivaprakash Veluthambi, MCCI   January, 2021
-#
-# Revision history:
-#     V0.1.0 Thu Jan 14 2021 18:50:59 sivaprakash
-#       Module created
 #
 ##############################################################################
 

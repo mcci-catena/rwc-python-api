@@ -132,7 +132,8 @@ def link_status():
             return True
         else:
             if cnt == 0:
-                debug('Link status: In-active\nPlease make sure the link is active\nTrying again...\n')
+                debug('Link status: In-active\n' \
+                'Please make sure the link is active\nTrying again...\n')
                 time.sleep(15)
             cnt = cnt + 1
 
@@ -206,11 +207,13 @@ def link_test(req_num, req_cmd, resp_num, resp_cmd):
                     return True
                 else:
                     if rcnt < 1:
-                        err('Invalid Response: {}\nTrying again...\n'.format(msglist[resp_num]))
+                        err('Invalid Response: {}\nTrying again...\n' \
+                        .format(msglist[resp_num]))
                         time.sleep(3)
                         rcnt += 1
                     else:
-                        err('Invalid Response: {}\nTest failed\n'.format(msglist[resp_num]))
+                        err('Invalid Response: {}\nTest failed\n' \
+                        .format(msglist[resp_num]))
                         return False
             else:
                 # err('MAC Request fail: {} \n'.format(msglist[req_num]))
@@ -252,7 +255,8 @@ if __name__ == '__main__':
         config_param('RX1', 1, 'ECHO_REQUEST_TM')
         result = link_test(17, 'EchoRequest', 17, 'EchoResponse')
         if bool(result) is False:
-            fatal('ECHO REQUEST MAC CMD REQUEST (Bytes - {}): Test Failed'.format(byte_len))
+            fatal('ECHO REQUEST MAC CMD REQUEST (Bytes - {}): Test Failed' \
+            .format(byte_len))
         byte_len += 1
 
     # Set abnormal mode
@@ -264,7 +268,8 @@ if __name__ == '__main__':
     config_param('RX1', 1, 'ECHO_REQUEST_TM')
     result = link_test(17, 'EchoRequest', 0, 'U') #To verify any UL Packet
     if bool(result) is False:
-        fatal('ECHO REQUEST MAC CMD REQUEST (Abnormal mode - {}): Test Failed'.format(mode))
+        fatal('ECHO REQUEST MAC CMD REQUEST (Abnormal mode - {}): Test Failed' \
+        .format(mode))
     
     result = link_msg()
     msglist = result.split('\t')

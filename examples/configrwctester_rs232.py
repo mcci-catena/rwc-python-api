@@ -44,7 +44,9 @@ class LinkAnalyzerTest(RWCTesterApi):
         myregion = RWCTesterApi.protocol_getregion(self)
         print ('Protocol Region: {}'.format(myregion), end='\n')
     
-        RWCTesterApi.protocol_setprotocolver(self, protocolparamdict.get('ver'))
+        RWCTesterApi.protocol_setprotocolver(
+            self, 
+            protocolparamdict.get('ver'))
         myprotocolver = RWCTesterApi.protocol_getprotocolver(self)
         print ('Protocol Version: {}'.format(myprotocolver), end='\n')
     
@@ -52,11 +54,15 @@ class LinkAnalyzerTest(RWCTesterApi):
         myprotocolclass = RWCTesterApi.protocol_getclass(self)
         print ('Protocol Class: {}'.format(myprotocolclass), end='\n')
     
-        RWCTesterApi.protocol_setactivationprocedure(self, protocolparamdict.get('activation'))
+        RWCTesterApi.protocol_setactivationprocedure(
+            self, 
+            protocolparamdict.get('activation'))
         myacttype = RWCTesterApi.protocol_getactivationprocedure(self)
         print ('Protocol Activation Procedure: {}'.format(myacttype), end='\n')
     
-        RWCTesterApi.protocol_settestmodeflag(self, protocolparamdict.get('setmode'))
+        RWCTesterApi.protocol_settestmodeflag(
+            self, 
+            protocolparamdict.get('setmode'))
         mymodestat = RWCTesterApi.protocol_gettestmodeflag(self)
         print ('Protocol Test Mode Status: {}'.format(mymodestat), end='\n')
     
@@ -96,8 +102,11 @@ class LinkAnalyzerTest(RWCTesterApi):
         '''
         Configuring MAC settings
         '''
-        macparamdict = {'cmdno' : 2, 'mac' : {1 : 'DEV_STATUS', 2 : 'DUTY_CYCLE'},
-                    'mactype' : 'UNCONFIRMED', 'macfield' : 'PAYLOAD'}
+        macparamdict = {
+            'cmdno' : 2, 
+            'mac' : {1 : 'DEV_STATUS', 2 : 'DUTY_CYCLE'},
+            'mactype' : 'UNCONFIRMED', 
+            'macfield' : 'PAYLOAD'}
 
         print ('Setting up MAC parameters', end='\n')
         RWCTesterApi.link_setnumofmaccmd(self, macparamdict.get('cmdno'))
@@ -105,9 +114,14 @@ class LinkAnalyzerTest(RWCTesterApi):
         print ('Number of MAC Command: {}'.format(mymaccmdno), end='\n')
 
         for key in macparamdict['mac']:
-            RWCTesterApi.link_setinstantmaccmd(self, key, macparamdict['mac'][key])
+            RWCTesterApi.link_setinstantmaccmd(
+                self, 
+                key, 
+                macparamdict['mac'][key])
             mymac = RWCTesterApi.link_getinstantmaccmd(self, key)
-            print ('MAC DUT Command {} : {}'.format(key, macparamdict['mac'][key]), end='\n')
+            print (
+                'MAC DUT Command {} : {}'.format(key, macparamdict['mac'][key]), 
+                end='\n')
     
         RWCTesterApi.link_setmaccmdtype(self, macparamdict.get('mactype'))
         mymactype = RWCTesterApi.link_getmaccmdtype(self)
@@ -139,7 +153,10 @@ class LinkAnalyzerTest(RWCTesterApi):
         '''
         To move between other sub menus
         '''
-        submenudict = {'time' : 'POWER_TIME', 'channel' : 'POWER_CHANNEL', 'analyzer' : 'LINK'}
+        submenudict = {
+            'time' : 'POWER_TIME', 
+            'channel' : 'POWER_CHANNEL', 
+            'analyzer' : 'LINK'}
         RWCTesterApi.set_screen(self, submenudict.get('time'))
         RWCTesterApi.set_screen(self, submenudict.get('channel'))
         RWCTesterApi.set_screen(self, submenudict.get('analyzer'))
