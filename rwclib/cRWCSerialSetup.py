@@ -1,10 +1,34 @@
+##############################################################################
+# 
+# Module: cRWCSerialSetup.py
+#
+# Description:
+#     Performs serial and ethernet communication
+#
+# Copyright notice:
+#     This file copyright (c) 2021 by
+#
+#         MCCI Corporation
+#         3520 Krums Corners Road
+#         Ithaca, NY  14850
+#
+#     See accompanying LICENSE file for copyright and license information.
+#
+# Author:
+#     Sivaprakash Veluthambi, MCCI   January, 2021
+#
+##############################################################################
+
+# Built-in imports
+import logging
 import os
 import re
+import socket
 import sys
 import time
+
+# Lib imports
 import serial
-import socket
-import logging
 
 class RwcSerialSetup:
     '''
@@ -15,7 +39,8 @@ class RwcSerialSetup:
     
     def __init__(self, port, addr = None):
         '''
-        Class constructor contains the RWC5020A serial port/ Ethernet settings
+        Class constructor contains the RWC5020A serial port/ Ethernet 
+        settings
 
         * Baudrate - 115200
         * Bytesize - 8 bits
@@ -106,22 +131,22 @@ class RwcSerialSetup:
                 readResult = self.myport.readline()
                 self.logger.info('Rx Response: {}'.format(readResult))
             except Exception as err:
-                self.logger.error('Error Send/Receive in Serial Communication: {}'
-                                  .format(err)
-                                  )
+                self.logger.error(
+                    'Error Send/Receive in Serial Communication: {}'
+                    .format(err))
 
         if self.udpport and self.udpipaddr:
             try:
-                self.clientsock.sendto(rwccmd.encode(),
-                                       (self.udpipaddr, self.udpport)
-                                       )
+                self.clientsock.sendto(
+                    rwccmd.encode(),
+                    (self.udpipaddr, self.udpport))
                 self.logger.info('Tx Command: {}'.format(rwccmd))
                 readResult, ip = self.clientsock.recvfrom(1024)
                 self.logger.info('Rx Response: {}'.format(readResult))
             except Exception as err:
-                self.logger.error('Error Send/Receive in IP Communication: {}'
-                                  .format(err)
-                                  )
+                self.logger.error(
+                    'Error Send/Receive in IP Communication: {}'
+                    .format(err))
         
         if readResult:
             result = readResult.decode()
@@ -153,5 +178,5 @@ class RwcSerialSetup:
                 self.logger.info('%s connection terminated',self.udpipaddr)
                 return True
             except Exception as err:
-                self.logger.error('Can\'t close connection: '.format(err))
+                self.logger.error('Can\'t close connection: {}'.format(err))
                 sys.exit('ERROR: Can\'t close connection')

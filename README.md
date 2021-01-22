@@ -47,3 +47,6 @@ To know more about class methods, please see the **code documentation** in the f
 
 Example scripts to access the library has been placed [here](https://github.com/mcci-catena/rwc-python-api/tree/master/examples) for your reference.
 
+## Support
+
+Python library supports RWC5020A firmware software from v1.150 to latest version.

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>RWC5020x Code Documentation &mdash; RWC5020x API Library 1.0.1 documentation</title>
+  <title>RWC5020x Code Documentation &mdash; RWC5020x API Library 1.0.3.10 documentation</title>
   
 
   
@@ -57,7 +57,7 @@
             
             
               <div class="version">
-                1.0
+                1.0.3.10
               </div>
             
           
@@ -161,8 +161,8 @@
 <em class="property">class </em><code class="descname">RWCTesterApi</code><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.RWCTesterApi" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<p>This is class file to send commands and receive response from RWC5020x 
-LoRa Tester via RS232 Port.</p>
+<p>This is class file to send commands and receive response from 
+RWC5020x LoRa Tester via RS232 Port.</p>
 <p><strong>Class Methods:</strong></p>
 <span class="target" id="commandlabel"></span><dl class="method">
 <dt id="rwclib.cRWC5020x.RWCTesterApi.query_identification">
@@ -174,7 +174,8 @@ LoRa Tester via RS232 Port.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body">N/A</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Name, Version and Serial No. of the device; NAK on failure</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Name, Version and Serial No. of the device; 
+NAK on failure</td>
 </tr>
 </tbody>
 </table>
@@ -286,8 +287,8 @@ LoRa Tester via RS232 Port.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body">N/A (Query only)</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">It returns the status of key input during remote control; NAK
-on failure</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">It returns the status of key input during remote 
+control; NAK on failure</td>
 </tr>
 </tbody>
 </table>
@@ -296,22 +297,16 @@ on failure</td>
 <dl class="method">
 <dt id="rwclib.cRWC5020x.RWCTesterApi.set_screen">
 <code class="descname">set_screen</code><span class="sig-paren">(</span><em>submenu</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.set_screen" title="Permalink to this definition">¶</a></dt>
-<dd><p>Configure a screen (or Sub Menu) of RWC5020A to move directly to 
-another sub menu</p>
+<dd><p>Configure a screen (or Sub Menu) of RWC5020A to move directly 
+to another sub menu</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>submenu</strong> – sub menu type (LINK, POWER_TIME, POWER_CHANNEL,</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>submenu</strong> – sub menu type (LINK, POWER_TIME, POWER_CHANNEL, 
+SENSITIVITY, REMOTE)</td>
 </tr>
-</tbody>
-</table>
-<p>SENSITIVITY, REMOTE)</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">ACK on success, NAK on failure</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">ACK on success, NAK on failure</td>
 </tr>
 </tbody>
 </table>
@@ -535,7 +530,8 @@ another sub menu</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body">N/A (Query only)</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">It returns the system clock offset value; NAK on failure</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">It returns the system clock offset value; 
+NAK on failure</td>
 </tr>
 </tbody>
 </table>
@@ -608,25 +604,22 @@ another sub menu</p>
 <dl class="method">
 <dt id="rwclib.cRWC5020x.RWCTesterApi.rf_setchannelmask">
 <code class="descname">rf_setchannelmask</code><span class="sig-paren">(</span><em>chindexrange</em>, <em>chmaskrange</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.rf_setchannelmask" title="Permalink to this definition">¶</a></dt>
-<dd><p>Configure the channel mask of channel index 0 in both EDT and GWT mode</p>
+<dd><p>Configure the channel mask of channel index 0 in both EDT and 
+GWT mode</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>chindexrange</strong> – Channel index (0 - 5)</li>
-<li><strong>chmaskrange</strong> – Channel Mask (For EDT 0x00 ~ 0xFF,</li>
+<li><strong>chmaskrange</strong> – Channel Mask (For EDT 0x00 ~ 0xFF, 
+For GWT 0x00 ~ 0xFFFF(US/AU/CN), 
+read-only (others))</li>
 </ul>
 </td>
 </tr>
-</tbody>
-</table>
-<p>For GWT 0x00 ~ 0xFFFF(US/AU/CN), read-only (others))</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">ACK on success, NAK on failure</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">ACK on success, NAK on failure</p>
+</td>
 </tr>
 </tbody>
 </table>
@@ -635,30 +628,36 @@ another sub menu</p>
 <dl class="method">
 <dt id="rwclib.cRWC5020x.RWCTesterApi.rf_getchannelmask">
 <code class="descname">rf_getchannelmask</code><span class="sig-paren">(</span><em>chindexrange</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.rf_getchannelmask" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read the channel mask of channel index 0 in both EDT and GWT mode</p>
+<dd><p>Read the channel mask of channel index 0 in both EDT and 
+GWT mode</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>chindexrange</strong> – Channel index (0 - 5)</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">It returns the channel mask with respect to the channel</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">It returns the channel mask with respect to the 
+channel index; NAK on failure</td>
 </tr>
 </tbody>
 </table>
-<p>index; NAK on failure</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="rwclib.cRWC5020x.RWCTesterApi.rf_setchannelgroup">
 <code class="descname">rf_setchannelgroup</code><span class="sig-paren">(</span><em>chgrouprange</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.rf_setchannelgroup" title="Permalink to this definition">¶</a></dt>
-<dd><p>Configure the channel group (only applicable to US/AU/CN in EDT mode)</p>
+<dd><p>Configure the channel group 
+(only applicable to US/AU/CN in EDT mode)</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Param:</th><td class="field-body">For US/AU, 00 ~ 07, 08 ~ 15, 16 ~ 23, 24 ~ 31, … , 48 ~ 55, 56 ~ 63,
-For CN, 00 ~ 07, 08 ~ 15, 16 ~ 23, 24 ~ 31, … , 80 ~ 87, 88 ~ 95</td>
+<tr class="field-odd field"><th class="field-name">Param:</th><td class="field-body">For US/AU, 
+00 ~ 07, 08 ~ 15, 16 ~ 23, 
+24 ~ 31, … , 48 ~ 55, 56 ~ 63,
+For CN, 
+00 ~ 07, 08 ~ 15, 16 ~ 23, 
+24 ~ 31, … , 80 ~ 87, 88 ~ 95</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">ACK on success, NAK on failure</td>
 </tr>
@@ -669,18 +668,19 @@ For CN, 00 ~ 07, 08 ~ 15, 16 ~ 23, 24 ~ 31, … , 80 ~ 87, 88 ~ 95</td>
 <dl class="method">
 <dt id="rwclib.cRWC5020x.RWCTesterApi.rf_getchannelgroup">
 <code class="descname">rf_getchannelgroup</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.rf_getchannelgroup" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read the channel group (only applicable to US/AU/CN in EDT mode)</p>
+<dd><p>Read the channel group 
+(only applicable to US/AU/CN in EDT mode)</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body">N/A (Query only)</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">It returns the channel group of US/AU/CN region;</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">It returns the channel group of US/AU/CN region; 
+NAK on failure</td>
 </tr>
 </tbody>
 </table>
-<p>NAK on failure</p>
 </dd></dl>
 
 <dl class="method">
@@ -788,16 +788,11 @@ For GWT all channels frequencies are editable</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>drvalue</strong> – DR0_SF12BW125, DR1_SF11BW125, DR2_SF10BW125,</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>drvalue</strong> – DR0_SF12BW125, DR1_SF11BW125, DR2_SF10BW125, 
+DR3_SF9BW125, DR4_SF8BW125, DR5_SF7BW125, 
+DR6_SF7BW250, DR7_FSK50</td>
 </tr>
-</tbody>
-</table>
-<p>DR3_SF9BW125, DR4_SF8BW125, DR5_SF7BW125, DR6_SF7BW250, DR7_FSK50</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">ACK on success, NAK on failure</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">ACK on success, NAK on failure</td>
 </tr>
 </tbody>
 </table>
@@ -813,7 +808,8 @@ For GWT all channels frequencies are editable</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body">N/A (Query only)</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">It returns the data rate of ping channel; NAK on failure</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">It returns the data rate of ping channel; 
+NAK on failure</td>
 </tr>
 </tbody>
 </table>
@@ -846,6 +842,24 @@ For GWT all channels frequencies are editable</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body">N/A (Query only)</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">It returns the frequency of beacon; NAK on failure</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="rwclib.cRWC5020x.RWCTesterApi.rf_setbeacondr">
+<code class="descname">rf_setbeacondr</code><span class="sig-paren">(</span><em>drvalue</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.rf_setbeacondr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configure the data rate of beacon</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>drvalue</strong> – DR0_SF12BW125, DR1_SF11BW125, DR2_SF10BW125, 
+DR3_SF9BW125, DR4_SF8BW125, DR5_SF7BW125, 
+DR6_SF7BW250, DR7_FSK50</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">ACK on success, NAK on failure</td>
 </tr>
 </tbody>
 </table>
@@ -932,6 +946,106 @@ For GWT all channels frequencies are editable</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="rwclib.cRWC5020x.RWCTesterApi.rf_setchannelgroup_as923">
+<code class="descname">rf_setchannelgroup_as923</code><span class="sig-paren">(</span><em>mode</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.rf_setchannelgroup_as923" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configure the channel group (only applicable to AS923 region)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>mode</strong> – Channel group (AS_923-1, AS_923-2, AS_923-3)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">ACK on success, NAK on failure</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="rwclib.cRWC5020x.RWCTesterApi.rf_getchannelgroup_as923">
+<code class="descname">rf_getchannelgroup_as923</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.rf_getchannelgroup_as923" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read the channel group (only applicable to AS923 region)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body">N/A (Query only)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">It returns the channel mode; NAK on failure</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="rwclib.cRWC5020x.RWCTesterApi.rf_setfreqoffset_as923">
+<code class="descname">rf_setfreqoffset_as923</code><span class="sig-paren">(</span><em>freqoffsetrng</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.rf_setfreqoffset_as923" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configure the frequency offset for channel group 
+(only applicable to AS923 region)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>freqoffsetrng</strong> – Offset range (-100 ~ 100)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">ACK on success, NAK on failure</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="rwclib.cRWC5020x.RWCTesterApi.rf_getfreqoffset_as923">
+<code class="descname">rf_getfreqoffset_as923</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.rf_getfreqoffset_as923" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read the frequency offset for channel group 
+(only applicable to AS923 region)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body">N/A (Query only)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">It returns the frequency offset value of AS923 
+channel group; NAK on failure</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="rwclib.cRWC5020x.RWCTesterApi.rf_setchplan_cn470">
+<code class="descname">rf_setchplan_cn470</code><span class="sig-paren">(</span><em>planType</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.rf_setchplan_cn470" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configure the channel plan (only applicable to CN470 region)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>planType</strong> – 20M_A, 20M_B, 26M_A, 26M_B</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">ACK on success, NAK on failure</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="rwclib.cRWC5020x.RWCTesterApi.rf_getchplan_cn470">
+<code class="descname">rf_getchplan_cn470</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.rf_getchplan_cn470" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read the channel plan (only applicable to CN470 region)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body">N/A (Query only)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">It returns the channel plan of CN470 region; 
+NAK on failure</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="rwclib.cRWC5020x.RWCTesterApi.rf_getmeasuredfreq">
 <code class="descname">rf_getmeasuredfreq</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.rf_getmeasuredfreq" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read currently measured CW frequency value</p>
@@ -1003,16 +1117,10 @@ For GWT all channels frequencies are editable</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>region</strong> – EU_868, EU_433, US_915, AU_921, CN_490, KR_922,</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>region</strong> – EU_868, EU_433, US_915, AU_921, CN_470, KR_922, 
+AS_923, IN_866</td>
 </tr>
-</tbody>
-</table>
-<p>AS_923, IN_866</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">ACK on success, NAK on failure</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">ACK on success, NAK on failure</td>
 </tr>
 </tbody>
 </table>
@@ -1158,7 +1266,8 @@ after activation</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Param:</th><td class="field-body">Query only</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">It returns the flag status either ON or OFF; NAK on failure</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">It returns the flag status either ON or OFF; 
+NAK on failure</td>
 </tr>
 </tbody>
 </table>
@@ -1270,7 +1379,8 @@ after activation</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Param:</th><td class="field-body">Query only</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">It returns the read application session key; NAK on failure</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">It returns the read application session key; 
+NAK on failure</td>
 </tr>
 </tbody>
 </table>
@@ -1508,16 +1618,10 @@ after activation</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>peruplinkmsg</strong> – NONE, LINK_CHECK_REQ, CONFIRMED_UP,</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>peruplinkmsg</strong> – NONE, LINK_CHECK_REQ, CONFIRMED_UP, 
+UNCONFIRMRED_UP, DL_COUNTER</td>
 </tr>
-</tbody>
-</table>
-<p>UNCONFIRMRED_UP, DL_COUNTER</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">ACK on success, NAK on failure</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">ACK on success, NAK on failure</td>
 </tr>
 </tbody>
 </table>
@@ -1533,7 +1637,8 @@ after activation</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Param:</th><td class="field-body">Query only</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">It returns the periodic uplink message; NAK on failure</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">It returns the periodic uplink message; 
+NAK on failure</td>
 </tr>
 </tbody>
 </table>
@@ -1542,8 +1647,8 @@ after activation</p>
 <dl class="method">
 <dt id="rwclib.cRWC5020x.RWCTesterApi.protocol_setinterval">
 <code class="descname">protocol_setinterval</code><span class="sig-paren">(</span><em>interval</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.protocol_setinterval" title="Permalink to this definition">¶</a></dt>
-<dd><p>Configure the interval in sec between Uplink message defined by 
-Periodic uplink</p>
+<dd><p>Configure the interval in sec between Uplink message defined 
+by Periodic uplink</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -1631,7 +1736,8 @@ Periodic uplink</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Param:</th><td class="field-body">Query only</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">It returns the flag status either ON or OFF; NAK on failure</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">It returns the flag status either ON or OFF; 
+NAK on failure</td>
 </tr>
 </tbody>
 </table>
@@ -1901,7 +2007,7 @@ Periodic uplink</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Param:</th><td class="field-body">0 ~ 255</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>batterystat</strong> – 0 ~ 255</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">ACK on success, NAK on failure</td>
 </tr>
@@ -2017,16 +2123,10 @@ Periodic uplink</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>slotval</strong> – For EDT, RX1, RX2, PING(Class B),</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>slotval</strong> – For EDT, RX1, RX2, PING(Class B), 
+For GWT, RX1, RX2, RX1&amp;RX2</td>
 </tr>
-</tbody>
-</table>
-<p>For GWT, RX1, RX2, RX1&amp;RX2</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">ACK on success, NAK on failure</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">ACK on success, NAK on failure</td>
 </tr>
 </tbody>
 </table>
@@ -2049,6 +2149,38 @@ Periodic uplink</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="rwclib.cRWC5020x.RWCTesterApi.protocol_setmacresponsefield">
+<code class="descname">protocol_setmacresponsefield</code><span class="sig-paren">(</span><em>fieldType</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.protocol_setmacresponsefield" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configure the selection of MAC response field type</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fieldType</strong> – PAYLOAD, FOPTS</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">ACK on success, NAK on failure</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="rwclib.cRWC5020x.RWCTesterApi.protocol_getmacresponsefield">
+<code class="descname">protocol_getmacresponsefield</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.protocol_getmacresponsefield" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read the selection of MAC response field type</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body">N/A (Query only)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">It returns the MAC response field type; NAK on failure</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="rwclib.cRWC5020x.RWCTesterApi.protocol_setuplinkdatarate">
 <code class="descname">protocol_setuplinkdatarate</code><span class="sig-paren">(</span><em>dr</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.protocol_setuplinkdatarate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Configure Data Rate of Uplink in GWT mode</p>
@@ -2056,16 +2188,15 @@ Periodic uplink</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>dr</strong> – DR0_SF12BW125, DR1_SF11BW125, DR2_SF10BW125, DR3_SF9BW125,</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>dr</strong> – <p>For S/W Version 1.150 and 1.160:
+DR_0, DR_1, DR_2, DR_3, DR_4, DR_5, DR_6, DR_7</p>
+<p>For S/W Version 1.170 - 1.305:
+DR0_SF12BW125, DR1_SF11BW125, DR2_SF10BW125, 
+DR3_SF9BW125, DR4_SF8BW125, DR5_SF7BW125, 
+DR6_SF7BW250, DR7_FSK50</p>
+</td>
 </tr>
-</tbody>
-</table>
-<p>DR4_SF8BW125, DR5_SF7BW125, DR6_SF7BW250, DR7_FSK50</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">ACK on success, NAK on failure</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">ACK on success, NAK on failure</td>
 </tr>
 </tbody>
 </table>
@@ -2159,16 +2290,15 @@ Periodic uplink</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>dr</strong> – DR0_SF12BW125, DR1_SF11BW125, DR2_SF10BW125, DR3_SF9BW125,</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>dr</strong> – <p>For S/W Version 1.150 and 1.160:
+DR_0, DR_1, DR_2, DR_3, DR_4, DR_5, DR_6, DR_7</p>
+<p>For S/W Version 1.170 - 1.305:
+DR0_SF12BW125, DR1_SF11BW125, DR2_SF10BW125, 
+DR3_SF9BW125, DR4_SF8BW125, DR5_SF7BW125, 
+DR6_SF7BW250, DR7_FSK50</p>
+</td>
 </tr>
-</tbody>
-</table>
-<p>DR4_SF8BW125, DR5_SF7BW125, DR6_SF7BW250, DR7_FSK50</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">ACK on success, NAK on failure</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">ACK on success, NAK on failure</td>
 </tr>
 </tbody>
 </table>
@@ -2248,7 +2378,8 @@ Periodic uplink</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Param:</th><td class="field-body">Query only</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">It returns the LoRaWAN protocol version; NAK on failure</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">It returns the LoRaWAN protocol version; 
+NAK on failure</td>
 </tr>
 </tbody>
 </table>
@@ -2583,8 +2714,8 @@ Periodic uplink</p>
 <dl class="method">
 <dt id="rwclib.cRWC5020x.RWCTesterApi.protocol_setduttype">
 <code class="descname">protocol_setduttype</code><span class="sig-paren">(</span><em>duttype</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.protocol_setduttype" title="Permalink to this definition">¶</a></dt>
-<dd><p>Configure the type of DUT, which determines whether the frame is for 
-uplink or downlink</p>
+<dd><p>Configure the type of DUT, which determines whether the frame 
+is for uplink or downlink. (Supported version: v1.15 - v1.21)</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -2601,7 +2732,7 @@ uplink or downlink</p>
 <dt id="rwclib.cRWC5020x.RWCTesterApi.protocol_getduttype">
 <code class="descname">protocol_getduttype</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.protocol_getduttype" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read the type of DUT, which determines whether the frame is for 
-uplink or downlink</p>
+uplink or downlink. (Supported version: v1.15 - v1.21)</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -2617,8 +2748,8 @@ uplink or downlink</p>
 <dl class="method">
 <dt id="rwclib.cRWC5020x.RWCTesterApi.protocol_setmacformatflag">
 <code class="descname">protocol_setmacformatflag</code><span class="sig-paren">(</span><em>macformatflag</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.protocol_setmacformatflag" title="Permalink to this definition">¶</a></dt>
-<dd><p>Configure the flag whether to use MAC protocol parameters in LoRa 
-test frame in NST mode</p>
+<dd><p>Configure the flag whether to use MAC protocol parameters in 
+LoRa test frame in NST mode (Supported version: v1.15 - v1.17)</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -2634,8 +2765,8 @@ test frame in NST mode</p>
 <dl class="method">
 <dt id="rwclib.cRWC5020x.RWCTesterApi.protocol_getmacformatflag">
 <code class="descname">protocol_getmacformatflag</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.protocol_getmacformatflag" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read the flag whether to use MAC protocol parameters in LoRa test 
-frame in NST mode</p>
+<dd><p>Read the flag whether to use MAC protocol parameters in LoRa 
+test frame in NST mode (Supported version: v1.15 - v1.17)</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -2651,7 +2782,8 @@ frame in NST mode</p>
 <dl class="method">
 <dt id="rwclib.cRWC5020x.RWCTesterApi.protocol_setnstfcnt">
 <code class="descname">protocol_setnstfcnt</code><span class="sig-paren">(</span><em>nstfcnt</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.protocol_setnstfcnt" title="Permalink to this definition">¶</a></dt>
-<dd><p>Configure the FCnt field of LoRa test frame in NST mode</p>
+<dd><p>Configure the FCnt field of LoRa test frame in NST mode 
+(Supported version: v1.15 - v1.17)</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -2667,7 +2799,8 @@ frame in NST mode</p>
 <dl class="method">
 <dt id="rwclib.cRWC5020x.RWCTesterApi.protocol_getnstfcnt">
 <code class="descname">protocol_getnstfcnt</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.protocol_getnstfcnt" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read the FCnt field of LoRa test frame in NST mode</p>
+<dd><p>Read the FCnt field of LoRa test frame in NST mode 
+(Supported version: v1.15 - v1.17)</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -2683,8 +2816,8 @@ frame in NST mode</p>
 <dl class="method">
 <dt id="rwclib.cRWC5020x.RWCTesterApi.protocol_setnstfcntmode">
 <code class="descname">protocol_setnstfcntmode</code><span class="sig-paren">(</span><em>fcntmode</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.protocol_setnstfcntmode" title="Permalink to this definition">¶</a></dt>
-<dd><p>Configure the operation mode of FCnt field of LoRa test frame in 
-NST mode</p>
+<dd><p>Configure the operation mode of FCnt field of LoRa test frame 
+in NST mode (Supported version: v1.15 - v1.17)</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -2700,7 +2833,8 @@ NST mode</p>
 <dl class="method">
 <dt id="rwclib.cRWC5020x.RWCTesterApi.protocol_getnstfcntmode">
 <code class="descname">protocol_getnstfcntmode</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.protocol_getnstfcntmode" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read the operation mode of FCnt field of LoRa test frame in NST mode</p>
+<dd><p>Read the operation mode of FCnt field of LoRa test frame in 
+NST mode (Supported version: v1.15 - v1.17)</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -2716,7 +2850,8 @@ NST mode</p>
 <dl class="method">
 <dt id="rwclib.cRWC5020x.RWCTesterApi.protocol_setnstack">
 <code class="descname">protocol_setnstack</code><span class="sig-paren">(</span><em>nstack</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.protocol_setnstack" title="Permalink to this definition">¶</a></dt>
-<dd><p>Configure the ACK field of LoRa test frame in NST mode</p>
+<dd><p>Configure the ACK field of LoRa test frame in NST mode 
+(Supported version: v1.15 - v1.21)</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -2732,7 +2867,8 @@ NST mode</p>
 <dl class="method">
 <dt id="rwclib.cRWC5020x.RWCTesterApi.protocol_getnstack">
 <code class="descname">protocol_getnstack</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.protocol_getnstack" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read the ACK field of LoRa test frame in NST mode</p>
+<dd><p>Read the ACK field of LoRa test frame in NST mode 
+(Supported version: v1.15 - v1.17)</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -2748,7 +2884,8 @@ NST mode</p>
 <dl class="method">
 <dt id="rwclib.cRWC5020x.RWCTesterApi.protocol_setnst_adrackreq">
 <code class="descname">protocol_setnst_adrackreq</code><span class="sig-paren">(</span><em>adrackreq</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.protocol_setnst_adrackreq" title="Permalink to this definition">¶</a></dt>
-<dd><p>Configure the ADRACKReq field of LoRa test frame in NST mode</p>
+<dd><p>Configure the ADRACKReq field of LoRa test frame in NST mode 
+(Supported version: v1.15 - v1.17)</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -2764,7 +2901,8 @@ NST mode</p>
 <dl class="method">
 <dt id="rwclib.cRWC5020x.RWCTesterApi.protocol_getnst_adrackreq">
 <code class="descname">protocol_getnst_adrackreq</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.protocol_getnst_adrackreq" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read the ADRACKReq field of LoRa test frame in NST mode</p>
+<dd><p>Read the ADRACKReq field of LoRa test frame in NST mode 
+(Supported version: v1.15 - v1.17)</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -2780,7 +2918,8 @@ NST mode</p>
 <dl class="method">
 <dt id="rwclib.cRWC5020x.RWCTesterApi.protocol_setnstfpending">
 <code class="descname">protocol_setnstfpending</code><span class="sig-paren">(</span><em>fpending</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.protocol_setnstfpending" title="Permalink to this definition">¶</a></dt>
-<dd><p>Configure the FPending field of LoRa test frame in NST mode</p>
+<dd><p>Configure the FPending field of LoRa test frame in NST mode 
+(Supported version: v1.15 - v1.17)</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -2796,7 +2935,8 @@ NST mode</p>
 <dl class="method">
 <dt id="rwclib.cRWC5020x.RWCTesterApi.protocol_getnstfpending">
 <code class="descname">protocol_getnstfpending</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.protocol_getnstfpending" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read the FPending field of LoRa test frame in NST mode</p>
+<dd><p>Read the FPending field of LoRa test frame in NST mode 
+(Supported version: v1.15 - v1.17)</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -2835,8 +2975,8 @@ NST mode</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Param:</th><td class="field-body">Query only</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">It returns the periodic downlink mode for class B; NAK on
-failure</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">It returns the periodic downlink mode for class B; 
+NAK on failure</td>
 </tr>
 </tbody>
 </table>
@@ -3108,7 +3248,8 @@ failure</td>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body">Query only</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">It returns the activation procedure status; NAK on failure</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">It returns the activation procedure status; 
+NAK on failure</td>
 </tr>
 </tbody>
 </table>
@@ -3288,8 +3429,9 @@ failure</td>
 RX_PARAM_SETUP, TX_PARAM_SETUP, NEW_CHANNEL, 
 DL_CHANNEL, RX_TIMING_SETUP, USER_DEFINED, 
 ACTIVATE_TM, DEACTIVATE_TM, CONFIRMED_TM,
-UNCONFIRMED_TM, ECHO_REQUEST_TM, TRIGGER_JOIN_REQ_TM,
-ENABLE_CW_MODE_TM, BEACON_FREQ, PING_SLOT_CH, 
+UNCONFIRMED_TM, ECHO_REQUEST_TM, 
+TRIGGER_JOIN_REQ_TM, ENABLE_CW_MODE_TM, 
+BEACON_FREQ, PING_SLOT_CH, 
 FORCE_REJOIN, REJOIN_SETUP, ADR_SETUP</p>
 <p>For GWT, LINK_CHECK, DEVICE_TIME, DEVICE_MODE, 
 RESET_IND</p>
@@ -3340,7 +3482,8 @@ link Analyzer</p>
 <dl class="method">
 <dt id="rwclib.cRWC5020x.RWCTesterApi.link_getmic_errdisplay">
 <code class="descname">link_getmic_errdisplay</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.link_getmic_errdisplay" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read the flag whether to display erroneous messages in link Analyzer</p>
+<dd><p>Read the flag whether to display erroneous messages in 
+link Analyzer</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -3361,20 +3504,16 @@ link Analyzer</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>macnum</strong> – MAC Command Number</li>
-<li><strong>drval</strong> – DR0_SF12BW125, DR1_SF11BW125, DR2_SF10BW125,</li>
+<li><strong>drval</strong> – DR0_SF12BW125, DR1_SF11BW125, DR2_SF10BW125, 
+DR3_SF9BW125, DR4_SF8BW125, DR5_SF7BW125, 
+DR6_SF7BW250, DR7_FSK50</li>
 </ul>
 </td>
 </tr>
-</tbody>
-</table>
-<p>DR3_SF9BW125, DR4_SF8BW125, DR5_SF7BW125, DR6_SF7BW250, DR7_FSK50</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">ACK on success, NAK on failure</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">ACK on success, NAK on failure</p>
+</td>
 </tr>
 </tbody>
 </table>
@@ -3522,7 +3661,8 @@ link Analyzer</p>
 <dl class="method">
 <dt id="rwclib.cRWC5020x.RWCTesterApi.link_setadr_morechannelmask">
 <code class="descname">link_setadr_morechannelmask</code><span class="sig-paren">(</span><em>chmaskval</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.link_setadr_morechannelmask" title="Permalink to this definition">¶</a></dt>
-<dd><p>Configure ADD_MORE_CH_MASK value for LinkADRReq for CLAA mode only</p>
+<dd><p>Configure ADD_MORE_CH_MASK value for LinkADRReq for 
+CLAA mode only</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -3665,20 +3805,15 @@ link Analyzer</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>macnum</strong> – MAC Command Number</li>
-<li><strong>value</strong> – 8, 10, 12, 13, 14, 16, 18, 20, 21, 24, 26, 27, 29,</li>
+<li><strong>value</strong> – 8, 10, 12, 13, 14, 16, 18, 20, 21, 24, 26, 27, 29, 
+30, 33, 36</li>
 </ul>
 </td>
 </tr>
-</tbody>
-</table>
-<p>30, 33, 36</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">ACK on success, NAK on failure</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">ACK on success, NAK on failure</p>
+</td>
 </tr>
 </tbody>
 </table>
@@ -4035,6 +4170,41 @@ link Analyzer</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="rwclib.cRWC5020x.RWCTesterApi.link_setpayloadtype">
+<code class="descname">link_setpayloadtype</code><span class="sig-paren">(</span><em>payloadtype</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.link_setpayloadtype" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configure the message type of user-defined MAC command
+(Supported version: v1.15)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>payloadtype</strong> – 0000_0000, 1111_1111, 1111_0000, 
+1010_1010, PRBS, USER</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">ACK on success, NAK on failure</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="rwclib.cRWC5020x.RWCTesterApi.link_getpayloadtype">
+<code class="descname">link_getpayloadtype</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.link_getpayloadtype" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read the message type of user-defined MAC command
+(Supported version: v1.15)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Param:</th><td class="field-body">Query only</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">It returns link payload type; NAK on failure</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="rwclib.cRWC5020x.RWCTesterApi.link_setfport">
 <code class="descname">link_setfport</code><span class="sig-paren">(</span><em>fport</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.link_setfport" title="Permalink to this definition">¶</a></dt>
 <dd><p>Configure the FPORT of user-defined MAC command</p>
@@ -4069,7 +4239,8 @@ link Analyzer</p>
 <dl class="method">
 <dt id="rwclib.cRWC5020x.RWCTesterApi.link_setpayloadsize">
 <code class="descname">link_setpayloadsize</code><span class="sig-paren">(</span><em>length</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.link_setpayloadsize" title="Permalink to this definition">¶</a></dt>
-<dd><p>Configure the Message length in byte of user-defined MAC command</p>
+<dd><p>Configure the Message length in byte of user-defined 
+MAC command</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -4106,7 +4277,7 @@ link Analyzer</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>value</strong> – 128-byte HEX value</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>value</strong> – 250-byte HEX value</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">ACK on success, NAK on failure</td>
 </tr>
@@ -4133,7 +4304,8 @@ link Analyzer</p>
 <dl class="method">
 <dt id="rwclib.cRWC5020x.RWCTesterApi.link_setfoptssize">
 <code class="descname">link_setfoptssize</code><span class="sig-paren">(</span><em>length</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.link_setfoptssize" title="Permalink to this definition">¶</a></dt>
-<dd><p>Configure the Message length in byte of user-defined FOpts field</p>
+<dd><p>Configure the Message length in byte of user-defined 
+FOpts field</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -4196,20 +4368,21 @@ link Analyzer</p>
 
 <dl class="method">
 <dt id="rwclib.cRWC5020x.RWCTesterApi.link_setbeaconfrequency">
-<code class="descname">link_setbeaconfrequency</code><span class="sig-paren">(</span><em>macnum</em>, <em>freq</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.link_setbeaconfrequency" title="Permalink to this definition">¶</a></dt>
+<code class="descname">link_setbeaconfrequency</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.link_setbeaconfrequency" title="Permalink to this definition">¶</a></dt>
 <dd><p>Configure the frequency value of Beacon frame</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>macnum</strong> – MAC Command Number</li>
-<li><strong>freq</strong> – 0, 862 ~ 960 MHz</li>
-</ul>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>*args</strong> – <p>For version below 1.17
+only frequency required (0, 862 ~ 960 MHz)</p>
+<p>For version 1.17 and above:
+first parameter should be a MAC command number,
+second parameter should be frequency 
+(0, 862 ~ 960 MHz)</p>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">ACK on success, NAK on failure</p>
-</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">ACK on success, NAK on failure</td>
 </tr>
 </tbody>
 </table>
@@ -4217,17 +4390,51 @@ link Analyzer</p>
 
 <dl class="method">
 <dt id="rwclib.cRWC5020x.RWCTesterApi.link_getbeaconfrequency">
-<code class="descname">link_getbeaconfrequency</code><span class="sig-paren">(</span><em>macnum</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.link_getbeaconfrequency" title="Permalink to this definition">¶</a></dt>
+<code class="descname">link_getbeaconfrequency</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.link_getbeaconfrequency" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read the frequency value of Beacon frame</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>macnum</strong> – MAC Command Number</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>*args</strong> – <p>MAC Command Number required if version 1.17 and 
+above otherwise parameter not required</p>
+</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Param:</th><td class="field-body">Query only</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">It returns the frequency value; NAK on failure</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">It returns the frequency value; NAK on failure</td>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="rwclib.cRWC5020x.RWCTesterApi.link_setbeacondatarate">
+<code class="descname">link_setbeacondatarate</code><span class="sig-paren">(</span><em>framedr</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.link_setbeacondatarate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configure the data rate of Beacon frame 
+(RWC supported version: v1.15 and v1.16)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>framedr</strong> – DR_0 ~ DR_6</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">ACK on success, NAK on failure</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="rwclib.cRWC5020x.RWCTesterApi.link_getbeacondatarate">
+<code class="descname">link_getbeacondatarate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.link_getbeacondatarate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read the data rate of Beacon frame 
+(RWC supported version: v1.15 and v1.16)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Param:</th><td class="field-body">Query only</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">It returns the data rate; NAK on failure</td>
 </tr>
 </tbody>
 </table>
@@ -4235,27 +4442,27 @@ link Analyzer</p>
 
 <dl class="method">
 <dt id="rwclib.cRWC5020x.RWCTesterApi.link_setpingdatarate">
-<code class="descname">link_setpingdatarate</code><span class="sig-paren">(</span><em>macnum</em>, <em>datarate</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.link_setpingdatarate" title="Permalink to this definition">¶</a></dt>
+<code class="descname">link_setpingdatarate</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.link_setpingdatarate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Configure the index of the Data Rate used for ping-slot 
-downlinks for PingSlotChannelReq</p>
+downlinks for PingSlotChannelReq (above v1.160)</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>macnum</strong> – MAC Command Number</li>
-<li><strong>datarate</strong> – DR0_SF12BW125, DR1_SF11BW125, DR2_SF10BW125,</li>
-</ul>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>*args</strong> – <p>For version below 1.17
+only datarate required</p>
+<p>For version 1.17 and above:
+first parameter should be a MAC command number,
+second parameter should be datarate</p>
+<dl class="docutils">
+<dt>(DR0_SF12BW125, DR1_SF11BW125, </dt>
+<dd>DR2_SF10BW125, DR3_SF9BW125, 
+DR4_SF8BW125, DR5_SF7BW125, 
+DR6_SF7BW250, DR7_FSK50)</dd>
+</dl>
 </td>
 </tr>
-</tbody>
-</table>
-<p>DR3_SF9BW125, DR4_SF8BW125, DR5_SF7BW125, DR6_SF7BW250, DR7_FSK50</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">ACK on success, NAK on failure</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">ACK on success, NAK on failure</td>
 </tr>
 </tbody>
 </table>
@@ -4263,14 +4470,16 @@ downlinks for PingSlotChannelReq</p>
 
 <dl class="method">
 <dt id="rwclib.cRWC5020x.RWCTesterApi.link_getpingdatarate">
-<code class="descname">link_getpingdatarate</code><span class="sig-paren">(</span><em>macnum</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.link_getpingdatarate" title="Permalink to this definition">¶</a></dt>
+<code class="descname">link_getpingdatarate</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.link_getpingdatarate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read the index of the Data Rate used for ping-slot downlinks 
-for PingSlotChannelReq</p>
+for PingSlotChannelReq (above v1.160)</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>macnum</strong> – MAC Command Number</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>*args</strong> – <p>MAC Command Number required if version is 1.17 
+and above otherwise parameter not required</p>
+</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">It returns the data rate; NAK on failure</td>
 </tr>
@@ -4280,21 +4489,23 @@ for PingSlotChannelReq</p>
 
 <dl class="method">
 <dt id="rwclib.cRWC5020x.RWCTesterApi.link_setpingfrequency">
-<code class="descname">link_setpingfrequency</code><span class="sig-paren">(</span><em>macnum</em>, <em>freq</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.link_setpingfrequency" title="Permalink to this definition">¶</a></dt>
+<code class="descname">link_setpingfrequency</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.link_setpingfrequency" title="Permalink to this definition">¶</a></dt>
 <dd><p>Configure the frequency used for ping-slot downlinks 
 for PingSlotChannelReq</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>macnum</strong> – MAC Command Number</li>
-<li><strong>freq</strong> – 400 ~ 510, 862 ~ 960 MHz</li>
-</ul>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>*args</strong> – <p>For version below 1.17
+only frequency required 
+(400 ~ 510, 862 ~ 960 MHz)</p>
+<p>For version 1.17 and above:
+first parameter should be a MAC command number,
+second parameter should be frequency 
+(400 ~ 510, 862 ~ 960 MHz)</p>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">ACK on success, NAK on failure</p>
-</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">ACK on success, NAK on failure</td>
 </tr>
 </tbody>
 </table>
@@ -4302,13 +4513,16 @@ for PingSlotChannelReq</p>
 
 <dl class="method">
 <dt id="rwclib.cRWC5020x.RWCTesterApi.link_getpingfrequency">
-<code class="descname">link_getpingfrequency</code><span class="sig-paren">(</span><em>macnum</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.link_getpingfrequency" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read the frequency used for ping-slot downlinks for PingSlotChannelReq</p>
+<code class="descname">link_getpingfrequency</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.link_getpingfrequency" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read the frequency used for ping-slot downlinks 
+for PingSlotChannelReq</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>macnum</strong> – MAC Command Number</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>*args</strong> – <p>MAC Command Number required if version is 1.17 
+and above otherwise parameter not required</p>
+</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">It returns the frequency value; NAK on failure</td>
 </tr>
@@ -4324,20 +4538,17 @@ for PingSlotChannelReq</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>macnum</strong> – MAC Command Number</li>
-<li><strong>datarate</strong> – DR0_SF12BW125, DR1_SF11BW125, DR2_SF10BW125,</li>
+<li><strong>datarate</strong> – DR0_SF12BW125, DR1_SF11BW125, 
+DR2_SF10BW125, DR3_SF9BW125, 
+DR4_SF8BW125, DR5_SF7BW125, 
+DR6_SF7BW250, DR7_FSK50</li>
 </ul>
 </td>
 </tr>
-</tbody>
-</table>
-<p>DR3_SF9BW125, DR4_SF8BW125, DR5_SF7BW125, DR6_SF7BW250, DR7_FSK50</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">ACK on success, NAK on failure</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">ACK on success, NAK on failure</p>
+</td>
 </tr>
 </tbody>
 </table>
@@ -4385,7 +4596,8 @@ for PingSlotChannelReq</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>macnum</strong> – MAC Command Number</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">It returns the RX2 channel frequency value; NAK on failure</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">It returns the RX2 channel frequency value; 
+NAK on failure</td>
 </tr>
 </tbody>
 </table>
@@ -4463,20 +4675,17 @@ for PingSlotChannelReq</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>macnum</strong> – MAC Command Number</li>
-<li><strong>datarate</strong> – DR0_SF12BW125, DR1_SF11BW125, DR2_SF10BW125,</li>
+<li><strong>datarate</strong> – DR0_SF12BW125, DR1_SF11BW125, 
+DR2_SF10BW125, DR3_SF9BW125, 
+DR4_SF8BW125, DR5_SF7BW125, 
+DR6_SF7BW250, DR7_FSK50</li>
 </ul>
 </td>
 </tr>
-</tbody>
-</table>
-<p>DR3_SF9BW125, DR4_SF8BW125, DR5_SF7BW125, DR6_SF7BW250, DR7_FSK50</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">ACK on success, NAK on failure</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">ACK on success, NAK on failure</p>
+</td>
 </tr>
 </tbody>
 </table>
@@ -4815,7 +5024,8 @@ Analyzer screen</p>
 <dl class="method">
 <dt id="rwclib.cRWC5020x.RWCTesterApi.link_getfcntdisplay">
 <code class="descname">link_getfcntdisplay</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.link_getfcntdisplay" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read the flag whether to display FCnt field in Link Analyzer screen</p>
+<dd><p>Read the flag whether to display FCnt field in Link 
+Analyzer screen</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -4848,7 +5058,8 @@ Analyzer screen</p>
 <dl class="method">
 <dt id="rwclib.cRWC5020x.RWCTesterApi.link_getadrdisplay">
 <code class="descname">link_getadrdisplay</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.link_getadrdisplay" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read the flag whether to display ADR field in Link Analyzer screen</p>
+<dd><p>Read the flag whether to display ADR field in Link 
+Analyzer screen</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -4881,7 +5092,8 @@ Analyzer screen</p>
 <dl class="method">
 <dt id="rwclib.cRWC5020x.RWCTesterApi.link_getackdisplay">
 <code class="descname">link_getackdisplay</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.link_getackdisplay" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read the flag whether to display ACK field in Link Analyzer screen</p>
+<dd><p>Read the flag whether to display ACK field in Link 
+Analyzer screen</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -4914,7 +5126,8 @@ Analyzer screen</p>
 <dl class="method">
 <dt id="rwclib.cRWC5020x.RWCTesterApi.link_getclassb_display">
 <code class="descname">link_getclassb_display</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.link_getclassb_display" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read the flag whether to display Class B field in Link Analyzer screen</p>
+<dd><p>Read the flag whether to display Class B field in Link 
+Analyzer screen</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -4947,7 +5160,8 @@ Analyzer screen</p>
 <dl class="method">
 <dt id="rwclib.cRWC5020x.RWCTesterApi.link_getportdisplay">
 <code class="descname">link_getportdisplay</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.link_getportdisplay" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read the flag whether to display FPort field in Link Analyzer screen</p>
+<dd><p>Read the flag whether to display FPort field in Link 
+Analyzer screen</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -5031,7 +5245,8 @@ Analyzer screen</p>
 <dl class="method">
 <dt id="rwclib.cRWC5020x.RWCTesterApi.link_setdrdisplay">
 <code class="descname">link_setdrdisplay</code><span class="sig-paren">(</span><em>flag</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.link_setdrdisplay" title="Permalink to this definition">¶</a></dt>
-<dd><p>Configure the flag whether to display DR value in Link Analyzer screen</p>
+<dd><p>Configure the flag whether to display DR value in Link 
+Analyzer screen</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -5047,7 +5262,8 @@ Analyzer screen</p>
 <dl class="method">
 <dt id="rwclib.cRWC5020x.RWCTesterApi.link_getdrdisplay">
 <code class="descname">link_getdrdisplay</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.link_getdrdisplay" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read the flag whether to display DR value in Link Analyzer screen</p>
+<dd><p>Read the flag whether to display DR value in Link 
+Analyzer screen</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -5197,20 +5413,22 @@ Analyzer screen</p>
 
 <dl class="method">
 <dt id="rwclib.cRWC5020x.RWCTesterApi.link_setpayloadlength">
-<code class="descname">link_setpayloadlength</code><span class="sig-paren">(</span><em>macnum</em>, <em>length</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.link_setpayloadlength" title="Permalink to this definition">¶</a></dt>
+<code class="descname">link_setpayloadlength</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.link_setpayloadlength" title="Permalink to this definition">¶</a></dt>
 <dd><p>Configure the length of payload in bytes in EchoRequest Command</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>macnum</strong> – MAC Command Number</li>
-<li><strong>length</strong> – 1 ~ 242</li>
-</ul>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>*args</strong> – <p>For version below 1.17
+only length required 
+(1 ~ 242)</p>
+<p>For version 1.17 and above:
+first parameter should be a MAC command number,
+second parameter should be length 
+(1 ~ 242)</p>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">ACK on success, NAK on failure</p>
-</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">ACK on success, NAK on failure</td>
 </tr>
 </tbody>
 </table>
@@ -5218,13 +5436,15 @@ Analyzer screen</p>
 
 <dl class="method">
 <dt id="rwclib.cRWC5020x.RWCTesterApi.link_getpayloadlength">
-<code class="descname">link_getpayloadlength</code><span class="sig-paren">(</span><em>macnum</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.link_getpayloadlength" title="Permalink to this definition">¶</a></dt>
+<code class="descname">link_getpayloadlength</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.link_getpayloadlength" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read the length of payload in bytes in EchoRequest Command</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>macnum</strong> – MAC Command Number</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>*args</strong> – <p>MAC Command Number if version is 1.17 and
+above, otherwise parameter not required</p>
+</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">It returns the payload length; NAK on failure</td>
 </tr>
@@ -5233,22 +5453,56 @@ Analyzer screen</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="rwclib.cRWC5020x.RWCTesterApi.link_setechopayload">
+<code class="descname">link_setechopayload</code><span class="sig-paren">(</span><em>macnum</em>, <em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.link_setechopayload" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configure the Message data of echo request command</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>value</strong> – 250-byte HEX value</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">ACK on success, NAK on failure</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="rwclib.cRWC5020x.RWCTesterApi.link_getechopayload">
+<code class="descname">link_getechopayload</code><span class="sig-paren">(</span><em>macnum</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.link_getechopayload" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read the Message data of echo request command</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Param:</th><td class="field-body">Query only</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">It returns the payload data; NAK on failure</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="rwclib.cRWC5020x.RWCTesterApi.link_setcwtimeout">
-<code class="descname">link_setcwtimeout</code><span class="sig-paren">(</span><em>macnum</em>, <em>time</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.link_setcwtimeout" title="Permalink to this definition">¶</a></dt>
+<code class="descname">link_setcwtimeout</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.link_setcwtimeout" title="Permalink to this definition">¶</a></dt>
 <dd><p>Configure the timeout of CW transmission in Enable Continuous 
 Wave Mode command</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>macnum</strong> – MAC Command Number</li>
-<li><strong>time</strong> – 1 ~ 255</li>
-</ul>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>*args</strong> – <p>For version below 1.17
+only time required 
+(1 ~ 255)</p>
+<p>For version 1.17 and above:
+first parameter should be a MAC command number,
+second parameter should be time 
+(1 ~ 255)</p>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">ACK on success, NAK on failure</p>
-</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">ACK on success, NAK on failure</td>
 </tr>
 </tbody>
 </table>
@@ -5256,14 +5510,16 @@ Wave Mode command</p>
 
 <dl class="method">
 <dt id="rwclib.cRWC5020x.RWCTesterApi.link_getcwtimeout">
-<code class="descname">link_getcwtimeout</code><span class="sig-paren">(</span><em>macnum</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.link_getcwtimeout" title="Permalink to this definition">¶</a></dt>
+<code class="descname">link_getcwtimeout</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.link_getcwtimeout" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read the timeout of CW transmission in Enable Continuous 
 Wave Mode command</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>macnum</strong> – MAC Command Number</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>*args</strong> – <p>MAC Command Number if version is 1.17 and
+above, otherwise parameter not required</p>
+</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">It returns the CW timeout value; NAK on failure</td>
 </tr>
@@ -5273,21 +5529,23 @@ Wave Mode command</p>
 
 <dl class="method">
 <dt id="rwclib.cRWC5020x.RWCTesterApi.link_setcwfrequency">
-<code class="descname">link_setcwfrequency</code><span class="sig-paren">(</span><em>macnum</em>, <em>freq</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.link_setcwfrequency" title="Permalink to this definition">¶</a></dt>
+<code class="descname">link_setcwfrequency</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.link_setcwfrequency" title="Permalink to this definition">¶</a></dt>
 <dd><p>Configure the frequency of CW signal in Enable Continuous Wave 
 Mode command</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>macnum</strong> – MAC Command Number</li>
-<li><strong>freq</strong> – 400 ~ 510 MHz, 862 ~ 960 MHz</li>
-</ul>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>*args</strong> – <p>For version below 1.17
+only frequency required 
+(400 ~ 510 MHz, 862 ~ 960 MHz)</p>
+<p>For version 1.17 and above:
+first parameter should be a MAC command number,
+second parameter should be frequency 
+(400 ~ 510 MHz, 862 ~ 960 MHz)</p>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">ACK on success, NAK on failure</p>
-</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">ACK on success, NAK on failure</td>
 </tr>
 </tbody>
 </table>
@@ -5295,13 +5553,16 @@ Mode command</p>
 
 <dl class="method">
 <dt id="rwclib.cRWC5020x.RWCTesterApi.link_getcwfrequency">
-<code class="descname">link_getcwfrequency</code><span class="sig-paren">(</span><em>macnum</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.link_getcwfrequency" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read the frequency of CW signal in Enable Continuous Wave Mode command</p>
+<code class="descname">link_getcwfrequency</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.link_getcwfrequency" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read the frequency of CW signal in Enable Continuous 
+Wave Mode command</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>macnum</strong> – MAC Command Number</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>*args</strong> – <p>MAC Command Number if version is 1.17 and
+above, otherwise parameter not required</p>
+</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">It returns the CW frequency value; NAK on failure</td>
 </tr>
@@ -5311,21 +5572,23 @@ Mode command</p>
 
 <dl class="method">
 <dt id="rwclib.cRWC5020x.RWCTesterApi.link_setcwpower">
-<code class="descname">link_setcwpower</code><span class="sig-paren">(</span><em>macnum</em>, <em>power</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.link_setcwpower" title="Permalink to this definition">¶</a></dt>
+<code class="descname">link_setcwpower</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.link_setcwpower" title="Permalink to this definition">¶</a></dt>
 <dd><p>Configure the power of CW signal in dBm in Enable Continuous Wave 
 Mode command</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>macnum</strong> – MAC Command Number</li>
-<li><strong>power</strong> – 0 ~ 40</li>
-</ul>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>*args</strong> – <p>For version below 1.17
+only power required 
+(0 ~ 40)</p>
+<p>For version 1.17 and above:
+first parameter should be a MAC command number,
+second parameter should be power 
+(0 ~ 40)</p>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">ACK on success, NAK on failure</p>
-</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">ACK on success, NAK on failure</td>
 </tr>
 </tbody>
 </table>
@@ -5333,14 +5596,16 @@ Mode command</p>
 
 <dl class="method">
 <dt id="rwclib.cRWC5020x.RWCTesterApi.link_getcwpower">
-<code class="descname">link_getcwpower</code><span class="sig-paren">(</span><em>macnum</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.link_getcwpower" title="Permalink to this definition">¶</a></dt>
+<code class="descname">link_getcwpower</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.link_getcwpower" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read the power of CW signal in dBm in Enable Continuous Wave 
 Mode command</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>macnum</strong> – MAC Command Number</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>*args</strong> – <p>MAC Command Number if version is 1.17 and
+above, otherwise parameter not required</p>
+</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">It returns the CW power value; NAK on failure</td>
 </tr>
@@ -5351,8 +5616,8 @@ Mode command</p>
 <dl class="method">
 <dt id="rwclib.cRWC5020x.RWCTesterApi.link_setmacinterval">
 <code class="descname">link_setmacinterval</code><span class="sig-paren">(</span><em>interval</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.link_setmacinterval" title="Permalink to this definition">¶</a></dt>
-<dd><p>Configure the minimum MAC command interval in sec. This parameter is
-used for Periodic Downlink in Class B &amp; C</p>
+<dd><p>Configure the minimum MAC command interval in sec. This 
+parameter is used for Periodic Downlink in Class B &amp; C</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -5418,8 +5683,8 @@ MIC Error Packets if it is set as MIC_ERR</p>
 <dl class="method">
 <dt id="rwclib.cRWC5020x.RWCTesterApi.link_getmacsendresult">
 <code class="descname">link_getmacsendresult</code><span class="sig-paren">(</span><em>macnum</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.link_getmacsendresult" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read MAC response information after sending MAC command. For multi-mac
-response, it requires MAC_NUM parameter</p>
+<dd><p>Read MAC response information after sending MAC command. 
+For multi-mac response, it requires MAC_NUM parameter</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -5435,8 +5700,9 @@ response, it requires MAC_NUM parameter</p>
 <dl class="method">
 <dt id="rwclib.cRWC5020x.RWCTesterApi.link_getmacsendstatus">
 <code class="descname">link_getmacsendstatus</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.link_getmacsendstatus" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read MAC command sending status. There are five status defined (IDLE,
-STARTED, SCHEDULED, GOT_RSP, TIMEOUT). Refer to following fig.</p>
+<dd><p>Read MAC command sending status. There are five status defined 
+(IDLE, STARTED, SCHEDULED, GOT_RSP, TIMEOUT). 
+Refer to following fig.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -5460,6 +5726,664 @@ STARTED, SCHEDULED, GOT_RSP, TIMEOUT). Refer to following fig.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body">N/A (Query only)</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Duty cycle value; NAK on failure</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="rwclib.cRWC5020x.RWCTesterApi.link_setmalfunction">
+<code class="descname">link_setmalfunction</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.link_setmalfunction" title="Permalink to this definition">¶</a></dt>
+<dd><p>To configure malfunction activation</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>value</strong> – ON, OFF</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">ACK on success, NAK on failure</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="rwclib.cRWC5020x.RWCTesterApi.link_getmalfunction">
+<code class="descname">link_getmalfunction</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.link_getmalfunction" title="Permalink to this definition">¶</a></dt>
+<dd><p>To read malfunction activation</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body">N/A (Query only)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">link malfunction status; NAK on failure</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="rwclib.cRWC5020x.RWCTesterApi.link_setmicerror">
+<code class="descname">link_setmicerror</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.link_setmicerror" title="Permalink to this definition">¶</a></dt>
+<dd><p>To configure Mic Error activation for malfunction testing</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>value</strong> – ON, OFF</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">ACK on success, NAK on failure</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="rwclib.cRWC5020x.RWCTesterApi.link_getmicerror">
+<code class="descname">link_getmicerror</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.link_getmicerror" title="Permalink to this definition">¶</a></dt>
+<dd><p>To read Mic Error activation for malfunction testing</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body">N/A (Query only)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">link mic error activation status; NAK on failure</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="rwclib.cRWC5020x.RWCTesterApi.link_setmhdrerror">
+<code class="descname">link_setmhdrerror</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.link_setmhdrerror" title="Permalink to this definition">¶</a></dt>
+<dd><p>To configure MAC Header Error activation for malfunction 
+testing</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>value</strong> – ON, OFF</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">ACK on success, NAK on failure</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="rwclib.cRWC5020x.RWCTesterApi.link_getmhdrerror">
+<code class="descname">link_getmhdrerror</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.link_getmhdrerror" title="Permalink to this definition">¶</a></dt>
+<dd><p>To read MAC header Error activation for malfunction testing</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body">N/A (Query only)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">link MAC error activation status; NAK on failure</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="rwclib.cRWC5020x.RWCTesterApi.link_setxormhdr">
+<code class="descname">link_setxormhdr</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.link_setxormhdr" title="Permalink to this definition">¶</a></dt>
+<dd><p>To configure exclusive OR for value for MAC header</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>value</strong> – 8-bit Hex Value</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">ACK on success, NAK on failure</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="rwclib.cRWC5020x.RWCTesterApi.link_getxormhdr">
+<code class="descname">link_getxormhdr</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.link_getxormhdr" title="Permalink to this definition">¶</a></dt>
+<dd><p>To read exclusive OR for value for MAC header</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body">N/A (Query only)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">link XOR MAC header value; NAK on failure</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="rwclib.cRWC5020x.RWCTesterApi.link_setfhdrerror">
+<code class="descname">link_setfhdrerror</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.link_setfhdrerror" title="Permalink to this definition">¶</a></dt>
+<dd><p>To configure Frame Header Error activation for malfunction 
+testing</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>value</strong> – ON, OFF</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">ACK on success, NAK on failure</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="rwclib.cRWC5020x.RWCTesterApi.link_getfhdrerror">
+<code class="descname">link_getfhdrerror</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.link_getfhdrerror" title="Permalink to this definition">¶</a></dt>
+<dd><p>To read frame header Error activation for malfunction testing</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body">N/A (Query only)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">link frame error activation status; NAK on failure</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="rwclib.cRWC5020x.RWCTesterApi.link_setxorfhdr">
+<code class="descname">link_setxorfhdr</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.link_setxorfhdr" title="Permalink to this definition">¶</a></dt>
+<dd><p>To configure exclusive OR for value for Frame header</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>value</strong> – 56-bit Hex Value</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">ACK on success, NAK on failure</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="rwclib.cRWC5020x.RWCTesterApi.link_getxorfhdr">
+<code class="descname">link_getxorfhdr</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.link_getxorfhdr" title="Permalink to this definition">¶</a></dt>
+<dd><p>To read exclusive OR for value for Frame header</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body">N/A (Query only)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">link XOR Frame header value; NAK on failure</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="rwclib.cRWC5020x.RWCTesterApi.link_getfuotafilelength">
+<code class="descname">link_getfuotafilelength</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.link_getfuotafilelength" title="Permalink to this definition">¶</a></dt>
+<dd><p>To read the length of FUOTA binary file</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body">N/A (Query only)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">FUOTA binary file length; NAK on failure</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="rwclib.cRWC5020x.RWCTesterApi.link_getfuotafilename">
+<code class="descname">link_getfuotafilename</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.link_getfuotafilename" title="Permalink to this definition">¶</a></dt>
+<dd><p>To read the name of FUOTA binary file</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body">N/A (Query only)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">name of the FUOTA binary file; NAK on failure</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="rwclib.cRWC5020x.RWCTesterApi.link_setfragmentindex">
+<code class="descname">link_setfragmentindex</code><span class="sig-paren">(</span><em>indexval</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.link_setfragmentindex" title="Permalink to this definition">¶</a></dt>
+<dd><p>To configure fragment index for application layer</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>indexval</strong> – 0 - 3</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">ACK on success, NAK on failure</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="rwclib.cRWC5020x.RWCTesterApi.link_setfragmentsize">
+<code class="descname">link_setfragmentsize</code><span class="sig-paren">(</span><em>fragsize</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.link_setfragmentsize" title="Permalink to this definition">¶</a></dt>
+<dd><p>To configure fragment size for application layer</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fragsize</strong> – 1 - 255</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">ACK on success, NAK on failure</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="rwclib.cRWC5020x.RWCTesterApi.link_setnumberoffragment">
+<code class="descname">link_setnumberoffragment</code><span class="sig-paren">(</span><em>fragnum</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.link_setnumberoffragment" title="Permalink to this definition">¶</a></dt>
+<dd><p>To configure number of fragment for application layer</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fragnum</strong> – 1 - 65535</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">ACK on success, NAK on failure</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="rwclib.cRWC5020x.RWCTesterApi.link_setfragemntpadding">
+<code class="descname">link_setfragemntpadding</code><span class="sig-paren">(</span><em>paddingval</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.link_setfragemntpadding" title="Permalink to this definition">¶</a></dt>
+<dd><p>To configure fragment padding for application layer</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>paddingval</strong> – 1 - 255</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">ACK on success, NAK on failure</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="rwclib.cRWC5020x.RWCTesterApi.link_setfragmentdescriptor">
+<code class="descname">link_setfragmentdescriptor</code><span class="sig-paren">(</span><em>descval</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.link_setfragmentdescriptor" title="Permalink to this definition">¶</a></dt>
+<dd><p>To configure fragment descriptor for application layer</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>descval</strong> – 0x0 - 0xFFFFFFFF</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">ACK on success, NAK on failure</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="rwclib.cRWC5020x.RWCTesterApi.link_setfragmentalgorithm">
+<code class="descname">link_setfragmentalgorithm</code><span class="sig-paren">(</span><em>algoval</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.link_setfragmentalgorithm" title="Permalink to this definition">¶</a></dt>
+<dd><p>To configure fragment algorithm for application layer</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>algoval</strong> – 0 - 7</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">ACK on success, NAK on failure</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="rwclib.cRWC5020x.RWCTesterApi.link_getfragmentprocessingstatus">
+<code class="descname">link_getfragmentprocessingstatus</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.link_getfragmentprocessingstatus" title="Permalink to this definition">¶</a></dt>
+<dd><p>To read the status of fragment progressing for 
+application layer</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body">NA (Query only)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">It returns fragment progressing status, NAK on failure</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="rwclib.cRWC5020x.RWCTesterApi.link_setmulticastkey">
+<code class="descname">link_setmulticastkey</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.link_setmulticastkey" title="Permalink to this definition">¶</a></dt>
+<dd><p>To configure multicast key value for application layer</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>value</strong> – 128-bit Hex value</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">ACK on success, NAK on failure</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="rwclib.cRWC5020x.RWCTesterApi.link_setmulticastgroupid">
+<code class="descname">link_setmulticastgroupid</code><span class="sig-paren">(</span><em>groupid</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.link_setmulticastgroupid" title="Permalink to this definition">¶</a></dt>
+<dd><p>To configure multicast group id for application layer</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>groupid</strong> – 0 - 3</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">ACK on success, NAK on failure</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="rwclib.cRWC5020x.RWCTesterApi.link_setmulticastaddress">
+<code class="descname">link_setmulticastaddress</code><span class="sig-paren">(</span><em>mcaddrval</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.link_setmulticastaddress" title="Permalink to this definition">¶</a></dt>
+<dd><p>To configure multicast address for application layer</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>mcaddrval</strong> – 0x0 - 0xFFFFFFFF</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">ACK on success, NAK on failure</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="rwclib.cRWC5020x.RWCTesterApi.link_setmulticastfrequency">
+<code class="descname">link_setmulticastfrequency</code><span class="sig-paren">(</span><em>freqval</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.link_setmulticastfrequency" title="Permalink to this definition">¶</a></dt>
+<dd><p>To configure multicast frequency for application layer</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>freqval</strong> – 400 - 510, 862 - 960 MHz</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">ACK on success, NAK on failure</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="rwclib.cRWC5020x.RWCTesterApi.link_setmulticastdr">
+<code class="descname">link_setmulticastdr</code><span class="sig-paren">(</span><em>drval</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.link_setmulticastdr" title="Permalink to this definition">¶</a></dt>
+<dd><p>To configure multicast data rate for application layer</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>drval</strong> – ‘DR0_SF12BW125’, ‘DR1_SF11BW125’, 
+‘DR2_SF10BW125’, ‘DR3_SF9BW125’, 
+‘DR4_SF8BW125’, ‘DR5_SF7BW125’, 
+‘DR6_SF7BW250’, ‘DR7_FSK50’</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">ACK on success, NAK on failure</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="rwclib.cRWC5020x.RWCTesterApi.link_setmulticastoption">
+<code class="descname">link_setmulticastoption</code><span class="sig-paren">(</span><em>optval</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.link_setmulticastoption" title="Permalink to this definition">¶</a></dt>
+<dd><p>To configure multicast option for application layer</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>optval</strong> – 0 - 1</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">ACK on success, NAK on failure</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="rwclib.cRWC5020x.RWCTesterApi.link_setmulticastinterval">
+<code class="descname">link_setmulticastinterval</code><span class="sig-paren">(</span><em>interval</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.link_setmulticastinterval" title="Permalink to this definition">¶</a></dt>
+<dd><p>To configure multicast interval between multicast packets 
+for application layer</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>interval</strong> – 1 - 10000</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">ACK on success, NAK on failure</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="rwclib.cRWC5020x.RWCTesterApi.link_setfirmwarereboottimemode">
+<code class="descname">link_setfirmwarereboottimemode</code><span class="sig-paren">(</span><em>mode</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.link_setfirmwarereboottimemode" title="Permalink to this definition">¶</a></dt>
+<dd><p>To configure firmware management reboot time mode for 
+application layer</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>mode</strong> – TIME, ASAP, CANCEL</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">ACK on success, NAK on failure</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="rwclib.cRWC5020x.RWCTesterApi.link_setfirmwarerebootyear">
+<code class="descname">link_setfirmwarerebootyear</code><span class="sig-paren">(</span><em>yearval</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.link_setfirmwarerebootyear" title="Permalink to this definition">¶</a></dt>
+<dd><p>To configure firmware management reboot time (year) for 
+application layer</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>yearval</strong> – 1900 - 2300</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">ACK on success, NAK on failure</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="rwclib.cRWC5020x.RWCTesterApi.link_setfirmwarerebootmonth">
+<code class="descname">link_setfirmwarerebootmonth</code><span class="sig-paren">(</span><em>monthval</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.link_setfirmwarerebootmonth" title="Permalink to this definition">¶</a></dt>
+<dd><p>To configure firmware management reboot time (month) for 
+application layer</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>monthval</strong> – 1 - 12</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">ACK on success, NAK on failure</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="rwclib.cRWC5020x.RWCTesterApi.link_setfirmwarerebootday">
+<code class="descname">link_setfirmwarerebootday</code><span class="sig-paren">(</span><em>dayval</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.link_setfirmwarerebootday" title="Permalink to this definition">¶</a></dt>
+<dd><p>To configure firmware management reboot time (day) for 
+application layer</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>dayval</strong> – 1 - 31</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">ACK on success, NAK on failure</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="rwclib.cRWC5020x.RWCTesterApi.link_setfirmwarereboothour">
+<code class="descname">link_setfirmwarereboothour</code><span class="sig-paren">(</span><em>hourval</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.link_setfirmwarereboothour" title="Permalink to this definition">¶</a></dt>
+<dd><p>To configure firmware management reboot time (hour) for 
+application layer</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>hourval</strong> – 0 - 23</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">ACK on success, NAK on failure</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="rwclib.cRWC5020x.RWCTesterApi.link_setfirmwarerebootminute">
+<code class="descname">link_setfirmwarerebootminute</code><span class="sig-paren">(</span><em>minval</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.link_setfirmwarerebootminute" title="Permalink to this definition">¶</a></dt>
+<dd><p>To configure firmware management reboot time (minute) for 
+application layer</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>minval</strong> – 0 - 59</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">ACK on success, NAK on failure</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="rwclib.cRWC5020x.RWCTesterApi.link_setfirmwarerebootsecond">
+<code class="descname">link_setfirmwarerebootsecond</code><span class="sig-paren">(</span><em>secval</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.link_setfirmwarerebootsecond" title="Permalink to this definition">¶</a></dt>
+<dd><p>To configure firmware management reboot time (second) for 
+application layer</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>secval</strong> – 0 - 59</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">ACK on success, NAK on failure</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="rwclib.cRWC5020x.RWCTesterApi.link_setfirmwarerebootcountdownval">
+<code class="descname">link_setfirmwarerebootcountdownval</code><span class="sig-paren">(</span><em>cdval</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.link_setfirmwarerebootcountdownval" title="Permalink to this definition">¶</a></dt>
+<dd><p>To configure firmware management reboot count down value for 
+application layer</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>cdval</strong> – 0x0 - 0xFFFFFF</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">ACK on success, NAK on failure</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="rwclib.cRWC5020x.RWCTesterApi.link_setnextfirmwareversion">
+<code class="descname">link_setnextfirmwareversion</code><span class="sig-paren">(</span><em>nextfmver</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.link_setnextfirmwareversion" title="Permalink to this definition">¶</a></dt>
+<dd><p>To configure next firmware version of firmware management for 
+application layer</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>nextfmver</strong> – 0x0 - 0xFFFFFFFF</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">ACK on success, NAK on failure</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="rwclib.cRWC5020x.RWCTesterApi.link_deletefirmwareversion">
+<code class="descname">link_deletefirmwareversion</code><span class="sig-paren">(</span><em>delfmver</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.link_deletefirmwareversion" title="Permalink to this definition">¶</a></dt>
+<dd><p>To configure delete firmware version of firmware management 
+for application layer</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>delfmver</strong> – 0x0 - 0xFFFFFFFF</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">ACK on success, NAK on failure</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="rwclib.cRWC5020x.RWCTesterApi.link_setapptimeperiod">
+<code class="descname">link_setapptimeperiod</code><span class="sig-paren">(</span><em>timeperiodval</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.link_setapptimeperiod" title="Permalink to this definition">¶</a></dt>
+<dd><p>To configure the application layer time request period</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>timeperiodval</strong> – 0 - 15</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">ACK on success, NAK on failure</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="rwclib.cRWC5020x.RWCTesterApi.link_setapptimetransnumber">
+<code class="descname">link_setapptimetransnumber</code><span class="sig-paren">(</span><em>timesynctransnumber</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.link_setapptimetransnumber" title="Permalink to this definition">¶</a></dt>
+<dd><p>To configure the number of transfers for time synchronization 
+application layer</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>timesynctransnumber</strong> – 0 - 7</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">ACK on success, NAK on failure</td>
 </tr>
 </tbody>
 </table>
@@ -5633,7 +6557,7 @@ STARTED, SCHEDULED, GOT_RSP, TIMEOUT). Refer to following fig.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body">Query only</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>index</strong> – 7 - 12</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">It returns number of packets received; NAK on failure</td>
 </tr>
@@ -5649,7 +6573,7 @@ STARTED, SCHEDULED, GOT_RSP, TIMEOUT). Refer to following fig.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body">Query only</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>index</strong> – 7 - 12</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">It returns max DUT power; NAK on failure</td>
 </tr>
@@ -5665,7 +6589,7 @@ STARTED, SCHEDULED, GOT_RSP, TIMEOUT). Refer to following fig.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body">Query only</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>index</strong> – 7 - 12</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">It returns average DUT power; NAK on failure</td>
 </tr>
@@ -5681,7 +6605,7 @@ STARTED, SCHEDULED, GOT_RSP, TIMEOUT). Refer to following fig.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body">Query only</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>index</strong> – 7 - 12</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">It returns minimum DUT power; NAK on failure</td>
 </tr>
@@ -5697,7 +6621,7 @@ STARTED, SCHEDULED, GOT_RSP, TIMEOUT). Refer to following fig.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body">Query only</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>index</strong> – 0 - 7</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">It returns number of packets received; NAK on failure</td>
 </tr>
@@ -5713,7 +6637,7 @@ STARTED, SCHEDULED, GOT_RSP, TIMEOUT). Refer to following fig.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body">Query only</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>index</strong> – 0 - 7</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">It returns max DUT power; NAK on failure</td>
 </tr>
@@ -5729,7 +6653,7 @@ STARTED, SCHEDULED, GOT_RSP, TIMEOUT). Refer to following fig.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body">Query only</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>index</strong> – 0 - 7</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">It returns average DUT power; NAK on failure</td>
 </tr>
@@ -5745,7 +6669,7 @@ STARTED, SCHEDULED, GOT_RSP, TIMEOUT). Refer to following fig.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body">Query only</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>index</strong> – 0 - 7</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">It returns minimum DUT power; NAK on failure</td>
 </tr>
@@ -5875,7 +6799,8 @@ STARTED, SCHEDULED, GOT_RSP, TIMEOUT). Refer to following fig.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Param:</th><td class="field-body">Query only</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">It returns the mode of power measure test; NAK on failure</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">It returns the mode of power measure test; 
+NAK on failure</td>
 </tr>
 </tbody>
 </table>
@@ -5907,7 +6832,8 @@ STARTED, SCHEDULED, GOT_RSP, TIMEOUT). Refer to following fig.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Param:</th><td class="field-body">Query only</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">It returns the scenario of power measure test; NAK on failure</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">It returns the scenario of power measure test; 
+NAK on failure</td>
 </tr>
 </tbody>
 </table>
@@ -5916,8 +6842,9 @@ STARTED, SCHEDULED, GOT_RSP, TIMEOUT). Refer to following fig.</p>
 <dl class="method">
 <dt id="rwclib.cRWC5020x.RWCTesterApi.power_settargetchmask">
 <code class="descname">power_settargetchmask</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.power_settargetchmask" title="Permalink to this definition">¶</a></dt>
-<dd><p>Configure the channel mask value to be used in power measure test. 
-This parameter allows power measure testing for specific channels</p>
+<dd><p>Configure the channel mask value to be used in power 
+measure test. This parameter allows power measure testing 
+for specific channels</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -5940,11 +6867,11 @@ This parameter allows power measure testing for specific channels</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Param:</th><td class="field-body">Query only</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">It returns the channel mask value of power measure test;</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">It returns the channel mask value of power measure  
+test; NAK on failure</td>
 </tr>
 </tbody>
 </table>
-<p>NAK on failure</p>
 </dd></dl>
 
 <dl class="method">
@@ -5967,18 +6894,19 @@ power measurement.</p>
 <dl class="method">
 <dt id="rwclib.cRWC5020x.RWCTesterApi.power_gettargetchmaskopt">
 <code class="descname">power_gettargetchmaskopt</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.power_gettargetchmaskopt" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read the channel mask value for optional DR for power measurement.</p>
+<dd><p>Read the channel mask value for optional DR for 
+power measurement.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Param:</th><td class="field-body">Query only</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">It returns the channel mask value of power measurement;</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">It returns the channel mask value of 
+power measurement; NAK on failure</td>
 </tr>
 </tbody>
 </table>
-<p>NAK on failure</p>
 </dd></dl>
 
 <dl class="method">
@@ -6021,16 +6949,11 @@ power measurement.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>datarate</strong> – DR0_SF12BW125, DR1_SF11BW125, DR2_SF10BW125,</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>datarate</strong> – DR0_SF12BW125, DR1_SF11BW125, DR2_SF10BW125, 
+DR3_SF9BW125, DR4_SF8BW125, DR5_SF7BW125, 
+DR6_SF7BW250, DR7_FSK50</td>
 </tr>
-</tbody>
-</table>
-<p>DR3_SF9BW125, DR4_SF8BW125, DR5_SF7BW125, DR6_SF7BW250, DR7_FSK50</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">ACK on success, NAK on failure</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">ACK on success, NAK on failure</td>
 </tr>
 </tbody>
 </table>
@@ -6072,7 +6995,8 @@ power measure test</p>
 <dl class="method">
 <dt id="rwclib.cRWC5020x.RWCTesterApi.power_getpacketnum">
 <code class="descname">power_getpacketnum</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.power_getpacketnum" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read the minimum packet number for each channel in power measure test.</p>
+<dd><p>Read the minimum packet number for each channel in 
+power measure test.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -6088,7 +7012,8 @@ power measure test</p>
 <dl class="method">
 <dt id="rwclib.cRWC5020x.RWCTesterApi.power_setcwtimeout">
 <code class="descname">power_setcwtimeout</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.power_setcwtimeout" title="Permalink to this definition">¶</a></dt>
-<dd><p>Configure the CW Timeout for CERTI_CW scenario in power measure test</p>
+<dd><p>Configure the CW Timeout for CERTI_CW scenario in 
+power measure test</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -6104,7 +7029,8 @@ power measure test</p>
 <dl class="method">
 <dt id="rwclib.cRWC5020x.RWCTesterApi.power_getcwtimeout">
 <code class="descname">power_getcwtimeout</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.power_getcwtimeout" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read the CW Timeout for CERTI_CW scenario in power measure test.</p>
+<dd><p>Read the CW Timeout for CERTI_CW scenario in power 
+measure test.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -6120,7 +7046,8 @@ power measure test</p>
 <dl class="method">
 <dt id="rwclib.cRWC5020x.RWCTesterApi.power_setcwfrequency">
 <code class="descname">power_setcwfrequency</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.power_setcwfrequency" title="Permalink to this definition">¶</a></dt>
-<dd><p>Configure the CW frequency for CERTI_CW scenario in power measure test</p>
+<dd><p>Configure the CW frequency for CERTI_CW scenario in 
+power measure test</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -6136,7 +7063,8 @@ power measure test</p>
 <dl class="method">
 <dt id="rwclib.cRWC5020x.RWCTesterApi.power_getcwfrequency">
 <code class="descname">power_getcwfrequency</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.power_getcwfrequency" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read the CW frequency for CERTI_CW scenario in power measure test.</p>
+<dd><p>Read the CW frequency for CERTI_CW scenario in power 
+measure test.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -6464,7 +7392,8 @@ and restart measuring.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Param:</th><td class="field-body">N/A (Query only)</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">It returns the status of sensitivity test; NAK on failure</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">It returns the status of sensitivity test; 
+NAK on failure</td>
 </tr>
 </tbody>
 </table>
@@ -6526,8 +7455,16 @@ and restart measuring.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>slotval</strong> – For EDT, RX1, RX2, PING (Class B), RXC (Class C)
-For GWT, RX1, RX2, RX1&amp;RX2</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>slotval</strong> – <dl class="docutils">
+<dt>For EDT, RX1, </dt>
+<dd>RX2, 
+PING (Class B), 
+RXC (Class C)</dd>
+<dt>For GWT, RX1, </dt>
+<dd>RX2, 
+RX1&amp;RX2</dd>
+</dl>
+</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">ACK on success, NAK on failure</td>
 </tr>
@@ -6577,11 +7514,11 @@ For GWT, RX1, RX2, RX1&amp;RX2</td>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Param:</th><td class="field-body">Query only</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">It returns the mask value to be used in Sensitivity test;</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">It returns the mask value to be used in 
+Sensitivity test; NAK on failure</td>
 </tr>
 </tbody>
 </table>
-<p>NAK on failure</p>
 </dd></dl>
 
 <dl class="method">
@@ -6604,7 +7541,8 @@ sensitivity test.</p>
 <dl class="method">
 <dt id="rwclib.cRWC5020x.RWCTesterApi.sensitivity_gettargetchmaskopt">
 <code class="descname">sensitivity_gettargetchmaskopt</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.sensitivity_gettargetchmaskopt" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read the channel mask value for optional DR for sensitivity test.</p>
+<dd><p>Read the channel mask value for optional DR for 
+sensitivity test.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -6625,16 +7563,10 @@ sensitivity test.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>drvalue</strong> – DR0_SF12BW125, DR1_SF11BW125, DR2_SF10BW125,</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>drvalue</strong> – DR0_SF12BW125, DR1_SF11BW125, DR2_SF10BW125, 
+DR3_SF9BW125, DR4_SF8BW125, DR5_SF7BW125</td>
 </tr>
-</tbody>
-</table>
-<p>DR3_SF9BW125, DR4_SF8BW125, DR5_SF7BW125</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">ACK on success, NAK on failure</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">ACK on success, NAK on failure</td>
 </tr>
 </tbody>
 </table>
@@ -6650,11 +7582,11 @@ sensitivity test.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Param:</th><td class="field-body">Query only</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">It returns the DR value to be used in sensitivity test;</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">It returns the DR value to be used in sensitivity test; 
+NAK on failure</td>
 </tr>
 </tbody>
 </table>
-<p>NAK on failure</p>
 </dd></dl>
 
 <dl class="method">
@@ -6682,18 +7614,19 @@ sensitivity test</p>
 <dl class="method">
 <dt id="rwclib.cRWC5020x.RWCTesterApi.sensitivity_gettargetdlch">
 <code class="descname">sensitivity_gettargetdlch</code><span class="sig-paren">(</span><em>chnum</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.sensitivity_gettargetdlch" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read the Downlink frequency channel to be used in sensitivity test</p>
+<dd><p>Read the Downlink frequency channel to be used in 
+sensitivity test</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>chnum</strong> – Channel Number</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">It returns the downlink channel frequency value;</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">It returns the downlink channel frequency value; 
+NAK on failure</td>
 </tr>
 </tbody>
 </table>
-<p>NAK on failure</p>
 </dd></dl>
 
 <dl class="method">
@@ -6704,16 +7637,11 @@ sensitivity test</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>msgtype</strong> – MAC Command Message type</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>msgtype</strong> – MAC Command Message type 
+(0000_0000, 1111_1111, 1111_0000, 
+1010_1010, PRBS, USER)</td>
 </tr>
-</tbody>
-</table>
-<p>(0000_0000, 1111_1111, 1111_0000, 1010_1010, PRBS, USER)</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">ACK on success, NAK on failure</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">ACK on success, NAK on failure</td>
 </tr>
 </tbody>
 </table>
@@ -6770,7 +7698,8 @@ sensitivity test</p>
 <dl class="method">
 <dt id="rwclib.cRWC5020x.RWCTesterApi.sensitivity_setpayloadsize">
 <code class="descname">sensitivity_setpayloadsize</code><span class="sig-paren">(</span><em>length</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.sensitivity_setpayloadsize" title="Permalink to this definition">¶</a></dt>
-<dd><p>Configure the Message length in byte of user-defined MAC command</p>
+<dd><p>Configure the Message length in byte of user-defined 
+MAC command</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -6914,8 +7843,8 @@ sensitivity test</p>
 <dl class="method">
 <dt id="rwclib.cRWC5020x.RWCTesterApi.nst_tx_status">
 <code class="descname">nst_tx_status</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.nst_tx_status" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read number of packets transmitted after started. It will return IDLE 
-if not started</p>
+<dd><p>Read number of packets transmitted after started. It will 
+return IDLE if not started</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -6931,7 +7860,8 @@ if not started</p>
 <dl class="method">
 <dt id="rwclib.cRWC5020x.RWCTesterApi.nst_tx_setrepeatnum">
 <code class="descname">nst_tx_setrepeatnum</code><span class="sig-paren">(</span><em>num</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.nst_tx_setrepeatnum" title="Permalink to this definition">¶</a></dt>
-<dd><p>Configure the number of repetition; 0 means infinite transmission</p>
+<dd><p>Configure the number of repetition; 0 means infinite 
+transmission</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -7160,7 +8090,8 @@ if not started</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>msgtype</strong> – 0000_0000, 1111_1111, 1111_0000, 1010_1010, PRBS, USER</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>msgtype</strong> – 0000_0000, 1111_1111, 1111_0000, 
+1010_1010, PRBS, USER</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">ACK on success, NAK on failure</td>
 </tr>
@@ -7454,7 +8385,8 @@ if not started</p>
 <dl class="method">
 <dt id="rwclib.cRWC5020x.RWCTesterApi.nst_tx_setduttype">
 <code class="descname">nst_tx_setduttype</code><span class="sig-paren">(</span><em>duttype</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.nst_tx_setduttype" title="Permalink to this definition">¶</a></dt>
-<dd><p>Configure the DUT Type for TX NST test</p>
+<dd><p>Configure the DUT Type for TX NST test 
+(RWC supported version: v1.15 - v1.21)</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -7470,7 +8402,8 @@ if not started</p>
 <dl class="method">
 <dt id="rwclib.cRWC5020x.RWCTesterApi.nst_tx_getduttype">
 <code class="descname">nst_tx_getduttype</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.nst_tx_getduttype" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read the DUT Type for TX NST test</p>
+<dd><p>Read the DUT Type for TX NST test 
+(RWC supported version: v1.15 - v1.21)</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -7668,6 +8601,38 @@ if not started</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="rwclib.cRWC5020x.RWCTesterApi.nst_rx_setpreamblesize">
+<code class="descname">nst_rx_setpreamblesize</code><span class="sig-paren">(</span><em>preamblesize</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.nst_rx_setpreamblesize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configure the preamble size of LoRa RX frame</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>preamblesize</strong> – 2 ~ 12</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">ACK on success, NAK on failure</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="rwclib.cRWC5020x.RWCTesterApi.nst_rx_getpreamblesize">
+<code class="descname">nst_rx_getpreamblesize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.nst_rx_getpreamblesize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read the preamble size of LoRa RX frame</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body">Query only</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">It returns the preamble size; NAK on failure</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="rwclib.cRWC5020x.RWCTesterApi.nst_rx_setcr">
 <code class="descname">nst_rx_setcr</code><span class="sig-paren">(</span><em>codingrate</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.nst_rx_setcr" title="Permalink to this definition">¶</a></dt>
 <dd><p>Configure the Coding Rate of LoRa RX frame</p>
@@ -7709,7 +8674,8 @@ if not started</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body">Query only</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">It returns RX number of received packets; NAK on failure</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">It returns RX number of received packets; 
+NAK on failure</td>
 </tr>
 </tbody>
 </table>
@@ -7861,7 +8827,7 @@ if not started</p>
 
 <dl class="method">
 <dt id="rwclib.cRWC5020x.RWCTesterApi.nst_rx_setsyncword">
-<code class="descname">nst_rx_setsyncword</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.nst_rx_setsyncword" title="Permalink to this definition">¶</a></dt>
+<code class="descname">nst_rx_setsyncword</code><span class="sig-paren">(</span><em>sizevalue</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.nst_rx_setsyncword" title="Permalink to this definition">¶</a></dt>
 <dd><p>Configure the Sync Word for FSK Modulation</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -7929,7 +8895,8 @@ if not started</p>
 <dl class="method">
 <dt id="rwclib.cRWC5020x.RWCTesterApi.nst_rx_setduttype">
 <code class="descname">nst_rx_setduttype</code><span class="sig-paren">(</span><em>duttype</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.nst_rx_setduttype" title="Permalink to this definition">¶</a></dt>
-<dd><p>Configure the DUT Type for RX NST test</p>
+<dd><p>Configure the DUT Type for RX NST test
+(RWC supported version: v1.15 - v1.21)</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -7945,7 +8912,8 @@ if not started</p>
 <dl class="method">
 <dt id="rwclib.cRWC5020x.RWCTesterApi.nst_rx_getduttype">
 <code class="descname">nst_rx_getduttype</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.nst_rx_getduttype" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read the DUT Type for RX NST test</p>
+<dd><p>Read the DUT Type for RX NST test
+(RWC supported version: v1.15 - v1.21)</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -7961,7 +8929,8 @@ if not started</p>
 <dl class="method">
 <dt id="rwclib.cRWC5020x.RWCTesterApi.nst_mfg_setduttype">
 <code class="descname">nst_mfg_setduttype</code><span class="sig-paren">(</span><em>duttype</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.nst_mfg_setduttype" title="Permalink to this definition">¶</a></dt>
-<dd><p>Configure the DUT Type for MFG NST test</p>
+<dd><p>Configure the DUT Type for MFG NST test
+(RWC supported version: v1.15 - v1.21)</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -7977,7 +8946,8 @@ if not started</p>
 <dl class="method">
 <dt id="rwclib.cRWC5020x.RWCTesterApi.nst_mfg_getduttype">
 <code class="descname">nst_mfg_getduttype</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.nst_mfg_getduttype" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read the DUT Type for MFG NST test</p>
+<dd><p>Read the DUT Type for MFG NST test
+(RWC supported version: v1.15 - v1.21)</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -8401,7 +9371,8 @@ in MFG test</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>msgtype</strong> – 0000_0000, 1111_1111, 1111_0000, 1010_1010, PRBS, USER</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>msgtype</strong> – 0000_0000, 1111_1111, 1111_0000, 
+1010_1010, PRBS, USER</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">ACK on success, NAK on failure</td>
 </tr>
@@ -8515,7 +9486,8 @@ in MFG test</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body">Query only</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">It returns the number of frame transmission; NAK on failure</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">It returns the number of frame transmission; 
+NAK on failure</td>
 </tr>
 </tbody>
 </table>
@@ -8660,7 +9632,7 @@ in MFG test</p>
 
 <dl class="method">
 <dt id="rwclib.cRWC5020x.RWCTesterApi.nst_mfg_setsyncword">
-<code class="descname">nst_mfg_setsyncword</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.nst_mfg_setsyncword" title="Permalink to this definition">¶</a></dt>
+<code class="descname">nst_mfg_setsyncword</code><span class="sig-paren">(</span><em>sizevalue</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.nst_mfg_setsyncword" title="Permalink to this definition">¶</a></dt>
 <dd><p>Configure the Sync Word for FSK Modulation</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -8816,7 +9788,8 @@ e.g. a serial number</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body">N/A (Query only)</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">It returns the selected reference clock; NAK on failure</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">It returns the selected reference clock; 
+NAK on failure</td>
 </tr>
 </tbody>
 </table>
@@ -8889,7 +9862,8 @@ e.g. a serial number</p>
 <dl class="method">
 <dt id="rwclib.cRWC5020x.RWCTesterApi.query_eucertoptinfo">
 <code class="descname">query_eucertoptinfo</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.query_eucertoptinfo" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read the software option information about Certification test of EU</p>
+<dd><p>Read the software option information about Certification 
+test of EU</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -8905,7 +9879,8 @@ e.g. a serial number</p>
 <dl class="method">
 <dt id="rwclib.cRWC5020x.RWCTesterApi.query_sktcertoptinfo">
 <code class="descname">query_sktcertoptinfo</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.query_sktcertoptinfo" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read the software option information about Certification test of SKT</p>
+<dd><p>Read the software option information about Certification 
+test of SKT</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -8921,7 +9896,8 @@ e.g. a serial number</p>
 <dl class="method">
 <dt id="rwclib.cRWC5020x.RWCTesterApi.query_uscertoptinfo">
 <code class="descname">query_uscertoptinfo</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.query_uscertoptinfo" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read the software option information about Certification test of US</p>
+<dd><p>Read the software option information about Certification 
+test of US</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -8937,7 +9913,8 @@ e.g. a serial number</p>
 <dl class="method">
 <dt id="rwclib.cRWC5020x.RWCTesterApi.query_ascertoptinfo">
 <code class="descname">query_ascertoptinfo</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.query_ascertoptinfo" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read the software option information about Certification test of AS</p>
+<dd><p>Read the software option information about Certification 
+test of AS</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -8953,7 +9930,8 @@ e.g. a serial number</p>
 <dl class="method">
 <dt id="rwclib.cRWC5020x.RWCTesterApi.query_krcertoptinfo">
 <code class="descname">query_krcertoptinfo</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.query_krcertoptinfo" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read the software option information about Certification test of KR</p>
+<dd><p>Read the software option information about Certification 
+test of KR</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -8961,6 +9939,71 @@ e.g. a serial number</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body">N/A (Query only)</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">It returns the KRCERT option info; NAK on failure</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="rwclib.cRWC5020x.RWCTesterApi.sys_setiptype">
+<code class="descname">sys_setiptype</code><span class="sig-paren">(</span><em>ipType</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.sys_setiptype" title="Permalink to this definition">¶</a></dt>
+<dd><p>To configure the IP type</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fieldType</strong> – DYNAMIC, STATIC</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">ACK on success, NAK on failure</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="rwclib.cRWC5020x.RWCTesterApi.sys_getiptype">
+<code class="descname">sys_getiptype</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.sys_getiptype" title="Permalink to this definition">¶</a></dt>
+<dd><p>To read the IP type</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body">N/A (Query only)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">It returns the IP type of tester; NAK on failure</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="rwclib.cRWC5020x.RWCTesterApi.sys_setipaddress">
+<code class="descname">sys_setipaddress</code><span class="sig-paren">(</span><em>ipval</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.sys_setipaddress" title="Permalink to this definition">¶</a></dt>
+<dd><p>To configure the ip address (IPV4).
+It should be executed via RS232C</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>ipval</strong> – IPV4 address</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">ACK on success, NAK on failure</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="rwclib.cRWC5020x.RWCTesterApi.sys_getipaddress">
+<code class="descname">sys_getipaddress</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.sys_getipaddress" title="Permalink to this definition">¶</a></dt>
+<dd><p>To read the IP address</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body">N/A (Query only)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">It returns the IP address of tester; NAK on failure</td>
 </tr>
 </tbody>
 </table>
@@ -8988,7 +10031,7 @@ e.g. a serial number</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2020, MCCI Corporation
+        &copy; Copyright 2020 - 2021, MCCI Corporation
 
     </p>
   </div> 
