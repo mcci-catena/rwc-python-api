@@ -16,40 +16,47 @@ This is a Python library to control the RWC5020x LoRa Tester remotely through ei
 
 ## How to install the package
 
-1.  clone the repository from [github](https://github.com/mcci-catena/rwc-python-api)
-2.  Open terminal in PC
-3.  Go to /[path_to_repository]/rwc-python-api/
-4.  To install, enter the command `python setup.py install`
+1.  Clone the repository from [github](https://github.com/mcci-catena/rwc-python-api)
+2.  Open a terminal window and change directory to `{path_to_repository}/rwc-python-api`.
+3.  To install the library in your local Python setup, enter the command
+
+    ```bash
+    python setup.py install
+    ```
 
 ## How to use the package
 
 Create a Python file and import the class library from package:
 
-     from rwclib.cRWC5020x import RWCTesterApi
+```python
+from rwclib.cRWC5020x import RWCTesterApi
+```
 
 Create a class object and pass serial port or ethernet port & ip address as constructor parameter
 
-     #Serial Communication
-     ob = RWCTesterApi('COM5') #windows
-     (or)
-     ob = RWCTesterApi('/dev/ttyUSB0') #Linux
-     (or)
-     #Ethernet Communication
-     ob = RWCTesterApi('5001', '192.168.0.33')
-     
+```python
+# ---Serial Communication---
+rwc = RWCTesterApi('COM5') #windows
+(or)
+rwc = RWCTesterApi('/dev/ttyUSB0') #Linux
+
+# ---Ethernet Communication---
+rwc = RWCTesterApi('5001', '192.168.0.33')
+```
+
 Access the class methods using instantiated object
 
-     ob.query_identification()
-     
-To know more about class methods, please see the **code documentation** in the following location in cloned repository:
+```python
+rwc.query_identification()
+```
 
-*/[path_to_repository]/rwc-python-api/doc/build/html/index.html*
+To know more about class methods, please see the **code documentation** in the following location in this repository: [`./doc/build/html/index.html`](doc/build/html/index.html)
 
-Example scripts to access the library has been placed [here](https://github.com/mcci-catena/rwc-python-api/tree/master/examples) for your reference.
+Example scripts showing how to use the library can be found in the [`examples`](./examples) directory.
 
 ## Support
 
-Python library supports RWC5020x firmware from v1.150 to latest version (v1.305 at time of release).
+The Python library supports RWC5020x firmware from v1.150 to latest version (v1.305 at time of release).
 
 ## Release History
 
