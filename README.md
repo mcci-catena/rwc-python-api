@@ -1,7 +1,7 @@
 # rwc-python-api
 
-This is python library to control RWC5020x LoRa Tester remotely through either serial
-(RS232) or ethernet port.
+This is a Python library to control the RWC5020x LoRa Tester remotely through either the serial port
+(RS232) or the Ethernet port.
 
 ## Requirements
 
@@ -23,7 +23,7 @@ This is python library to control RWC5020x LoRa Tester remotely through either s
 
 ## How to use the package
 
-Create a python file and import the class library from package:
+Create a Python file and import the class library from package:
 
      from rwclib.cRWC5020x import RWCTesterApi
 
@@ -49,7 +49,7 @@ Example scripts to access the library has been placed [here](https://github.com/
 
 ## Support
 
-Python library supports RWC5020A firmware software from v1.150 to latest version.
+Python library supports RWC5020x firmware from v1.150 to latest version (v1.305 at time of release).
 
 ## Release History
 
