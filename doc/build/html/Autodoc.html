@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>RWC5020x Code Documentation &mdash; RWC5020x API Library 1.0.3.10 documentation</title>
+  <title>RWC5020x Code Documentation &mdash; RWC5020x API Library 1.0.3.20 documentation</title>
   
 
   
@@ -57,7 +57,7 @@
             
             
               <div class="version">
-                1.0.3.10
+                1.0
               </div>
             
           
@@ -222,6 +222,38 @@ NAK on failure</td>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>value</strong> – setting value (1 ~ 10)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="rwclib.cRWC5020x.RWCTesterApi.reboot_tester">
+<code class="descname">reboot_tester</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.reboot_tester" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reboot the tester</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body">N/A</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="rwclib.cRWC5020x.RWCTesterApi.factory_reset">
+<code class="descname">factory_reset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.factory_reset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Factory reset the tester</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body">N/A</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
 </tr>
@@ -1104,6 +1136,39 @@ NAK on failure</td>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body">N/A (Query only)</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">It returns the channel mode; NAK on failure</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="rwclib.cRWC5020x.RWCTesterApi.rf_setrxgain">
+<code class="descname">rf_setrxgain</code><span class="sig-paren">(</span><em>gain_level</em><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.rf_setrxgain" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configure the RX gain of the tester (LOWER is only for 
+RWC5020B/M)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>gain_level</strong> – HIGH, MEDIUM, LOW, LOWER</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">ACK on success; NAK on failure</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="rwclib.cRWC5020x.RWCTesterApi.rf_getrxgain">
+<code class="descname">rf_getrxgain</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rwclib.cRWC5020x.RWCTesterApi.rf_getrxgain" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read the RX gain of the tester</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body">N/A (Query only)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">It returns the RX gain; NAK on failure</td>
 </tr>
 </tbody>
 </table>
@@ -2360,7 +2425,8 @@ DR6_SF7BW250, DR7_FSK50</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>version</strong> – LoRaWAN1.0.2, LoRaWAN 1.0.3, LoRaWAN1.1</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>version</strong> – LoRaWAN1.0.2, LoRaWAN1.0.3, LoRaWAN1.0.4, 
+LoRaWAN1.1</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">ACK on success, NAK on failure</td>
 </tr>
@@ -6814,7 +6880,7 @@ NAK on failure</td>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>scenario</strong> – NORMAL_UL, CERTI_UL, CERTI_CW</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>scenario</strong> – NORMAL_UL, CERTI_CW, CERTI_DL_CNT, CERTI_UL</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">ACK on success, NAK on failure</td>
 </tr>
@@ -10031,7 +10097,7 @@ It should be executed via RS232C</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2020 - 2021, MCCI Corporation
+        &copy; Copyright 2020, MCCI Corporation
 
     </p>
   </div> 

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>How to use Python Library &mdash; RWC5020x API Library 1.0.3.10 documentation</title>
+  <title>How to use Python Library &mdash; RWC5020x API Library 1.0.3.20 documentation</title>
   
 
   
@@ -58,7 +58,7 @@
             
             
               <div class="version">
-                1.0.3.10
+                1.0
               </div>
             
           
@@ -180,7 +180,7 @@
 3
 4
 5
-6</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1">#Serial communication</span>
+6</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1"># ---Serial communication---</span>
 <span class="n">obRwcLib</span> <span class="o">=</span> <span class="n">RWCTesterApi</span><span class="p">(</span><span class="s1">&#39;/dev/ttyUSB0&#39;</span><span class="p">)</span>
 <span class="n">obRwcLib</span><span class="o">.</span><span class="n">open_port</span><span class="p">()</span>
 <span class="n">devIdn</span> <span class="o">=</span> <span class="n">obRwcLib</span><span class="o">.</span><span class="n">query_identification</span><span class="p">()</span>
@@ -194,7 +194,7 @@
 3
 4
 5
-6</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1">#Ethernet communication</span>
+6</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1"># ---Ethernet communication---</span>
 <span class="n">obRwcLib</span> <span class="o">=</span> <span class="n">RWCTesterApi</span><span class="p">(</span><span class="s1">&#39;5001&#39;</span><span class="p">,</span> <span class="s1">&#39;192.168.0.33&#39;</span><span class="p">)</span>
 <span class="n">obRwcLib</span><span class="o">.</span><span class="n">open_port</span><span class="p">()</span>
 <span class="n">devIdn</span> <span class="o">=</span> <span class="n">obRwcLib</span><span class="o">.</span><span class="n">query_identification</span><span class="p">()</span>
@@ -225,7 +225,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2020 - 2021, MCCI Corporation
+        &copy; Copyright 2020, MCCI Corporation
 
     </p>
   </div> 
