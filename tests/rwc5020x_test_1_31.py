@@ -43,7 +43,7 @@ class RwcApiTest(unittest.TestCase):
 
     # Test cases for Common Command Methods
     def test_com_query_identification(self):
-        self.assertEqual(self.rwctest.query_identification(), 'RWC5020A LoRaWAN Tester, Ver=1.305,SN=RWC50201760009 ')
+        self.assertEqual(self.rwctest.query_identification(), 'RWC5020A LoRaWAN Tester, Ver=1.310,SN=RWC50201760009 ')
 
     def test_com_reset(self):
         self.assertEqual(self.rwctest.reset(), 'ACK', 'Reset Operation Failed')
@@ -216,6 +216,14 @@ class RwcApiTest(unittest.TestCase):
         self.assertEqual(self.rwctest.rf_getchplan_cn470(), '26M_A', 'Get ch plan for CN470 failed')
         self.assertEqual(self.rwctest.rf_setchplan_cn470('26M_B'), 'ACK', 'Set ch plan for CN470 failed')
         self.assertEqual(self.rwctest.rf_getchplan_cn470(), '26M_B', 'Get ch plan for CN470 failed')
+        
+    def test_rfrxgain(self):
+        self.assertEqual(self.rwctest.rf_setrxgain('HIGH'), 'ACK', 'Set RX Gain Failed')
+        self.assertEqual(self.rwctest.rf_getrxgain(), 'HIGH', 'Get RX Gain Failed')
+        self.assertEqual(self.rwctest.rf_setrxgain('MEDIUM'), 'ACK', 'Set RX Gain Failed')
+        self.assertEqual(self.rwctest.rf_getrxgain(), 'MEDIUM', 'Get RX Gain Failed')
+        self.assertEqual(self.rwctest.rf_setrxgain('LOW'), 'ACK', 'Set RX Gain Failed')
+        self.assertEqual(self.rwctest.rf_getrxgain(), 'LOW', 'Get RX Gain Failed')
 
     # Test Cases for Protocol Command Methods
     def test_protocolregion(self):
@@ -1357,7 +1365,7 @@ class RwcApiTest(unittest.TestCase):
 
     # Test Cases for System Command Methods
     def test_querysysversion(self):
-        self.assertEqual(self.rwctest.query_sysversion(), '1.305', 'Reading System Software Version Failed.')
+        self.assertEqual(self.rwctest.query_sysversion(), '1.310', 'Reading System Software Version Failed.')
 
     def test_sysreferenceclock(self):
         self.assertEqual(self.rwctest.sys_setreferenceclock('INT'), 'ACK', 'Setting System Reference Clock Failed.')
