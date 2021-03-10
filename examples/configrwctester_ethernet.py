@@ -1,4 +1,24 @@
-# Script to perform link analyzer test by accessing RWC tester library
+##############################################################################
+# 
+# Module: configrwctester_ethernet.py
+#
+# Description:
+#     Script to perform link analyzer test by accessing RWC tester library
+#     through ethernet
+#
+# Copyright notice:
+#     This file copyright (c) 2021 by
+#
+#         MCCI Corporation
+#         3520 Krums Corners Road
+#         Ithaca, NY  14850
+#
+#     See accompanying LICENSE file for copyright and license information.
+#
+# Author:
+#     Sivaprakash Veluthambi, MCCI   January, 2021
+#
+##############################################################################
 
 import sys
 import time
@@ -22,10 +42,10 @@ class LinkAnalyzerTest(RWCTesterApi):
         '''
         screenparamdict = {'testmode' : 'EDT', 'submenu' : 'LINK'}
 
-        print ('Setting up Test Mode to EDT', end='\n')
+        print('Setting up Test Mode to EDT', end='\n')
         RWCTesterApi.set_mode(self, screenparamdict.get('testmode'))
         mymode = RWCTesterApi.query_mode(self)
-        print ('Test Mode: {}'.format(mymode), end='\n\n')
+        print('Test Mode: {}'.format(mymode), end='\n\n')
     
         RWCTesterApi.set_screen(self, screenparamdict.get('submenu'))
 
@@ -39,38 +59,38 @@ class LinkAnalyzerTest(RWCTesterApi):
                          'setmode' : 'ON', 'appkey' : 0x01,
                          'chkeui' : 'NO'}
 
-        print ('Setting up PROTOCOL parameters', end='\n')
+        print('Setting up PROTOCOL parameters', end='\n')
         RWCTesterApi.protocol_setregion(self, protocolparamdict.get('region'))
         myregion = RWCTesterApi.protocol_getregion(self)
-        print ('Protocol Region: {}'.format(myregion), end='\n')
+        print('Protocol Region: {}'.format(myregion), end='\n')
     
         RWCTesterApi.protocol_setprotocolver(self, protocolparamdict.get('ver'))
         myprotocolver = RWCTesterApi.protocol_getprotocolver(self)
-        print ('Protocol Version: {}'.format(myprotocolver), end='\n')
+        print('Protocol Version: {}'.format(myprotocolver), end='\n')
     
         RWCTesterApi.protocol_setclass(self, protocolparamdict.get('class'))
         myprotocolclass = RWCTesterApi.protocol_getclass(self)
-        print ('Protocol Class: {}'.format(myprotocolclass), end='\n')
+        print('Protocol Class: {}'.format(myprotocolclass), end='\n')
     
         RWCTesterApi.protocol_setactivationprocedure(
             self, 
             protocolparamdict.get('activation'))
         myacttype = RWCTesterApi.protocol_getactivationprocedure(self)
-        print ('Protocol Activation Procedure: {}'.format(myacttype), end='\n')
+        print('Protocol Activation Procedure: {}'.format(myacttype), end='\n')
     
         RWCTesterApi.protocol_settestmodeflag(
             self, 
             protocolparamdict.get('setmode'))
         mymodestat = RWCTesterApi.protocol_gettestmodeflag(self)
-        print ('Protocol Test Mode Status: {}'.format(mymodestat), end='\n')
+        print('Protocol Test Mode Status: {}'.format(mymodestat), end='\n')
     
         RWCTesterApi.protocol_setappkey(self, protocolparamdict.get('appkey'))
         myappkey = RWCTesterApi.protocol_getappkey(self)
-        print ('Protocol App Key: {}'.format(myappkey), end='\n')
+        print('Protocol App Key: {}'.format(myappkey), end='\n')
     
         RWCTesterApi.protocol_seteuiflag(self, protocolparamdict.get('chkeui'))
         myeuiflag = RWCTesterApi.protocol_geteuiflag(self)
-        print ('Protocol EUI Check: {}'.format(myeuiflag), end='\n\n')
+        print('Protocol EUI Check: {}'.format(myeuiflag), end='\n\n')
 
     def config_rf(self):
         '''
@@ -79,22 +99,22 @@ class LinkAnalyzerTest(RWCTesterApi):
         rfparamdict = {'txpow' : -30, 'pathloss' : 0, 'freqoffset' : 0,
                    'timeoffset' : 0}
 
-        print ('Setting up RF parameters', end='\n')
+        print('Setting up RF parameters', end='\n')
         RWCTesterApi.rf_settxpower(self, rfparamdict.get('txpow'))
         mytxpow = RWCTesterApi.rf_gettxpower(self)
-        print ('RF Tx Power: {}'.format(mytxpow), end='\n')
+        print('RF Tx Power: {}'.format(mytxpow), end='\n')
     
         RWCTesterApi.rf_setpathloss(self, rfparamdict.get('pathloss'))
         mypathlossrng = RWCTesterApi.rf_getpathloss(self)
-        print ('RF Path Loss: {}'.format(mypathlossrng), end='\n')
+        print('RF Path Loss: {}'.format(mypathlossrng), end='\n')
     
         RWCTesterApi.rf_setfreqoffset(self, rfparamdict.get('freqoffset'))
         myrffreqoffset = RWCTesterApi.rf_getfreqoffset(self)
-        print ('RF Frequency Offset: {}'.format(myrffreqoffset), end='\n')
+        print('RF Frequency Offset: {}'.format(myrffreqoffset), end='\n')
     
         RWCTesterApi.rf_settimeoffset(self, rfparamdict.get('timeoffset'))
         mytimeoffset = RWCTesterApi.rf_gettimeoffset(self)
-        print ('RF Time Offset: {}'.format(mytimeoffset), end='\n\n')
+        print('RF Time Offset: {}'.format(mytimeoffset), end='\n\n')
 
     def config_mac(self):
         '''
@@ -106,10 +126,10 @@ class LinkAnalyzerTest(RWCTesterApi):
             'mactype' : 'UNCONFIRMED', 
             'macfield' : 'PAYLOAD'}
 
-        print ('Setting up MAC parameters', end='\n')
+        print('Setting up MAC parameters', end='\n')
         RWCTesterApi.link_setnumofmaccmd(self, macparamdict.get('cmdno'))
         mymaccmdno = RWCTesterApi.link_getnumofmaccmd(self)
-        print ('Number of MAC Command: {}'.format(mymaccmdno), end='\n')
+        print('Number of MAC Command: {}'.format(mymaccmdno), end='\n')
 
         for key in macparamdict['mac']:
             RWCTesterApi.link_setinstantmaccmd(
@@ -117,23 +137,23 @@ class LinkAnalyzerTest(RWCTesterApi):
                 key, 
                 macparamdict['mac'][key])
             mymac = RWCTesterApi.link_getinstantmaccmd(self, key)
-            print (
+            print(
                 'MAC DUT Command {} : {}'.format(key, macparamdict['mac'][key]), 
                 end='\n')
     
         RWCTesterApi.link_setmaccmdtype(self, macparamdict.get('mactype'))
         mymactype = RWCTesterApi.link_getmaccmdtype(self)
-        print ('MAC Command Type : {}'.format(mymactype), end='\n')
+        print('MAC Command Type : {}'.format(mymactype), end='\n')
     
         RWCTesterApi.link_setmaccmdfield(self, macparamdict.get('macfield'))
         mymacfield = RWCTesterApi.link_getmaccmdfield(self)
-        print ('MAC Command Field : {}'.format(mymacfield), end='\n\n')
+        print('MAC Command Field : {}'.format(mymacfield), end='\n\n')
 
     def exec_link(self):
         '''
         To start the link test
         '''
-        print ('Executing Link Analyzer Test', end='\n')
+        print('Executing Link Analyzer Test', end='\n')
         time.sleep(1)
         result = RWCTesterApi.link_run(self)
         print (result, end='\n')
@@ -142,10 +162,10 @@ class LinkAnalyzerTest(RWCTesterApi):
         '''
         To send MAC command
         '''
-        print ('Executing MAC Command', end='\n')
+        print('Executing MAC Command', end='\n')
         time.sleep(1)
         result = RWCTesterApi.link_sendmac(self)
-        print (result, end='\n')
+        print(result, end='\n')
 
     def mv_submenu(self):
         '''
@@ -163,9 +183,9 @@ class LinkAnalyzerTest(RWCTesterApi):
         '''
         Stop the test
         '''
-        print ('Stop Link Analyzer Test', end='\n')
+        print('Stop Link Analyzer Test', end='\n')
         result = RWCTesterApi.link_stop(self)
-        print (result, end='\n')
+        print(result, end='\n')
 
     def close(self):
         '''

@@ -1,4 +1,23 @@
-# Script to perform EU certification 5.3 test
+##############################################################################
+# 
+# Module: eucerttest_5_3_ethernet.py
+#
+# Description:
+#     Script to perform EU certification 5.3 test through ethernet
+#
+# Copyright notice:
+#     This file copyright (c) 2021 by
+#
+#         MCCI Corporation
+#         3520 Krums Corners Road
+#         Ithaca, NY  14850
+#
+#     See accompanying LICENSE file for copyright and license information.
+#
+# Author:
+#     Sivaprakash Veluthambi, MCCI   January, 2021
+#
+##############################################################################
 
 import os, sys
 import time
@@ -211,11 +230,11 @@ def link_test(num, req_cmd, resp_cmd):
             msg = link_msg()
             msglist = msg.split('\t')
             if req_cmd in msglist[num]:
-                print ('MAC Request: {}'.format(msglist[num]), end='\n')
+                print('MAC Request: {}'.format(msglist[num]), end='\n')
                 msg = link_msg()
                 msglist = msg.split('\t')
                 if resp_cmd in msglist[num]:
-                    print ('Response: {}'.format(msglist[num]), end='\n\n')
+                    print('Response: {}'.format(msglist[num]), end='\n\n')
                     return True
                 else:
                     if rcnt < 1:

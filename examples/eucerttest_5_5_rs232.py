@@ -1,4 +1,23 @@
-# Script to perform EU certification 5.5 test
+##############################################################################
+# 
+# Module: eucerttest_5_5_rs232.py
+#
+# Description:
+#     Script to perform EU certification 5.5 test through RS232
+#
+# Copyright notice:
+#     This file copyright (c) 2021 by
+#
+#         MCCI Corporation
+#         3520 Krums Corners Road
+#         Ithaca, NY  14850
+#
+#     See accompanying LICENSE file for copyright and license information.
+#
+# Author:
+#     Sivaprakash Veluthambi, MCCI   January, 2021
+#
+##############################################################################
 
 import os
 import sys
@@ -199,11 +218,11 @@ def link_test(req_num, req_cmd, resp_num, resp_cmd):
             msg = link_msg()
             msglist = msg.split('\t')
             if req_cmd in msglist[req_num]:
-                print ('MAC Request: {}'.format(msglist[req_num]), end='\n')
+                print('MAC Request: {}'.format(msglist[req_num]), end='\n')
                 msg = link_msg()
                 msglist = msg.split('\t')
                 if resp_cmd in msglist[resp_num]:
-                    print ('Response: {}'.format(msglist[resp_num]), end='\n\n')
+                    print('Response: {}'.format(msglist[resp_num]), end='\n\n')
                     return True
                 else:
                     if rcnt < 1:
@@ -276,7 +295,7 @@ if __name__ == '__main__':
     if msglist[17] == 'EchoResponse':
         fatal('Abnormal mode - {}: Test failed'.format(mode))
     else:
-        print ('Response: {}'.format(msglist[17]), end = '\n\n')
+        print('Response: {}'.format(msglist[17]), end = '\n\n')
 
     # SET LINK ABNORMAL PARAM
     mode = 'OFF'
