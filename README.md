@@ -3,6 +3,18 @@
 This is a Python library to control the RWC5020x LoRa Tester remotely through either the serial port
 (RS232) or the Ethernet port.
 
+- **Supported analyzers (current generation):**
+
+  | RWC5020B | RWC5020M |
+  | :---: | :---: |
+  | [![RWC5020B Tester](doc/build/html/_images/RWC5020B.png)](https://mcci.com/lorawan/products/rwc5020b/ "Link to RWC5020B page") | [![RWC5020M Tester](doc/build/html/_images/RWC5020M.png)](https://mcci.com/lorawan/products/rwc5020m/ "Link to RWC5020M page") |
+
+- **Supported analyzer (previous generation):**
+
+  | RWC5020A |
+  | :---: |
+  | [![RWC5020A Tester](doc/build/html/_images/RWC5020A.png)](https://mcci.com/lorawan/products/rwc5020b/ "Link to RWC5020A page") |
+
 ## Requirements
 
 - [Python3.*](https://www.python.org/downloads/)
