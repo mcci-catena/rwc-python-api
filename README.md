@@ -68,9 +68,12 @@ Example scripts showing how to use the library can be found in the [`examples`](
 
 ## Support
 
-The Python library supports RWC5020x firmware from v1.150 to latest version (v1.305 at time of release).
+The Python library supports RWC5020x firmware from v1.150 to latest version (v1.310 at time of release).
 
 ## Release History
+
+- Head has the following changes:
+  - Fix [#6](https://github.com/mcci-catena/rwc-python-api/issues/6): Added new remote commands for the latest firmware v1.310
 
 - v1.0.3.10 includes the following changes:
   - Fix [#2](https://github.com/mcci-catena/rwc-python-api/issues/2): Updated latest remote commands and added backward compatibility to python library for support of RWC5020x firmware from v1.150 to v1.305.
