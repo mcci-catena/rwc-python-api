@@ -3,6 +3,18 @@
 This is a Python library to control the RWC5020x LoRa Tester remotely through either the serial port
 (RS232) or the Ethernet port.
 
+- **Supported analyzers (current generation):**
+
+  | RWC5020B | RWC5020M |
+  | :---: | :---: |
+  | [![RWC5020B Tester](doc/build/html/_images/RWC5020B.png)](https://mcci.com/lorawan/products/rwc5020b/ "Link to RWC5020B page") | [![RWC5020M Tester](doc/build/html/_images/RWC5020M.png)](https://mcci.com/lorawan/products/rwc5020m/ "Link to RWC5020M page") |
+
+- **Supported analyzer (previous generation):**
+
+  | RWC5020A |
+  | :---: |
+  | [![RWC5020A Tester](doc/build/html/_images/RWC5020A.png)](https://mcci.com/lorawan/products/rwc5020b/ "Link to RWC5020A page") |
+
 ## Requirements
 
 - [Python3.*](https://www.python.org/downloads/)
@@ -56,9 +68,12 @@ Example scripts showing how to use the library can be found in the [`examples`](
 
 ## Support
 
-The Python library supports RWC5020x firmware from v1.150 to latest version (v1.305 at time of release).
+The Python library supports RWC5020x firmware from v1.150 to latest version (v1.310 at time of release).
 
 ## Release History
+
+- Head has the following changes:
+  - Fix [#6](https://github.com/mcci-catena/rwc-python-api/issues/6): Added new remote commands for the latest firmware v1.310
 
 - v1.0.3.10 includes the following changes:
   - Fix [#2](https://github.com/mcci-catena/rwc-python-api/issues/2): Updated latest remote commands and added backward compatibility to python library for support of RWC5020x firmware from v1.150 to v1.305.

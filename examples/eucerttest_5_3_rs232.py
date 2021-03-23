@@ -1,4 +1,23 @@
-# Script to perform EU certification 5.3 test
+##############################################################################
+# 
+# Module: eucerttest_5_3_rs232.py
+#
+# Description:
+#     Script to perform EU certification 5.3 test through RS232
+#
+# Copyright notice:
+#     This file copyright (c) 2021 by
+#
+#         MCCI Corporation
+#         3520 Krums Corners Road
+#         Ithaca, NY  14850
+#
+#     See accompanying LICENSE file for copyright and license information.
+#
+# Author:
+#     Sivaprakash Veluthambi, MCCI   January, 2021
+#
+##############################################################################
 
 import os, sys
 import time
@@ -8,18 +27,30 @@ sys.path.insert(0, os.path.abspath('..'))
 from rwclib.cRWC5020x import RWCTesterApi
 
 def debug(msg):
+    '''
+    Display debug message
+    '''
     print(msg, end='\n')
     return True
 
 def err(msg):
+    '''
+    Display error message
+    '''
     print(msg, end='\n')
 
 def fatal(msg):
+    '''
+    Exit on error
+    '''
     err(msg)
     print('\nTest Result: FAIL')
     sys.exit(1)
     
 def exec_link():
+    '''
+    To start link test
+    '''
     result = ob.link_run()
     if result:
         if result == 'ACK':
@@ -31,6 +62,9 @@ def exec_link():
     return True
 
 def clear_link():
+    '''
+    Clear existing link messages
+    '''
     result = ob.link_clear()
     if result:
         if result == 'ACK':
@@ -42,6 +76,9 @@ def clear_link():
     return True
 
 def set_dlslot(slot):
+    '''
+    Configure downlink slot
+    '''
     result = ob.protocol_setdownlinkslot(slot)
     if result:
         if result == 'ACK':
@@ -53,6 +90,9 @@ def set_dlslot(slot):
     return True
 
 def set_mactype():
+    '''
+    Configure MAC command type
+    '''
     mactype = 'UNCONFIRMED'
     result = ob.link_setmaccmdtype(mactype)
     if result:
@@ -65,6 +105,9 @@ def set_mactype():
     return True
 
 def set_maccmdfield():
+    '''
+    Configure MAC command field
+    '''
     maccmdfield = 'PAYLOAD'
     result = ob.link_setmaccmdfield(maccmdfield)
     if result:
@@ -77,6 +120,9 @@ def set_maccmdfield():
     return True
 
 def set_numofcmd():
+    '''
+    Configure number of MAC command
+    '''
     num = 1
     result = ob.link_setnumofmaccmd(num)
     if result:
@@ -89,6 +135,9 @@ def set_numofcmd():
     return True
 
 def instant_mac_cmd(num, maccmd):
+    '''
+    Configure instant MAC command
+    '''
     result = ob.link_setinstantmaccmd(num, maccmd)
     if result:
         if result == 'ACK':
@@ -100,6 +149,9 @@ def instant_mac_cmd(num, maccmd):
     return True
 
 def set_echolen(length):
+    '''
+    Configure payload length
+    '''
     result = ob.link_setpayloadlength(1, length)
     if result:
         if result == 'ACK':
@@ -111,6 +163,9 @@ def set_echolen(length):
     return True
 
 def set_droffset(val):
+    '''
+    Configure RX1 data rate offset
+    '''
     result = ob.protocol_setrx1_dr_offset(val)
     if result:
         if result == 'ACK':
@@ -122,6 +177,9 @@ def set_droffset(val):
     return True
 
 def set_dr(val):
+    '''
+    Configure RX2 DR value
+    '''
     result = ob.protocol_setrx2_dr(val)
     if result:
         if result == 'ACK':
@@ -133,6 +191,9 @@ def set_dr(val):
     return True
 
 def link_status():
+    '''
+    To check the status of link test
+    '''
     cnt = 0
     while(cnt < 2):
         result = ob.link_getactivationstatus()
@@ -157,6 +218,9 @@ def link_status():
         fatal('Link status: In-active\n')
 
 def config_param(slot, num, maccmd):
+    '''
+    Configure parameters for EU test
+    '''
     set_dlslot(slot)
     set_mactype()
     set_maccmdfield()
@@ -164,6 +228,9 @@ def config_param(slot, num, maccmd):
     instant_mac_cmd(num, maccmd)
 
 def link_msg():
+    '''
+    To read the link message
+    '''
     msg = None
     while (msg is None or msg == 'NA'):
         msg = ob.link_readmsg()
@@ -175,6 +242,9 @@ def link_msg():
         fatal('READ:LINK:MSG? - {}\n'.format(msg))
 
 def send_mac():
+    '''
+    To send a MAC command
+    '''
     time.sleep(1)
     result = ob.link_sendmac()
     if result:
@@ -188,6 +258,9 @@ def send_mac():
     return True
 
 def link_reset():
+    '''
+    Reset the link message
+    '''
     result = ob.link_msgreset()
     if result:
         if result == 'ACK':
@@ -200,6 +273,9 @@ def link_reset():
     return True
 
 def link_test(num, req_cmd, resp_cmd):
+    '''
+    To perform link test
+    '''
     cnt = 0
     while (cnt < 2):
         rcnt = 0
@@ -211,11 +287,11 @@ def link_test(num, req_cmd, resp_cmd):
             msg = link_msg()
             msglist = msg.split('\t')
             if req_cmd in msglist[num]:
-                print ('MAC Request: {}'.format(msglist[num]), end='\n')
+                print('MAC Request: {}'.format(msglist[num]), end='\n')
                 msg = link_msg()
                 msglist = msg.split('\t')
                 if resp_cmd in msglist[num]:
-                    print ('Response: {}'.format(msglist[num]), end='\n\n')
+                    print('Response: {}'.format(msglist[num]), end='\n\n')
                     return True
                 else:
                     if rcnt < 1:

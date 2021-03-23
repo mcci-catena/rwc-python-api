@@ -89,12 +89,18 @@ class RWCTesterApi(RwcSerialSetup):
         :return: None
 
         '''
+        currVersion = self.query_sysversion()
         saveindex = int(index)
-        if saveindex >= 0 and saveindex <=9:
+
+        if (saveindex >= 0 and saveindex <=9 and float(currVersion) >= 1.310):
+            cmdSaveIndex = str(saveindex)
+            cmdSave = '*SAVE SAVE_' + cmdSaveIndex + '\n'
+        else:
             cmdSaveIndex = str(saveindex)
             cmdSave = '*SAVE ' + cmdSaveIndex + '\n'
-            result = RwcSerialSetup.transceive(self, cmdSave)
-            return result
+
+        result = RwcSerialSetup.transceive(self, cmdSave)
+        return result
             
     def recall(self, index):
         '''
@@ -104,15 +110,57 @@ class RWCTesterApi(RwcSerialSetup):
 
         :return: None
 
+        '''
+        currVersion = self.query_sysversion()
+        recallindex = int(index)
+
+        if (recallindex >= 0 and recallindex <=9 and float(currVersion) >= 1.310):
+            cmdRecallIndex = str(recallindex)
+            cmdRecall = '*RECALL SAVE_' + cmdRecallIndex + '\n'
+        else:
+            cmdRecallIndex = str(recallindex)
+            cmdRecall = '*RECALL ' + cmdRecallIndex + '\n'
+
+        result = RwcSerialSetup.transceive(self, cmdRecall)
+        return result
+
+    def reboot_tester(self):
+        '''
+        Reboot the tester
+
+        :Parameters: N/A
+
+        :return: None
+
+        '''
+        currVersion = self.query_sysversion()
+
+        if (float(currVersion) > 1.29):
+            cmdReboot = '*REBOOT' + '\n'
+            result = RwcSerialSetup.transceive(self, cmdReboot)
+            return result
+        else:
+            raise Exception('Command not supported in current version')
+
+    def factory_reset(self):
+        '''
+        Factory reset the tester
+
+        :Parameters: N/A
+
+        :return: None
+
 
         .. _sysconflabel:
         '''
-        recallindex = int(index)
-        if recallindex >= 0 and recallindex <=9:
-            cmdRecallIndex = str(recallindex)
-            cmdRecall = '*SAVE ' + cmdRecallIndex + '\n'
-            result = RwcSerialSetup.transceive(self, cmdRecall)
+        currVersion = self.query_sysversion()
+
+        if (float(currVersion) > 1.29):
+            cmdfactoryRst = '*FACTORY_RST' + '\n'
+            result = RwcSerialSetup.transceive(self, cmdfactoryRst)
             return result
+        else:
+            raise Exception('Command not supported in current version')
             
     # System Configuration Command Methods
     def set_mode(self, mode):
@@ -1009,7 +1057,8 @@ class RWCTesterApi(RwcSerialSetup):
 
         :Parameters: N/A (Query only)
 
-        :return: It returns the channel mode; NAK on failure 
+        :return: It returns the channel mode; NAK on failure
+
         '''
         cmdGetChGroupAs = 'READ:RF:AS923_CH_GROUP?' + '\n'
         result = RwcSerialSetup.transceive(self, cmdGetChGroupAs)
@@ -1088,7 +1137,8 @@ class RWCTesterApi(RwcSerialSetup):
 
         :Parameters: N/A (Query only)
 
-        :return: It returns the channel mode; NAK on failure 
+        :return: It returns the channel mode; NAK on failure
+
         '''
         cmdGetMeasuredFreq = 'READ:RF:MEASURED_FREQ?' + '\n'
         result = RwcSerialSetup.transceive(self, cmdGetMeasuredFreq)
@@ -1100,7 +1150,8 @@ class RWCTesterApi(RwcSerialSetup):
 
         :Parameters: N/A (Query only)
 
-        :return: It returns the channel mode; NAK on failure 
+        :return: It returns the channel mode; NAK on failure
+
         '''
         cmdGetMeasuredFreqMax = 'READ:RF:MEASURED_FREQ_MAX?' + '\n'
         result = RwcSerialSetup.transceive(self, cmdGetMeasuredFreqMax)
@@ -1113,6 +1164,7 @@ class RWCTesterApi(RwcSerialSetup):
         :Parameters: N/A (Query only)
 
         :return: It returns the channel mode; NAK on failure 
+
         '''
         cmdGetMeasuredFreqAvg = 'READ:RF:MEASURED_FREQ_AVG?' + '\n'
         result = RwcSerialSetup.transceive(self, cmdGetMeasuredFreqAvg)
@@ -1124,13 +1176,45 @@ class RWCTesterApi(RwcSerialSetup):
 
         :Parameters: N/A (Query only)
 
-        :return: It returns the channel mode; NAK on failure
+        :return: It returns the channel mode; NAK on failure 
+
+        '''
+        cmdGetMeasuredFreqMin = 'READ:RF:MEASURED_FREQ_MIN?' + '\n'
+        result = RwcSerialSetup.transceive(self, cmdGetMeasuredFreqMin)
+        return result
+
+    def rf_setrxgain(self, gain_level):
+        '''
+        Configure the RX gain of the tester (LOWER is only for 
+        RWC5020B/M)
+
+        :param gain_level: HIGH, MEDIUM, LOW, LOWER
+
+        :return: ACK on success; NAK on failure 
+
+        '''
+        gainList = ['HIGH', 'MEDIUM', 'LOW', 'LOWER']
+
+        if gain_level in gainList:
+            cmdSetRxGain = 'CONF:RF:RX_GAIN ' + gain_level + '\n'
+            result = RwcSerialSetup.transceive(self, cmdSetRxGain)
+            return result
+        else:
+            raise Exception('Invalid RX Gain parameter received.')
+
+    def rf_getrxgain(self):
+        '''
+        Read the RX gain of the tester
+
+        :Parameters: N/A (Query only)
+
+        :return: It returns the RX gain; NAK on failure
 
 
         .. _protocollabel: 
         '''
-        cmdGetMeasuredFreqMin = 'READ:RF:MEASURED_FREQ_MIN?' + '\n'
-        result = RwcSerialSetup.transceive(self, cmdGetMeasuredFreqMin)
+        cmdGetRxGain = 'READ:RF:RX_GAIN?' + '\n'
+        result = RwcSerialSetup.transceive(self, cmdGetRxGain)
         return result
 
     #Protocol Command Methods
@@ -2293,7 +2377,7 @@ class RWCTesterApi(RwcSerialSetup):
             '1.170', '1.200', '1.203', 
             '1.204', '1.206', '1.210', 
             '1.220', '1.221', '1.222', 
-            '1.300', '1.305']
+            '1.300', '1.305', '1.310']
         drList1 = [
             'DR_0', 'DR_1', 'DR_2', 'DR_3', 
             'DR_4', 'DR_5', 'DR_6', 'DR_7']
@@ -2413,7 +2497,7 @@ class RWCTesterApi(RwcSerialSetup):
         verList2 = [
             '1.170', '1.200', '1.203', '1.204', 
             '1.206', '1.210', '1.220', '1.221', 
-            '1.222', '1.300', '1.305']
+            '1.222', '1.300', '1.305', '1.310']
         drList1 = [
             'DR_0', 'DR_1', 'DR_2', 'DR_3', 
             'DR_4', 'DR_5', 'DR_6', 'DR_7']
@@ -2484,25 +2568,17 @@ class RWCTesterApi(RwcSerialSetup):
         '''
         Configure the protocol version of LoRaWAN
 
-        :param version: LoRaWAN1.0.2, LoRaWAN 1.0.3, LoRaWAN1.1
+        :param version: LoRaWAN1.0.2, LoRaWAN1.0.3, LoRaWAN1.0.4, 
+                        LoRaWAN1.1
 
         :return: ACK on success, NAK on failure
         
         '''
-        cmdProtocolVersion = version
-        if cmdProtocolVersion == 'LoRaWAN1.0.2':
-            cmdSetProtocolVersion = 'CONF:PROTOCOL:PROTOCOL_VER LoRaWAN1.0.2' \
-                                        + '\n'
-            result = RwcSerialSetup.transceive(self, cmdSetProtocolVersion)
-            return result
-        elif cmdProtocolVersion == 'LoRaWAN1.0.3':
-            cmdSetProtocolVersion = 'CONF:PROTOCOL:PROTOCOL_VER LoRaWAN1.0.3' \
-                                        + '\n'
-            result = RwcSerialSetup.transceive(self, cmdSetProtocolVersion)
-            return result
-        elif cmdProtocolVersion == 'LoRaWAN1.1':
-            cmdSetProtocolVersion = 'CONF:PROTOCOL:PROTOCOL_VER LoRaWAN1.1' \
-                                        + '\n'
+        versionList = ['LoRaWAN1.0.2', 'LoRaWAN1.0.3', 'LoRaWAN1.0.4', 'LoRaWAN1.1']
+        if version in versionList:
+            cmdSetProtocolVersion = 'CONF:PROTOCOL:PROTOCOL_VER ' \
+                                    + version \
+                                    + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetProtocolVersion)
             return result
         else:
@@ -7410,12 +7486,12 @@ class RWCTesterApi(RwcSerialSetup):
         '''
         Configure the scenario for power measure test.
 
-        :param scenario: NORMAL_UL, CERTI_UL, CERTI_CW
+        :param scenario: NORMAL_UL, CERTI_CW, CERTI_DL_CNT, CERTI_UL
 
         :return: ACK on success, NAK on failure
         
         '''
-        scenariolist = ['NORMAL_UL', 'CERTI_UL', 'CERTI_CW']
+        scenariolist = ['NORMAL_UL', 'CERTI_UL', 'CERTI_CW', 'CERTI_DL_CNT']
         if scenario in scenariolist:
             cmdSetScenario = 'CONF:POWER:SCENARIO ' + scenario + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetScenario)
@@ -8553,10 +8629,18 @@ class RWCTesterApi(RwcSerialSetup):
         :return: ACK on success, NAK on failure
         
         '''
+        currVersion = self.query_sysversion()
         cmdValue = float(value)
-        if (cmdValue >= 0.01 and cmdValue <= 1000.00):
+        if (cmdValue >= 0.01 and cmdValue <= 1000.00 
+            and float(currVersion) < 1.3 ):
             cmdIntervalValue = str(cmdValue)
             cmdSetInterval = 'CONF:NST:TX:INTERVAL ' + cmdIntervalValue + '\n'
+            result = RwcSerialSetup.transceive(self, cmdSetInterval)
+            return result
+        elif (cmdValue >= 0.01 and cmdValue <= 1000.00 
+                and float(currVersion) > 1.290 ):
+            cmdIntervalValue = str(cmdValue)
+            cmdSetInterval = 'CONF:NST:TX:PACKET_INTERVAL ' + cmdIntervalValue + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetInterval)
             return result
         else:
@@ -8571,7 +8655,11 @@ class RWCTesterApi(RwcSerialSetup):
         :return: It returns the NST TX interval; NAK on failure
         
         '''
-        cmdGetTxInterval = 'READ:NST:TX:INTERVAL?' + '\n'
+        currVersion = self.query_sysversion()
+        if (float(currVersion) > 1.290):
+            cmdGetTxInterval = 'READ:NST:TX:PACKET_INTERVAL?' + '\n'
+        else:
+            cmdGetTxInterval = 'READ:NST:TX:INTERVAL?' + '\n'
         result = RwcSerialSetup.transceive(self, cmdGetTxInterval)
         return result
 
@@ -9834,10 +9922,19 @@ class RWCTesterApi(RwcSerialSetup):
         :return: ACK on success, NAK on failure
         
         '''
+        currVersion = self.query_sysversion()
         cmdValue = float(value)
-        if (cmdValue >= 0.05 and cmdValue <= 1000.00):
+        if (cmdValue >= 0.05 and cmdValue <= 1000.00 
+            and float(currVersion) < 1.3):
             cmdIntervalValue = str(cmdValue)
             cmdSetInterval = 'CONF:NST:MFG:INTERVAL ' \
+                                + cmdIntervalValue + '\n'
+            result = RwcSerialSetup.transceive(self, cmdSetInterval)
+            return result
+        elif (cmdValue >= 0.05 and cmdValue <= 1000.00 
+                and float(currVersion) > 1.290):
+            cmdIntervalValue = str(cmdValue)
+            cmdSetInterval = 'CONF:NST:MFG:PACKET_INTERVAL ' \
                                 + cmdIntervalValue + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetInterval)
             return result
@@ -9854,7 +9951,11 @@ class RWCTesterApi(RwcSerialSetup):
         :return: It returns MFG interval in seconds; NAK on failure
         
         '''
-        cmdGetMfgInterval = 'READ:NST:MFG:INTERVAL?' + '\n'
+        currVersion = self.query_sysversion()
+        if (float(currVersion) > 1.290):
+            cmdGetMfgInterval = 'READ:NST:MFG:PACKET_INTERVAL?' + '\n'
+        else:
+            cmdGetMfgInterval = 'READ:NST:MFG:INTERVAL?' + '\n'
         result = RwcSerialSetup.transceive(self, cmdGetMfgInterval)
         return result
 
@@ -10651,6 +10752,7 @@ class RWCTesterApi(RwcSerialSetup):
         result = RwcSerialSetup.transceive(self, cmdGetIPAddr)
         return result
 
+    ### To check the command valid for tester version 
     def validate_sys_swversion(self, versionlist):
         currVersion = self.query_sysversion()
         if currVersion in versionlist:
