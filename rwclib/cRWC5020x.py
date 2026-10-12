@@ -34,28 +34,33 @@ def _hexparam(value, maxbytes):
     Convert a value to the hex string the tester takes for a sync word
     or payload.
 
-    :param value: bytes, bytearray, a hex string (with or without 0x),
-                  or a non-negative int
+    :param value: bytes or bytearray (sent as is); an int; a string of
+                  hex digits starting with 0x (leading zero bytes kept);
+                  or a decimal string, read as an int as in v1.0.4
     :param maxbytes: largest number of bytes allowed
 
     :return: upper-case hex digits, two per byte, without 0x
     '''
     if isinstance(value, (bytes, bytearray)):
         data = bytes(value)
-    elif isinstance(value, str):
-        digits = value.strip()
-        if digits[:2].lower() == '0x':
-            digits = digits[2:]
-        if len(digits) % 2:
-            digits = '0' + digits
-        try:
-            data = bytes.fromhex(digits)
-        except ValueError:
-            raise Exception('Invalid parameter received.')
-    elif isinstance(value, int) and value >= 0:
-        data = value.to_bytes(max(1, (value.bit_length() + 7) // 8), 'big')
     else:
-        raise Exception('Invalid parameter received.')
+        if isinstance(value, str) and value.strip()[:2].lower() == '0x':
+            digits = value.strip()[2:]
+            if len(digits) % 2:
+                digits = '0' + digits
+            try:
+                data = bytes.fromhex(digits)
+            except ValueError:
+                raise Exception('Invalid parameter received.')
+        else:
+            try:
+                number = int(value)
+            except (TypeError, ValueError):
+                raise Exception('Invalid parameter received.')
+            if number < 0:
+                raise Exception('Invalid parameter received.')
+            data = number.to_bytes(max(1, (number.bit_length() + 7) // 8),
+                                   'big')
 
     if len(data) < 1 or len(data) > maxbytes:
         raise Exception('Invalid parameter received.')
@@ -4810,8 +4815,8 @@ class RWCTesterApi(RwcSerialSetup):
         '''
         Configure the Message data of user-defined MAC command
 
-        :param value: 1 ~ 250 bytes, as bytes, a hex string (with or
-                     without 0x), or an int. The length should match
+        :param value: 1 ~ 250 bytes, as bytes, a hex string starting
+                     with 0x, an int, or a decimal string. The length should match
                      LINK:PAYLOAD_SIZE.
 
         :return: ACK on success, NAK on failure
@@ -4870,8 +4875,8 @@ class RWCTesterApi(RwcSerialSetup):
         '''
         Configure the Message data of user-defined FOpts field
 
-        :param value: 1 ~ 15 bytes, as bytes, a hex string (with or
-                     without 0x), or an int. The length should match
+        :param value: 1 ~ 15 bytes, as bytes, a hex string starting
+                     with 0x, an int, or a decimal string. The length should match
                      LINK:FOPTS_SIZE.
 
         :return: ACK on success, NAK on failure
@@ -6183,8 +6188,8 @@ class RWCTesterApi(RwcSerialSetup):
         Configure the Message data of echo request command
 
         :param macnum: MAC Command Number
-        :param value: 1 ~ 250 bytes, as bytes, a hex string (with or
-                     without 0x), or an int. The length should match
+        :param value: 1 ~ 250 bytes, as bytes, a hex string starting
+                     with 0x, an int, or a decimal string. The length should match
                      LINK:ECHO_LEN.
 
         :return: ACK on success, NAK on failure
@@ -8737,8 +8742,8 @@ class RWCTesterApi(RwcSerialSetup):
         '''
         Configure the Message data of user-defined MAC command for sensitivity test
 
-        :param data: 1 ~ 128 bytes, as bytes, a hex string (with or
-                     without 0x), or an int. The length should match
+        :param data: 1 ~ 128 bytes, as bytes, a hex string starting
+                     with 0x, an int, or a decimal string. The length should match
                      SENSITIVITY:PAYLOAD_SIZE.
 
         :return: ACK on success, NAK on failure
@@ -9181,8 +9186,8 @@ class RWCTesterApi(RwcSerialSetup):
         the payload size (nst_tx_setpayloadsize); the tester NAKs
         anything else.
 
-        :param data: 1 ~ 250 bytes, as bytes, a hex string (with or
-                     without 0x), or an int
+        :param data: 1 ~ 250 bytes, as bytes, a hex string starting
+                     with 0x, an int, or a decimal string
 
         :return: ACK on success, NAK on failure
         
@@ -9343,8 +9348,8 @@ class RWCTesterApi(RwcSerialSetup):
         '''
         Configure the Sync Word for FSK Modulation
 
-        :param value: 1 ~ 8 bytes, as bytes, a hex string (with or without
-                   0x), or an int; for example 'C194C1' for LoRaWAN
+        :param value: 1 ~ 8 bytes, as bytes, a hex string starting with
+                   0x, or an int; for example '0xC194C1' for LoRaWAN
 
         :return: ACK on success, NAK on failure
 
@@ -9849,8 +9854,8 @@ class RWCTesterApi(RwcSerialSetup):
         '''
         Configure the Sync Word for FSK Modulation
 
-        :param sizevalue: 1 ~ 8 bytes, as bytes, a hex string (with or without
-                   0x), or an int; for example 'C194C1' for LoRaWAN
+        :param sizevalue: 1 ~ 8 bytes, as bytes, a hex string starting with
+                   0x, or an int; for example '0xC194C1' for LoRaWAN
 
         :return: ACK on success, NAK on failure
 
@@ -10393,8 +10398,8 @@ class RWCTesterApi(RwcSerialSetup):
         '''
         Configure the Payload data of LoRa TX frame in MFG test
 
-        :param value: 1 ~ 250 bytes, as bytes, a hex string (with or
-                     without 0x), or an int. The length should match
+        :param value: 1 ~ 250 bytes, as bytes, a hex string starting
+                     with 0x, an int, or a decimal string. The length should match
                      NST:MFG:PAYLOAD_SIZE.
 
         :return: ACK on success, NAK on failure
@@ -10696,8 +10701,8 @@ class RWCTesterApi(RwcSerialSetup):
         '''
         Configure the Sync Word for FSK Modulation
 
-        :param sizevalue: 1 ~ 8 bytes, as bytes, a hex string (with or without
-                   0x), or an int; for example 'C194C1' for LoRaWAN
+        :param sizevalue: 1 ~ 8 bytes, as bytes, a hex string starting with
+                   0x, or an int; for example '0xC194C1' for LoRaWAN
 
         :return: ACK on success, NAK on failure
 

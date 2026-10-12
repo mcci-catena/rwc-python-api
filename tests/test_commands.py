@@ -178,11 +178,11 @@ def test_ranges_accepted(rwc):
 
 
 def test_payload_setters_keep_leading_zeros(rwc):
-    rwc.link_setpayload('000102')
+    rwc.link_setpayload('0x000102')
     rwc.link_setechopayload(1, bytes([0, 1, 2]))
     rwc.link_setfopts('0x0001')
     rwc.sensitivity_setpayload(bytes(range(16)))
-    rwc.nst_mfg_setpayload('00ff')
+    rwc.nst_mfg_setpayload('0x00ff')
     assert sent(rwc) == ['CONF:LINK:PAYLOAD 000102\n',
                          'CONF:LINK:ECHO_PAYLOAD 1 000102\n',
                          'CONF:LINK:FOPTS 0001\n',
@@ -203,3 +203,25 @@ def test_power_per_channel(rwc):
 def test_power_per_channel_old_firmware(rwc):
     with pytest.raises(Exception, match = 'not supported'):
         rwc.power_getmaxdutpower_ch(8)
+
+
+def test_hexparam_compatibility():
+    from rwclib.cRWC5020x import _hexparam
+    # v1.0.4 read strings as decimal, ints as numbers
+    assert _hexparam('100', 8) == '64'
+    assert _hexparam(100, 8) == '64'
+    assert _hexparam(0x1234, 8) == '1234'
+    # hex needs 0x, and keeps leading zero bytes
+    assert _hexparam('0x000102', 8) == '000102'
+    assert _hexparam('0xC194C1', 8) == 'C194C1'
+    assert _hexparam(b'\x00\x01', 8) == '0001'
+    for bad in ['C194C1', '0xzz', '', -1, None, 'x' * 3, '0x' + '00' * 9]:
+        with pytest.raises(Exception):
+            _hexparam(bad, 8)
+
+
+def test_syncword(rwc):
+    rwc.nst_tx_setsyncword('0xC194C1')
+    rwc.nst_rx_setsyncword(0xC194C1)
+    assert sent(rwc) == ['CONF:NST:TX:SYNC_WORD 0x0000000000C194C1\n',
+                         'CONF:NST:RX:SYNC_WORD 0x0000000000C194C1\n']
