@@ -45,7 +45,7 @@ class RwcSerialSetup:
         * Bytesize - 8 bits
         * Parity - None
         * Stopbits - 1
-        * Timeout - 30
+        * Timeout - 15 s (CONF:RF:RX_FREQ takes about 5.5 s on v1.500)
 
         :param port: Serial port (E.g., COM3 or /dev/ttyS3) or UDP port
         :param addr: Ip Address (E.g., 192.168.0.33)
@@ -57,7 +57,7 @@ class RwcSerialSetup:
         self.myport.bytesize = serial.EIGHTBITS
         self.myport.parity = serial.PARITY_NONE
         self.myport.stopbits = serial.STOPBITS_ONE
-        self.myport.timeout = 5
+        self.myport.timeout = 15
 
         self.udpport = port
         self.udpipaddr = addr
@@ -94,7 +94,7 @@ class RwcSerialSetup:
                 self.clientsock = socket.socket(
                     socket.AF_INET, socket.SOCK_DGRAM
                     )
-                self.clientsock.settimeout(5)
+                self.clientsock.settimeout(15)
                 self.udpport = int(self.udpport)
                 self.udpipaddr = str(self.udpipaddr)
                 self.logger.info('%s connected',self.udpipaddr)
@@ -132,6 +132,20 @@ class RwcSerialSetup:
                     .format(err))
 
         if self.udpport and self.udpipaddr:
+            # Discard replies that arrived after an earlier call timed
+            # out; otherwise each later call returns the previous one's
+            # reply.
+            self.clientsock.setblocking(False)
+            try:
+                while True:
+                    stale, ip = self.clientsock.recvfrom(1024)
+                    self.logger.warning('Discarded late response: {}'
+                                        .format(stale))
+            except (BlockingIOError, InterruptedError):
+                pass
+            finally:
+                self.clientsock.settimeout(15)
+
             try:
                 self.clientsock.sendto(
                     rwccmd.encode(),

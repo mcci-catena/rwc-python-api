@@ -318,7 +318,7 @@ class RWCTesterApi(RwcSerialSetup):
         '''
         Configure CW frequency in MHz for non-signaling test
 
-        :param freqrange: Frequency in MHz (400~510, 862~960); may have a fraction
+        :param freqrange: Frequency in MHz (400~510, 862~960), to 1 Hz
 
         :return: ACK on success, NAK on failure
 
@@ -327,7 +327,7 @@ class RWCTesterApi(RwcSerialSetup):
         if (frequencynum >= 400 
                 and frequencynum <= 510) or (frequencynum >= 862 
                     and frequencynum <= 960):
-            cmdFreqRange = '{:g}'.format(frequencynum)
+            cmdFreqRange = '{:.6f}'.format(frequencynum)
             cmdNstFrequency = 'CONF:RF:FREQ ' + cmdFreqRange + '\n'
             result = RwcSerialSetup.transceive(self, cmdNstFrequency)
             return result
@@ -351,7 +351,7 @@ class RWCTesterApi(RwcSerialSetup):
         '''
         Configure TX CW frequency in MHz for non-signaling test
 
-        :param freqrange: Frequency in MHz (400~510, 862~960); may have a fraction
+        :param freqrange: Frequency in MHz (400~510, 862~960), to 1 Hz
 
         :return: ACK on success, NAK on failure
 
@@ -360,7 +360,7 @@ class RWCTesterApi(RwcSerialSetup):
         if (txfrequencynum >= 400 
                 and txfrequencynum <= 510) or (txfrequencynum >= 862 
                     and txfrequencynum <= 960):
-            cmdTxFreqRange = '{:g}'.format(txfrequencynum)
+            cmdTxFreqRange = '{:.6f}'.format(txfrequencynum)
             cmdNstTxFrequency = 'CONF:RF:TX_FREQ ' + cmdTxFreqRange + '\n'
             result = RwcSerialSetup.transceive(self, cmdNstTxFrequency)
             return result
@@ -384,16 +384,16 @@ class RWCTesterApi(RwcSerialSetup):
         '''
         Configure RX CW frequency in MHz for non-signaling test
 
-        :param freqrange: Frequency in MHz (400~510, 862~960); may have a fraction
+        :param freqrange: Frequency in MHz (400~510, 862~960), to 1 Hz
 
         :return: ACK on success, NAK on failure
 
         '''
-        rxfrequencynum = int(freqrange)
+        rxfrequencynum = float(freqrange)
         if (rxfrequencynum >= 400 
                 and rxfrequencynum <= 510) or (rxfrequencynum >= 862 
                     and rxfrequencynum <= 960):
-            cmdRxFreqRange = str(rxfrequencynum)
+            cmdRxFreqRange = '{:.6f}'.format(rxfrequencynum)
             cmdNstRxFrequency = 'CONF:RF:RX_FREQ ' + cmdRxFreqRange + '\n'
             result = RwcSerialSetup.transceive(self, cmdNstRxFrequency)
             return result
@@ -417,16 +417,16 @@ class RWCTesterApi(RwcSerialSetup):
         '''
         Configure MFG CW frequency in MHz for non-signaling test
 
-        :param freqrange: Frequency in MHz (400~510, 862~960); may have a fraction
+        :param freqrange: Frequency in MHz (400~510, 862~960), to 1 Hz
 
         :return: ACK on success, NAK on failure
 
         '''
-        mfgfrequencynum = int(freqrange)
+        mfgfrequencynum = float(freqrange)
         if (mfgfrequencynum >= 400 
                 and mfgfrequencynum <= 510) or (mfgfrequencynum >= 862 
                     and mfgfrequencynum <= 960):
-            cmdMfgFreqRange = str(mfgfrequencynum)
+            cmdMfgFreqRange = '{:.6f}'.format(mfgfrequencynum)
             cmdNstMfgFrequency = 'CONF:RF:MFG_FREQ ' + cmdMfgFreqRange + '\n'
             result = RwcSerialSetup.transceive(self, cmdNstMfgFrequency)
             return result
@@ -838,16 +838,16 @@ class RWCTesterApi(RwcSerialSetup):
         '''
         Configure the frequency of ping channel
 
-        :param freqrange: Frequency in MHz (400~510, 862~960); may have a fraction
+        :param freqrange: Frequency in MHz (400~510, 862~960), to 1 Hz
 
         :return: ACK on success, NAK on failure
 
         '''
-        pingfrequencynum = int(freqrange)
+        pingfrequencynum = float(freqrange)
         if (pingfrequencynum >= 400 
                 and pingfrequencynum <= 510) or (pingfrequencynum >= 862 
                     and pingfrequencynum <= 960):
-            cmdPingFreqRange = str(pingfrequencynum)
+            cmdPingFreqRange = '{:.6f}'.format(pingfrequencynum)
             cmdNstPingFrequency = 'CONF:RF:PING_FREQ ' \
                                     + cmdPingFreqRange \
                                     + '\n'
@@ -923,16 +923,16 @@ class RWCTesterApi(RwcSerialSetup):
         '''
         Configure the frequency of beacon
 
-        :param freqrange: Frequency in MHz (400~510, 862~960); may have a fraction
+        :param freqrange: Frequency in MHz (400~510, 862~960), to 1 Hz
 
         :return: ACK on success, NAK on failure
 
         '''
-        bcnfrequencynum = int(freqrange)
+        bcnfrequencynum = float(freqrange)
         if (bcnfrequencynum >= 400 
                 and bcnfrequencynum <= 510) or (bcnfrequencynum >= 862 
                     and bcnfrequencynum <= 960):
-            cmdBcnFreqRange = str(bcnfrequencynum)
+            cmdBcnFreqRange = '{:.6f}'.format(bcnfrequencynum)
             cmdNstBcnFrequency = 'CONF:RF:BEACON_FREQ ' \
                                     + cmdBcnFreqRange \
                                     + '\n'
