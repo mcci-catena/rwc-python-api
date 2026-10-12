@@ -9,7 +9,8 @@ A Python library (`rwclib`) that controls an RWC5020A/B/M LoRaWAN tester through
 - `rwclib/cRWCSerialSetup.py`: `RwcSerialSetup`, the transport (`open_port()`, `transceive()`, `close_port()`).
 - `rwclib/cRWC5020x.py`: `RWCTesterApi(port, addr=None)`, one method per tester command, about 11,000 lines. Methods are grouped by prefix: `query_*`, `rf_*`, `protocol_*`, `link_*`, `nst_tx_*`, `nst_rx_*`, `nst_mfg_*`.
 - `examples/`: scripts that set up the tester and run parts of the EU certification tests.
-- `tests/`: one `unittest` file per tester firmware version (`rwc5020x_test_1_31.py` is v1.310), run as `python rwc5020x_test_1_31.py <serial-port>`. They need a tester on a serial port and change its setup; there are no tests that run without hardware.
+- `tests/test_commands.py`: offline pytest tests that check the command strings methods send, with a stand-in for `transceive()`. Run `uv run --with pytest --with pyserial python -m pytest tests/test_commands.py`. Add a test with each fix.
+- `tests/rwc5020x_test_*.py`: one `unittest` file per tester firmware version (`rwc5020x_test_1_31.py` is v1.310), run as `python rwc5020x_test_1_31.py <serial-port>`. They need a tester on a serial port and change its setup.
 - `doc/build/html/`: generated API documentation (Sphinx); the sources are not in the repository.
 
 ## Using it
@@ -28,7 +29,7 @@ t.close_port()
 
 ## Conventions and pitfalls
 
-- **Firmware versions.** Commands change between tester firmware releases. Methods check the version with `query_sysversion()`, either against a list (`validate_sys_swversion()`, used for commands that only old firmware has) or numerically. For a command that exists from some version on, compare numerically (`float(ver) >= 1.170`); a list goes stale with each new firmware release.
+- **Firmware versions.** Commands change between tester firmware releases. Use `require_swversion(since=..., before=...)` for a command that exists only in a range of firmware versions, and `swversion_number()` to choose between old and new forms of a command. Older methods use `validate_sys_swversion()` with a list of versions; a list goes stale with each new firmware release. The firmware's revision history in the operation manual says when each command was added or deleted.
 - **Queries** use `READ:...?`. Firmware 1.500 NAKs `CONF:...?`.
 - **Hex values** (sync words, payloads) go through `_hexparam()`, which takes bytes, a hex string or an int. The tester NAKs a payload whose length differs from the payload size.
 - **Restore the tester.** Changing NST or protocol settings changes the tester for everyone using it. Read each value before changing it and set it back afterwards; stop the link (`EXEC:LINK:STOP`) before changing modes and restart it (`EXEC:LINK:RUN`) when done.
