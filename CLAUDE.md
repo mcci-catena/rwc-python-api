@@ -29,7 +29,7 @@ t.close_port()
 
 ## Conventions and pitfalls
 
-- **Firmware versions.** Commands change between tester firmware releases. Use `require_swversion(since=..., before=...)` for a command that exists only in a range of firmware versions, and `swversion_number()` to choose between old and new forms of a command. Older methods use `validate_sys_swversion()` with a list of versions; a list goes stale with each new firmware release. The firmware's revision history in the operation manual says when each command was added or deleted.
+- **Firmware versions.** Commands change between tester firmware releases. Use `require_swversion(since=..., before=...)` for a command that exists only in a range of firmware versions, and `swversion_number()` to choose between old and new forms of a command. Don't check against a list of version strings (`validate_sys_swversion()`, now unused); a list goes stale with each new firmware release. The firmware's revision history in the operation manual says when each command was added or deleted.
 - **Queries** use `READ:...?`. Firmware 1.500 NAKs `CONF:...?`.
 - **Hex values** (sync words, payloads) go through `_hexparam()`, which takes bytes, a hex string starting with `0x`, an int, or a decimal string. A plain string is decimal because v1.0.4 read it that way; don't change that, since a caller's payload would change with no error. The tester NAKs a payload whose length differs from the payload size, and does not pad short values.
 - **Restore the tester.** Changing NST or protocol settings changes the tester for everyone using it. Read each value before changing it and set it back afterwards; stop the link (`EXEC:LINK:STOP`) before changing modes and restart it (`EXEC:LINK:RUN`) when done.

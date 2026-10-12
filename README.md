@@ -68,11 +68,14 @@ Example scripts showing how to use the library can be found in the [`examples`](
 
 ## Support
 
-The Python library supports RWC5020x firmware from v1.150 on. v1.0.5 to v1.0.8 were tested with an RWC5020B running firmware v1.500.
+The Python library supports RWC5020x firmware from v1.150 on. v1.0.5 to v1.0.9 were tested with an RWC5020B running firmware v1.500.
 
 The library logs each command and response through Python's `logging` module, under the logger `rwclib.cRWCSerialSetup`. To see them, configure logging in your script, for example `logging.basicConfig(level=logging.INFO)`.
 
 ## Release History
+
+- v1.0.9 has the following changes:
+  - Part of [#18](https://github.com/mcci-catena/rwc-python-api/issues/18): `sensitivity_setrx2frequency()` works (it was a stub); uplink and downlink channel methods take an optional channel number; firmware version checks use numeric ranges instead of lists, and fail with a clear error if the tester doesn't report its version.
 
 - v1.0.8 has the following changes:
   - Part of [#18](https://github.com/mcci-catena/rwc-python-api/issues/18): region names AU_915, KR_920 and IN_865 (old names still accepted); ICA operator; ranges for target PER, power Y-axis minimum, fragment padding, MFG packet interval and TX power; payload setters take bytes or hex strings starting with `0x`, and keep leading zero bytes; per-channel power for channels above 7.

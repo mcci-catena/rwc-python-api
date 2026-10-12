@@ -126,7 +126,7 @@ class RWCTesterApi(RwcSerialSetup):
         :return: None
 
         '''
-        currVersion = self.query_sysversion()
+        currVersion = self.swversion_number()
         saveindex = int(index)
 
         if (saveindex >= 0 and saveindex <=9 and float(currVersion) >= 1.310):
@@ -148,7 +148,7 @@ class RWCTesterApi(RwcSerialSetup):
         :return: None
 
         '''
-        currVersion = self.query_sysversion()
+        currVersion = self.swversion_number()
         recallindex = int(index)
 
         if (recallindex >= 0 and recallindex <=9 and float(currVersion) >= 1.310):
@@ -170,7 +170,7 @@ class RWCTesterApi(RwcSerialSetup):
         :return: None
 
         '''
-        currVersion = self.query_sysversion()
+        currVersion = self.swversion_number()
 
         if (float(currVersion) > 1.29):
             cmdReboot = '*REBOOT' + '\n'
@@ -190,7 +190,7 @@ class RWCTesterApi(RwcSerialSetup):
 
         .. _sysconflabel:
         '''
-        currVersion = self.query_sysversion()
+        currVersion = self.swversion_number()
 
         if (float(currVersion) > 1.29):
             cmdfactoryRst = '*FACTORY_RST' + '\n'
@@ -785,59 +785,75 @@ class RWCTesterApi(RwcSerialSetup):
         result = RwcSerialSetup.transceive(self, cmdGetChGroup)
         return result
 
-    def rf_setuplinkchannel(self, ulchfreqrange):
+    def rf_setuplinkchannel(self, ulchfreqrange, channel = None):
         '''
         Write uplink Channel n frequency in MHz;
 
         For EDT param=3 (EU868, IN) param=4 (EU433, KR, AS)
         For GWT all channels frequencies are editable
 
-        :param ulchfreqrange: Frequency range (400~510, 862~960)
+        :param ulchfreqrange: Frequency in MHz (400~510, 862~960), to 1 Hz
+        :param channel: channel number. If given, the command is
+                        CONF:RF:UL_CH <channel> <freq>; this form follows
+                        READ:RF:UL_CH? <channel> but has not been checked
+                        on a tester. If omitted, the command is
+                        CONF:RF:UL_CH <freq>, as before v1.0.9.
 
         :return: ACK on success, NAK on failure
 
         '''
-        freqnum = int(ulchfreqrange)
+        freqnum = float(ulchfreqrange)
         if (freqnum >= 400 and freqnum <= 510
         ) or (freqnum >= 862 and freqnum <= 960):
-            cmdUlChFreqRange = str(freqnum)
-            cmdSetUplinkChannel = 'CONF:RF:UL_CH ' + cmdUlChFreqRange + '\n'
+            cmdUlChFreqRange = '{:.6f}'.format(freqnum)
+            if channel is None:
+                cmdSetUplinkChannel = 'CONF:RF:UL_CH ' \
+                                        + cmdUlChFreqRange + '\n'
+            else:
+                cmdSetUplinkChannel = 'CONF:RF:UL_CH ' + str(int(channel)) \
+                                        + ' ' + cmdUlChFreqRange + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetUplinkChannel)
             return result
         else:
             raise Exception('Invalid Uplink Channel Freq range received.')
 
-    def rf_getuplinkchannel(self):
+    def rf_getuplinkchannel(self, channel = None):
         '''
         Read Uplink Channel n frequency in MHz
 
-        * param=0,1,...,71 (US/AU)
-        * param=0,1,...,95 (CN)
-        * param=0,1,...,7 (others)
+        :param channel: channel number; omitted means channel 0
 
-        :Parameters: N/A (Query only)
+        * 0,1,...,71 (US/AU)
+        * 0,1,...,95 (CN)
+        * 0,1,...,7 (others)
 
-        :return: -
+        :return: frequency in MHz; NAK on failure
 
         '''
-        cmdGetUplinkChannel = 'READ:RF:UL_CH?' + '\n'
+        if channel is None:
+            cmdGetUplinkChannel = 'READ:RF:UL_CH?' + '\n'
+        else:
+            cmdGetUplinkChannel = 'READ:RF:UL_CH? ' + str(int(channel)) + '\n'
         result = RwcSerialSetup.transceive(self, cmdGetUplinkChannel)
         return result
 
-    def rf_getdownlinkchannel(self):
+    def rf_getdownlinkchannel(self, channel = None):
         '''
         Read Downlink Channel n frequency in MHz
 
-        * param=0,1,...,47 (CN)
-        * param=0,1,...,7 (others)
+        :param channel: channel number; omitted means channel 0
 
-        :Parameters: N/A (Query only)
+        * 0,1,...,47 (CN)
+        * 0,1,...,7 (others)
 
-        :return: -
+        :return: frequency in MHz; NAK on failure
 
         '''
-        cmdGetDownlinklinkChannel = 'READ:RF:DL_CH?' + '\n'
-        result = RwcSerialSetup.transceive(self, cmdGetDownlinklinkChannel)
+        if channel is None:
+            cmdGetDownlinkChannel = 'READ:RF:DL_CH?' + '\n'
+        else:
+            cmdGetDownlinkChannel = 'READ:RF:DL_CH? ' + str(int(channel)) + '\n'
+        result = RwcSerialSetup.transceive(self, cmdGetDownlinkChannel)
         return result
 
     def rf_setpingfreq(self, freqrange):
@@ -1052,10 +1068,9 @@ class RWCTesterApi(RwcSerialSetup):
 
         '''
         chModeList = ['AS920-923', 'AS923-925']
-        cmdSupportedVersion = [
-            '1.200', '1.203', '1.204', '1.206', 
-            '1.210', '1.220', '1.221', '1.222']
-        verStatus = self.validate_sys_swversion(cmdSupportedVersion)
+        # firmware 1.200 up to (not including) 1.300
+        verStatus = self.require_swversion(since = 1.200, before = 1.300) \
+            is not None
 
         if verStatus and mode in chModeList:
             cmdSetAsChMode = 'CONF:RF:AS923_CH_MODE ' + mode + '\n'
@@ -1072,10 +1087,9 @@ class RWCTesterApi(RwcSerialSetup):
 
         :return: It returns the channel mode; NAK on failure 
         '''
-        cmdSupportedVersion = [
-            '1.200', '1.203', '1.204', '1.206', 
-            '1.210', '1.220', '1.221', '1.222']
-        verStatus = self.validate_sys_swversion(cmdSupportedVersion)
+        # firmware 1.200 up to (not including) 1.300
+        verStatus = self.require_swversion(since = 1.200, before = 1.300) \
+            is not None
 
         if verStatus:
             cmdGetChModeAs = 'READ:RF:AS923_CH_MODE?' + '\n'
@@ -1329,11 +1343,13 @@ class RWCTesterApi(RwcSerialSetup):
 
     def protocol_getoperator(self):
         '''
-        Read the LoRa service operator in case of KR_922
+        Read the LoRa service operator for KR_920 or CN_470
 
         :param: Query only
 
-        :return: It returns the service operator name; NAK on failure
+        :return: It returns the service operator name; NAK on failure.
+                 In other regions firmware v1.500 does not answer, so
+                 this returns None after the timeout.
         
         '''
         cmdGetOperator = 'READ:PROTOCOL:OPERATOR?' + '\n'
@@ -2399,7 +2415,6 @@ class RWCTesterApi(RwcSerialSetup):
         :return: ACK on success, NAK on failure
         
         '''
-        verList1 = ['1.150', '1.160']
         drList1 = [
             'DR_0', 'DR_1', 'DR_2', 'DR_3', 
             'DR_4', 'DR_5', 'DR_6', 'DR_7']
@@ -2411,10 +2426,9 @@ class RWCTesterApi(RwcSerialSetup):
             'DR4_SF8BW125', 'DR4_SF8BW500',
             'DR5_SF7BW125', 'DR6_SF7BW250',
             'DR7_FSK50']
-        swVersion = self.query_sysversion()
-        swVersionNum = float(swVersion)
+        swVersionNum = self.swversion_number()
 
-        if swVersion in verList1 and dr in drList1:
+        if swVersionNum < 1.170 and dr in drList1:
             cmdSetUplinkDr = 'CONF:PROTOCOL:UPLINK_DR ' + dr + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetUplinkDr)
             return result
@@ -2521,7 +2535,6 @@ class RWCTesterApi(RwcSerialSetup):
         :return: ACK on success, NAK on failure
         
         '''
-        verList1 = ['1.150', '1.160']
         drList1 = [
             'DR_0', 'DR_1', 'DR_2', 'DR_3', 
             'DR_4', 'DR_5', 'DR_6', 'DR_7']
@@ -2534,10 +2547,9 @@ class RWCTesterApi(RwcSerialSetup):
             'DR10_SF10BW500', 'DR11_SF9BW500',
             'DR12_SF8BW500', 'DR13_SF7BW500'
             ]
-        swVersion = self.query_sysversion()
-        swVersionNum = float(swVersion)
+        swVersionNum = self.swversion_number()
 
-        if swVersion in verList1 and dr in drList1:
+        if swVersionNum < 1.170 and dr in drList1:
             cmdSetRx2Dr = 'CONF:PROTOCOL:RX2_DR ' + dr + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetRx2Dr)
             return result
@@ -2945,10 +2957,9 @@ class RWCTesterApi(RwcSerialSetup):
         
         '''
         dutTypeList = ['END_DEVICE', 'GATEWAY']
-        cmdSupportedVersion = [
-            '1.150', '1.160', '1.170', '1.200', 
-            '1.203', '1.204', '1.206', '1.210']
-        verStatus = self.validate_sys_swversion(cmdSupportedVersion)
+        # firmware 1.150 up to (not including) 1.220
+        verStatus = self.require_swversion(since = 1.150, before = 1.220) \
+            is not None
 
         if verStatus and duttype in dutTypeList:
             cmdSetDutType = 'CONF:PROTOCOL:DUT_TYPE ' + duttype + '\n'
@@ -2967,10 +2978,9 @@ class RWCTesterApi(RwcSerialSetup):
         :return: It returns the DUT type; NAK on failure
         
         '''
-        cmdSupportedVersion = [
-            '1.150', '1.160', '1.170', '1.200', 
-            '1.204', '1.203', '1.206', '1.210']
-        verStatus = self.validate_sys_swversion(cmdSupportedVersion)
+        # firmware 1.150 up to (not including) 1.220
+        verStatus = self.require_swversion(since = 1.150, before = 1.220) \
+            is not None
 
         if verStatus:
             cmdGetDutType = 'READ:PROTOCOL:DUT_TYPE?' + '\n'
@@ -2988,8 +2998,9 @@ class RWCTesterApi(RwcSerialSetup):
         
         '''
         macFormatFlagList = ['OFF', 'ON']
-        cmdSupportedVersion = ['1.150', '1.160', '1.170']
-        verStatus = self.validate_sys_swversion(cmdSupportedVersion)
+        # firmware 1.150 up to (not including) 1.200
+        verStatus = self.require_swversion(since = 1.150, before = 1.200) \
+            is not None
 
         if verStatus and macformatflag in macFormatFlagList:
             cmdSetMacFormatFlag = 'CONF:PROTOCOL:MAC_FORMAT ' \
@@ -3010,8 +3021,9 @@ class RWCTesterApi(RwcSerialSetup):
         :return: It returns the flag status; NAK on failure
         
         '''
-        cmdSupportedVersion = ['1.150', '1.160', '1.170']
-        verStatus = self.validate_sys_swversion(cmdSupportedVersion)
+        # firmware 1.150 up to (not including) 1.200
+        verStatus = self.require_swversion(since = 1.150, before = 1.200) \
+            is not None
         if verStatus:
             cmdGetMacFormatFlag = 'READ:PROTOCOL:MAC_FORMAT?' + '\n'
             result = RwcSerialSetup.transceive(self, cmdGetMacFormatFlag)
@@ -3027,8 +3039,9 @@ class RWCTesterApi(RwcSerialSetup):
         :return: ACK on success, NAK on failure
         
         '''
-        cmdSupportedVersion = ['1.150', '1.160', '1.170']
-        verStatus = self.validate_sys_swversion(cmdSupportedVersion)
+        # firmware 1.150 up to (not including) 1.200
+        verStatus = self.require_swversion(since = 1.150, before = 1.200) \
+            is not None
 
         if verStatus and (nstfcnt >= 0 and nstfcnt <= 65535):
             cmdNstFCnt = str(nstfcnt)
@@ -3048,8 +3061,9 @@ class RWCTesterApi(RwcSerialSetup):
         :return: It returns the FCnt value; NAK on failure
         
         '''
-        cmdSupportedVersion = ['1.150', '1.160', '1.170']
-        verStatus = self.validate_sys_swversion(cmdSupportedVersion)
+        # firmware 1.150 up to (not including) 1.200
+        verStatus = self.require_swversion(since = 1.150, before = 1.200) \
+            is not None
 
         if verStatus:
             cmdGetNstFcnt = 'READ:PROTOCOL:FCNT?' + '\n'
@@ -3067,8 +3081,9 @@ class RWCTesterApi(RwcSerialSetup):
         
         '''
         fcntModeList = ['FIXED', 'INCREASING']
-        cmdSupportedVersion = ['1.150', '1.160', '1.170']
-        verStatus = self.validate_sys_swversion(cmdSupportedVersion)
+        # firmware 1.150 up to (not including) 1.200
+        verStatus = self.require_swversion(since = 1.150, before = 1.200) \
+            is not None
 
         if verStatus and fcntmode in fcntModeList:
             cmdSetFcntMode = 'CONF:PROTOCOL:FCNT_MODE ' + fcntmode + '\n'
@@ -3087,8 +3102,9 @@ class RWCTesterApi(RwcSerialSetup):
         :return: It returns the FCnt mode; NAK on failure
         
         '''
-        cmdSupportedVersion = ['1.150', '1.160', '1.170']
-        verStatus = self.validate_sys_swversion(cmdSupportedVersion)
+        # firmware 1.150 up to (not including) 1.200
+        verStatus = self.require_swversion(since = 1.150, before = 1.200) \
+            is not None
 
         if verStatus:
             cmdGetNstFcntMode = 'READ:PROTOCOL:FCNT_MODE?' + '\n'
@@ -3106,8 +3122,9 @@ class RWCTesterApi(RwcSerialSetup):
         
         '''
         nstAckList = ['OFF', 'ON']
-        cmdSupportedVersion = ['1.150', '1.160', '1.170']
-        verStatus = self.validate_sys_swversion(cmdSupportedVersion)
+        # firmware 1.150 up to (not including) 1.200
+        verStatus = self.require_swversion(since = 1.150, before = 1.200) \
+            is not None
 
         if verStatus and nstack in nstAckList:
             cmdSetNstAck = 'CONF:PROTOCOL:ACK ' + nstack + '\n'
@@ -3126,8 +3143,9 @@ class RWCTesterApi(RwcSerialSetup):
         :return: It returns the NST ACK status; NAK on failure
         
         '''
-        cmdSupportedVersion = ['1.150', '1.160', '1.170']
-        verStatus = self.validate_sys_swversion(cmdSupportedVersion)
+        # firmware 1.150 up to (not including) 1.200
+        verStatus = self.require_swversion(since = 1.150, before = 1.200) \
+            is not None
 
         if verStatus:
             cmdGetNstAck = 'READ:PROTOCOL:ACK?' + '\n'
@@ -3145,8 +3163,9 @@ class RWCTesterApi(RwcSerialSetup):
         
         '''
         adrAckReqList = ['OFF', 'ON']
-        cmdSupportedVersion = ['1.150', '1.160', '1.170']
-        verStatus = self.validate_sys_swversion(cmdSupportedVersion)
+        # firmware 1.150 up to (not including) 1.200
+        verStatus = self.require_swversion(since = 1.150, before = 1.200) \
+            is not None
 
         if verStatus and adrackreq in adrAckReqList:
             cmdSetAdrAckReq = 'CONF:PROTOCOL:ADR_ACK_REQ ' + adrackreq + '\n'
@@ -3165,8 +3184,9 @@ class RWCTesterApi(RwcSerialSetup):
         :return: It returns the ADRACKReq status; NAK on failure
         
         '''
-        cmdSupportedVersion = ['1.150', '1.160', '1.170']
-        verStatus = self.validate_sys_swversion(cmdSupportedVersion)
+        # firmware 1.150 up to (not including) 1.200
+        verStatus = self.require_swversion(since = 1.150, before = 1.200) \
+            is not None
 
         if verStatus:
             cmdGetNstAdrAckReq = 'READ:PROTOCOL:ADR_ACK_REQ?' + '\n'
@@ -3184,8 +3204,9 @@ class RWCTesterApi(RwcSerialSetup):
         
         '''
         fpendingList = ['OFF', 'ON']
-        cmdSupportedVersion = ['1.150', '1.160', '1.170']
-        verStatus = self.validate_sys_swversion(cmdSupportedVersion)
+        # firmware 1.150 up to (not including) 1.200
+        verStatus = self.require_swversion(since = 1.150, before = 1.200) \
+            is not None
 
         if verStatus and fpending in fpendingList:
             cmdSetNstFpending = 'CONF:PROTOCOL:FPENDING ' + fpending + '\n'
@@ -3204,8 +3225,9 @@ class RWCTesterApi(RwcSerialSetup):
         :return: It returns the NST Fpending status; NAK on failure
         
         '''
-        cmdSupportedVersion = ['1.150', '1.160', '1.170']
-        verStatus = self.validate_sys_swversion(cmdSupportedVersion)
+        # firmware 1.150 up to (not including) 1.200
+        verStatus = self.require_swversion(since = 1.150, before = 1.200) \
+            is not None
 
         if verStatus:
             cmdGetNstFpending = 'READ:PROTOCOL:FPENDING?' + '\n'
@@ -3615,8 +3637,7 @@ class RWCTesterApi(RwcSerialSetup):
         :return: ACK on success, NAK on failure
         
         '''
-        swVersion = self.query_sysversion()
-        swVersionNum = float(swVersion)
+        swVersionNum = self.swversion_number()
 
         if swVersionNum < 1.220:
             maxLimit = 600
@@ -3631,7 +3652,7 @@ class RWCTesterApi(RwcSerialSetup):
             result = RwcSerialSetup.transceive(self, cmdSetMacAnsTo)
             return result
         else:
-            raise Exception(f'Value out of range for firmware {swVersion}: max {maxLimit}s')
+            raise Exception(f'Value out of range for firmware {swVersionNum:.3f}: max {maxLimit}s')
 
     def link_getmacanstimeout(self):
         '''
@@ -3699,7 +3720,8 @@ class RWCTesterApi(RwcSerialSetup):
                        FORCE_REJOIN, REJOIN_SETUP, ADR_SETUP
 
                        For GWT, LINK_CHECK, DEVICE_TIME, DEVICE_MODE, 
-                       RESET_IND
+                       RESET_IND. The *_TM commands are missing from the
+                       v1.500 manual, but firmware v1.500 accepts them.
 
         :return: ACK on success, NAK on failure
                 
@@ -3950,8 +3972,7 @@ class RWCTesterApi(RwcSerialSetup):
         
         '''
         cmdMacNum = str(macnum)
-        cmdVersion = self.query_sysversion()
-        numVersion = float(cmdVersion)
+        numVersion = self.swversion_number()
         lowVersionDrvallist = [0, 1, 2, 3, 4, 5, 6, 7]
         drvallist = [
             'DR0_SF10BW125',
@@ -3968,8 +3989,7 @@ class RWCTesterApi(RwcSerialSetup):
             'DR6_SF7BW250',
             'DR7_FSK50']
         
-        if (cmdVersion == '1.150' 
-                or cmdVersion == '1.160') and (int(drval) 
+        if numVersion < 1.170 and (int(drval) 
                     in lowVersionDrvallist):
             cmdDrVal = str(drval)
             cmdSetAdrDrVal = 'CONF:LINK:ADR_DR ' \
@@ -4723,8 +4743,9 @@ class RWCTesterApi(RwcSerialSetup):
             '0000_0000', '1111_1111', 
             '1111_0000', '1010_1010', 
             'PRBS', 'USER']
-        cmdSupportedVersion = ['1.150']
-        verStatus = self.validate_sys_swversion(cmdSupportedVersion)
+        # firmware 1.150 up to (not including) 1.160
+        verStatus = self.require_swversion(since = 1.150, before = 1.160) \
+            is not None
 
         if verStatus and payloadtype in payloadTypeList:
             cmdSetPayloadType = 'CONF:LINK:PAYLOAD_TYPE ' + payloadtype + '\n'
@@ -4743,8 +4764,9 @@ class RWCTesterApi(RwcSerialSetup):
         :return: It returns link payload type; NAK on failure
 
         '''
-        cmdSupportedVersion = ['1.150']
-        verStatus = self.validate_sys_swversion(cmdSupportedVersion)
+        # firmware 1.150 up to (not including) 1.160
+        verStatus = self.require_swversion(since = 1.150, before = 1.160) \
+            is not None
         if verStatus:
             cmdGetPayloadType = 'READ:LINK:PAYLOAD_TYPE?' + '\n'
             result = RwcSerialSetup.transceive(self, cmdGetPayloadType)
@@ -4967,13 +4989,14 @@ class RWCTesterApi(RwcSerialSetup):
         :return: ACK on success, NAK on failure
         
         '''
-        cmdSupportedVersion = ['1.150', '1.160']
         frameDrList = [
             'DR_0', 'DR_1', 
             'DR_2', 'DR_3', 
             'DR_4', 'DR_5', 
             'DR_6']
-        verStatus = self.validate_sys_swversion(cmdSupportedVersion)
+        # firmware 1.150 up to (not including) 1.170
+        verStatus = self.require_swversion(since = 1.150, before = 1.170) \
+            is not None
 
         if verStatus and framedr in frameDrList:
             cmdSetFrameDr = 'CONF:LINK:BEACON_DR ' + framedr + '\n'
@@ -4992,8 +5015,9 @@ class RWCTesterApi(RwcSerialSetup):
         :return: It returns the data rate; NAK on failure
 
         '''
-        cmdSupportedVersion = ['1.150', '1.160']
-        verStatus = self.validate_sys_swversion(cmdSupportedVersion)
+        # firmware 1.150 up to (not including) 1.170
+        verStatus = self.require_swversion(since = 1.150, before = 1.170) \
+            is not None
 
         if verStatus:
             cmdGetBeaconDr = 'READ:LINK:BEACON_DR?' + '\n'
@@ -5375,8 +5399,7 @@ class RWCTesterApi(RwcSerialSetup):
             'DR4_SF8BW125', 'DR4_SF8BW500',
             'DR5_SF7BW125', 'DR6_SF7BW250',
             'DR7_FSK50']
-        cmdVersion = self.query_sysversion()
-        numVersion = float(cmdVersion)
+        numVersion = self.swversion_number()
         
         if numVersion < 1.170 and datarate in lowVersionDrList:
             cmdSetRejoinDr = 'CONF:LINK:REJOIN_DR ' \
@@ -8767,16 +8790,26 @@ class RWCTesterApi(RwcSerialSetup):
         result = RwcSerialSetup.transceive(self, cmdGetMsgData)
         return result
 
-    def sensitivity_setrx2frequency(self):
+    def sensitivity_setrx2frequency(self, freqrange):
         '''
         Configure the RX2 Frequency for RX2 channel sensitivity test
 
-        :param: 128-byte HEX value
+        :param freqrange: Frequency in MHz (400~510, 862~960), to 1 Hz.
+                          (The v1.500 manual says Hz, but the tester
+                          takes and reports MHz.)
 
         :return: ACK on success, NAK on failure
         
         '''
-        pass
+        freqnum = float(freqrange)
+        if (freqnum >= 400 and freqnum <= 510) or \
+                (freqnum >= 862 and freqnum <= 960):
+            cmdSetRx2Frequency = 'CONF:SENSITIVITY:RX2_FREQ ' \
+                                    + '{:.6f}'.format(freqnum) + '\n'
+            result = RwcSerialSetup.transceive(self, cmdSetRx2Frequency)
+            return result
+        else:
+            raise Exception('Invalid or Out of frequency range received.')
 
     def sensitivity_getrx2frequency(self):
         '''
@@ -8925,7 +8958,7 @@ class RWCTesterApi(RwcSerialSetup):
         :return: ACK on success, NAK on failure
         
         '''
-        currVersion = self.query_sysversion()
+        currVersion = self.swversion_number()
         cmdValue = float(value)
         if (cmdValue >= 0.01 and cmdValue <= 1000.00 
             and float(currVersion) < 1.3 ):
@@ -8951,7 +8984,7 @@ class RWCTesterApi(RwcSerialSetup):
         :return: It returns the NST TX interval; NAK on failure
         
         '''
-        currVersion = self.query_sysversion()
+        currVersion = self.swversion_number()
         if (float(currVersion) > 1.290):
             cmdGetTxInterval = 'READ:NST:TX:PACKET_INTERVAL?' + '\n'
         else:
@@ -9414,12 +9447,9 @@ class RWCTesterApi(RwcSerialSetup):
 
         '''
         duttypelist = ['END_DEVICE', 'GATEWAY', 'UNKNOWN']
-        cmdSupportedVersion = [
-            '1.150', '1.160', 
-            '1.170', '1.200', 
-            '1.203', '1.204', 
-            '1.206', '1.210']
-        verStatus = self.validate_sys_swversion(cmdSupportedVersion)
+        # firmware 1.150 up to (not including) 1.220
+        verStatus = self.require_swversion(since = 1.150, before = 1.220) \
+            is not None
 
         if verStatus and duttype in duttypelist:
             cmdSetDutType = 'CONF:NST:TX:DUT_TYPE ' + duttype + '\n'
@@ -9438,12 +9468,9 @@ class RWCTesterApi(RwcSerialSetup):
         :return: It returns DUT type; NAK on failure
         
         '''
-        cmdSupportedVersion = [
-            '1.150', '1.160', 
-            '1.170', '1.200', 
-            '1.203', '1.204', 
-            '1.206', '1.210']
-        verStatus = self.validate_sys_swversion(cmdSupportedVersion)
+        # firmware 1.150 up to (not including) 1.220
+        verStatus = self.require_swversion(since = 1.150, before = 1.220) \
+            is not None
 
         if verStatus:
             cmdGetDutType = 'READ:NST:TX:DUT_TYPE?' + '\n'
@@ -9920,12 +9947,9 @@ class RWCTesterApi(RwcSerialSetup):
 
         '''
         duttypelist = ['END_DEVICE', 'GATEWAY', 'UNKNOWN']
-        cmdSupportedVersion = [
-            '1.150', '1.160', 
-            '1.170', '1.200', 
-            '1.203', '1.204', 
-            '1.206', '1.210']
-        verStatus = self.validate_sys_swversion(cmdSupportedVersion)
+        # firmware 1.150 up to (not including) 1.220
+        verStatus = self.require_swversion(since = 1.150, before = 1.220) \
+            is not None
 
         if verStatus and duttype in duttypelist:
             cmdSetDutType = 'CONF:NST:RX:DUT_TYPE ' + duttype + '\n'
@@ -9944,12 +9968,9 @@ class RWCTesterApi(RwcSerialSetup):
         :return: It returns DUT type; NAK on failure
         
         '''
-        cmdSupportedVersion = [
-            '1.150', '1.160', 
-            '1.170', '1.200', 
-            '1.203', '1.204', 
-            '1.206', '1.210']
-        verStatus = self.validate_sys_swversion(cmdSupportedVersion)
+        # firmware 1.150 up to (not including) 1.220
+        verStatus = self.require_swversion(since = 1.150, before = 1.220) \
+            is not None
 
         if verStatus:
             cmdGetDutType = 'READ:NST:RX:DUT_TYPE?' + '\n'
@@ -9967,12 +9988,9 @@ class RWCTesterApi(RwcSerialSetup):
 
         '''
         duttypelist = ['END_DEVICE', 'GATEWAY', 'UNKNOWN']
-        cmdSupportedVersion = [
-            '1.150', '1.160', 
-            '1.170', '1.200', 
-            '1.203', '1.204', 
-            '1.206', '1.210']
-        verStatus = self.validate_sys_swversion(cmdSupportedVersion)
+        # firmware 1.150 up to (not including) 1.220
+        verStatus = self.require_swversion(since = 1.150, before = 1.220) \
+            is not None
 
         if verStatus and duttype in duttypelist:
             cmdSetDutType = 'CONF:NST:MFG:DUT_TYPE ' + duttype + '\n'
@@ -9991,12 +10009,9 @@ class RWCTesterApi(RwcSerialSetup):
         :return: It returns DUT type; NAK on failure
         
         '''
-        cmdSupportedVersion = [
-            '1.150', '1.160', 
-            '1.170', '1.200', 
-            '1.203', '1.204', 
-            '1.206', '1.210']
-        verStatus = self.validate_sys_swversion(cmdSupportedVersion)
+        # firmware 1.150 up to (not including) 1.220
+        verStatus = self.require_swversion(since = 1.150, before = 1.220) \
+            is not None
 
         if verStatus:
             cmdGetDutType = 'READ:NST:MFG:DUT_TYPE?' + '\n'
@@ -10173,7 +10188,7 @@ class RWCTesterApi(RwcSerialSetup):
         '''
         Configure the mode of MFG test
 
-        :param mode: LORA, CW
+        :param mode: LORA, FSK
 
         :return: ACK on success, NAK on failure
         
@@ -10213,7 +10228,7 @@ class RWCTesterApi(RwcSerialSetup):
         :return: ACK on success, NAK on failure
         
         '''
-        currVersion = self.query_sysversion()
+        currVersion = self.swversion_number()
         cmdValue = float(value)
         if (cmdValue >= 0.05 and cmdValue <= 1000.00 
             and float(currVersion) < 1.3):
@@ -10242,7 +10257,7 @@ class RWCTesterApi(RwcSerialSetup):
         :return: It returns MFG interval in seconds; NAK on failure
         
         '''
-        currVersion = self.query_sysversion()
+        currVersion = self.swversion_number()
         if (float(currVersion) > 1.290):
             cmdGetMfgInterval = 'READ:NST:MFG:PACKET_INTERVAL?' + '\n'
         else:
