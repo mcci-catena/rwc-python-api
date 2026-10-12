@@ -68,11 +68,15 @@ Example scripts showing how to use the library can be found in the [`examples`](
 
 ## Support
 
-The Python library supports RWC5020x firmware from v1.150 on. v1.0.5 to v1.0.7 were tested with an RWC5020B running firmware v1.500.
+The Python library supports RWC5020x firmware from v1.150 on. v1.0.5 to v1.0.8 were tested with an RWC5020B running firmware v1.500.
 
 The library logs each command and response through Python's `logging` module, under the logger `rwclib.cRWCSerialSetup`. To see them, configure logging in your script, for example `logging.basicConfig(level=logging.INFO)`.
 
 ## Release History
+
+- v1.0.8 has the following changes:
+  - Part of [#18](https://github.com/mcci-catena/rwc-python-api/issues/18): region names AU_915, KR_920 and IN_865 (old names still accepted); ICA operator; ranges for target PER, power Y-axis minimum, fragment padding, MFG packet interval and TX power; payload setters take bytes or hex strings starting with `0x`, and keep leading zero bytes; per-channel power for channels above 7.
+  - Payload and sync-word setters read a plain string as decimal, as v1.0.4 did. v1.0.5 to v1.0.7 read a plain string passed to `nst_tx_setpayload()` or a sync-word setter as hex; write hex as `'0x...'` or pass bytes.
 
 - v1.0.7 has the following changes:
   - Part of [#18](https://github.com/mcci-catena/rwc-python-api/issues/18): `link_getmacsendresult()` sends `MAC_SEND_RESULT`; `link_set/getadrchmask_optdr()` send `ADR_CH_MASK_OPT <MAC_NUM>` on firmware v1.200 and later; `nst_rx_settxpolarity()` sends `RX_POLARITY`; `nst_tx_getmode()` reads `MODULATION`. Methods for commands deleted in firmware v1.32 and v1.33 raise on that firmware and later.
