@@ -29,6 +29,38 @@ import serial
 
 from rwclib.cRWCSerialSetup import RwcSerialSetup
 
+def _hexparam(value, maxbytes):
+    '''
+    Convert a value to the hex string the tester takes for a sync word
+    or payload.
+
+    :param value: bytes, bytearray, a hex string (with or without 0x),
+                  or a non-negative int
+    :param maxbytes: largest number of bytes allowed
+
+    :return: upper-case hex digits, two per byte, without 0x
+    '''
+    if isinstance(value, (bytes, bytearray)):
+        data = bytes(value)
+    elif isinstance(value, str):
+        digits = value.strip()
+        if digits[:2].lower() == '0x':
+            digits = digits[2:]
+        if len(digits) % 2:
+            digits = '0' + digits
+        try:
+            data = bytes.fromhex(digits)
+        except ValueError:
+            raise Exception('Invalid parameter received.')
+    elif isinstance(value, int) and value >= 0:
+        data = value.to_bytes(max(1, (value.bit_length() + 7) // 8), 'big')
+    else:
+        raise Exception('Invalid parameter received.')
+
+    if len(data) < 1 or len(data) > maxbytes:
+        raise Exception('Invalid parameter received.')
+    return data.hex().upper()
+
 class RWCTesterApi(RwcSerialSetup):
     '''
     .. class:: RWCTesterApi
@@ -167,7 +199,7 @@ class RWCTesterApi(RwcSerialSetup):
         '''
         Configure an operating mode (or Main Menu) of RWC5020A
 
-        :param mode: Testing mode (EDT, GWT, NST)
+        :param mode: Testing mode (EDT, GWT, NST_TX, NST_RX, NST_MFG)
 
         :return: ACK on success, NAK on failure
 
@@ -286,16 +318,16 @@ class RWCTesterApi(RwcSerialSetup):
         '''
         Configure CW frequency in MHz for non-signaling test
 
-        :param freqrange: Frequency range (400~510, 862~960)
+        :param freqrange: Frequency in MHz (400~510, 862~960); may have a fraction
 
         :return: ACK on success, NAK on failure
 
         '''
-        frequencynum = int(freqrange)
+        frequencynum = float(freqrange)
         if (frequencynum >= 400 
                 and frequencynum <= 510) or (frequencynum >= 862 
                     and frequencynum <= 960):
-            cmdFreqRange = str(frequencynum)
+            cmdFreqRange = '{:g}'.format(frequencynum)
             cmdNstFrequency = 'CONF:RF:FREQ ' + cmdFreqRange + '\n'
             result = RwcSerialSetup.transceive(self, cmdNstFrequency)
             return result
@@ -319,16 +351,16 @@ class RWCTesterApi(RwcSerialSetup):
         '''
         Configure TX CW frequency in MHz for non-signaling test
 
-        :param freqrange: Frequency range (400~510, 862~960)
+        :param freqrange: Frequency in MHz (400~510, 862~960); may have a fraction
 
         :return: ACK on success, NAK on failure
 
         '''
-        txfrequencynum = int(freqrange)
+        txfrequencynum = float(freqrange)
         if (txfrequencynum >= 400 
                 and txfrequencynum <= 510) or (txfrequencynum >= 862 
                     and txfrequencynum <= 960):
-            cmdTxFreqRange = str(txfrequencynum)
+            cmdTxFreqRange = '{:g}'.format(txfrequencynum)
             cmdNstTxFrequency = 'CONF:RF:TX_FREQ ' + cmdTxFreqRange + '\n'
             result = RwcSerialSetup.transceive(self, cmdNstTxFrequency)
             return result
@@ -352,7 +384,7 @@ class RWCTesterApi(RwcSerialSetup):
         '''
         Configure RX CW frequency in MHz for non-signaling test
 
-        :param freqrange: Frequency range (400~510, 862~960)
+        :param freqrange: Frequency in MHz (400~510, 862~960); may have a fraction
 
         :return: ACK on success, NAK on failure
 
@@ -385,7 +417,7 @@ class RWCTesterApi(RwcSerialSetup):
         '''
         Configure MFG CW frequency in MHz for non-signaling test
 
-        :param freqrange: Frequency range (400~510, 862~960)
+        :param freqrange: Frequency in MHz (400~510, 862~960); may have a fraction
 
         :return: ACK on success, NAK on failure
 
@@ -806,7 +838,7 @@ class RWCTesterApi(RwcSerialSetup):
         '''
         Configure the frequency of ping channel
 
-        :param freqrange: Frequency range (400~510, 862~960)
+        :param freqrange: Frequency in MHz (400~510, 862~960); may have a fraction
 
         :return: ACK on success, NAK on failure
 
@@ -891,7 +923,7 @@ class RWCTesterApi(RwcSerialSetup):
         '''
         Configure the frequency of beacon
 
-        :param freqrange: Frequency range (400~510, 862~960)
+        :param freqrange: Frequency in MHz (400~510, 862~960); may have a fraction
 
         :return: ACK on success, NAK on failure
 
@@ -2382,7 +2414,7 @@ class RWCTesterApi(RwcSerialSetup):
         :param dr: For S/W Version 1.150 and 1.160:
                    DR_0, DR_1, DR_2, DR_3, DR_4, DR_5, DR_6, DR_7
 
-                   For S/W Version 1.170 - 1.305:
+                   For S/W Version 1.170 and later:
                    DR0_SF10BW125, DR0_SF12BW125, DR1_SF9BW125,
                    DR1_SF11BW125, DR2_SF8BW125, DR2_SF10BW125,
                    DR3_SF7BW125, DR3_SF9BW125, DR4_SF8BW125,
@@ -2393,12 +2425,6 @@ class RWCTesterApi(RwcSerialSetup):
         
         '''
         verList1 = ['1.150', '1.160']
-        verList2 = [
-            '1.170', '1.200', '1.203', 
-            '1.204', '1.206', '1.210', 
-            '1.220', '1.221', '1.222', 
-            '1.300', '1.305', '1.310',
-            '1.517']
         drList1 = [
             'DR_0', 'DR_1', 'DR_2', 'DR_3', 
             'DR_4', 'DR_5', 'DR_6', 'DR_7']
@@ -2417,8 +2443,7 @@ class RWCTesterApi(RwcSerialSetup):
             cmdSetUplinkDr = 'CONF:PROTOCOL:UPLINK_DR ' + dr + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetUplinkDr)
             return result
-        elif (swVersion in verList2 and dr in drList2) or \
-             (swVersionNum > 1.517 and dr in drList2):
+        elif swVersionNum >= 1.170 and dr in drList2:
             cmdSetUplinkDr = 'CONF:PROTOCOL:UPLINK_DR ' + dr + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetUplinkDr)
             return result
@@ -2511,7 +2536,7 @@ class RWCTesterApi(RwcSerialSetup):
         :param dr: For S/W Version 1.150 and 1.160:
                    DR_0, DR_1, DR_2, DR_3, DR_4, DR_5, DR_6, DR_7
                    
-                   For S/W Version 1.170 - 1.305:
+                   For S/W Version 1.170 and later:
                    DR0_SF12BW125, DR1_SF11BW125, DR2_SF10BW125,
                    DR3_SF9BW125, DR4_SF8BW125, DR5_SF7BW125,
                    DR6_SF7BW250, DR7_FSK50, DR8_SF12BW500,
@@ -2522,11 +2547,6 @@ class RWCTesterApi(RwcSerialSetup):
         
         '''
         verList1 = ['1.150', '1.160']
-        verList2 = [
-            '1.170', '1.200', '1.203', '1.204', 
-            '1.206', '1.210', '1.220', '1.221', 
-            '1.222', '1.300', '1.305', '1.310',
-            '1.517']
         drList1 = [
             'DR_0', 'DR_1', 'DR_2', 'DR_3', 
             'DR_4', 'DR_5', 'DR_6', 'DR_7']
@@ -2546,8 +2566,7 @@ class RWCTesterApi(RwcSerialSetup):
             cmdSetRx2Dr = 'CONF:PROTOCOL:RX2_DR ' + dr + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetRx2Dr)
             return result
-        elif (swVersion in verList2 and dr in drList2) or \
-             (swVersionNum > 1.517 and dr in drList2):
+        elif swVersionNum >= 1.170 and dr in drList2:
             cmdSetRx2Dr = 'CONF:PROTOCOL:RX2_DR ' + dr + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetRx2Dr)
             return result
@@ -9116,14 +9135,16 @@ class RWCTesterApi(RwcSerialSetup):
         '''
         Configure the Payload size of LoRa TX frame
 
-        :param length: 8 ~ 256
+        :param length: 1 ~ 250. The v1.500 manual says 8 ~ 256, but
+                       firmware v1.500 NAKs sizes above 250 and
+                       accepts 7.
 
         :return: ACK on success, NAK on failure
         
         '''
-        if length >= 8 and length <= 256:
+        if length >= 1 and length <= 250:
             cmdMsgLength = str(length)
-            cmdSetMsgLength = 'CONF:SENSITIVITY:PAYLOAD_SIZE ' \
+            cmdSetMsgLength = 'CONF:NST:TX:PAYLOAD_SIZE ' \
                                 + cmdMsgLength + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetMsgLength)
             return result
@@ -9145,21 +9166,20 @@ class RWCTesterApi(RwcSerialSetup):
 
     def nst_tx_setpayload(self, data):
         '''
-        Configure the Payload data of LoRa TX frame
+        Configure the Payload data of TX frame. The length must equal
+        the payload size (nst_tx_setpayloadsize); the tester NAKs
+        anything else.
 
-        :param data: 128-byte HEX value
+        :param data: 1 ~ 250 bytes, as bytes, a hex string (with or
+                     without 0x), or an int
 
         :return: ACK on success, NAK on failure
         
         '''
-        cmdData = int(data)
-        if (cmdData >= 0 and cmdData <= 2**128 -1) :
-            cmdHexValue = hex(cmdData)
-            cmdSetPayload = 'CONF:NST:TX:PAYLOAD ' + cmdHexValue + '\n'
-            result = RwcSerialSetup.transceive(self, cmdSetPayload)
-            return result
-        else:
-            raise Exception('Invalid parameter received.')
+        cmdHexValue = _hexparam(data, 250)
+        cmdSetPayload = 'CONF:NST:TX:PAYLOAD ' + cmdHexValue + '\n'
+        result = RwcSerialSetup.transceive(self, cmdSetPayload)
+        return result
 
     def nst_tx_getpayload(self):
         '''
@@ -9241,7 +9261,7 @@ class RWCTesterApi(RwcSerialSetup):
         :return: It returns FM deviation value; NAK on failure
         
         '''
-        cmdGetFmDeviation = 'CONF:NST:TX:FM_DEVIATION?' + '\n'
+        cmdGetFmDeviation = 'READ:NST:TX:FM_DEVIATION?' + '\n'
         result = RwcSerialSetup.transceive(self, cmdGetFmDeviation)
         return result
 
@@ -9272,7 +9292,7 @@ class RWCTesterApi(RwcSerialSetup):
         :return: It returns Data rate value; NAK on failure
         
         '''
-        cmdGetDatarate = 'CONF:NST:TX:DATA_RATE?' + '\n'
+        cmdGetDatarate = 'READ:NST:TX:DATA_RATE?' + '\n'
         result = RwcSerialSetup.transceive(self, cmdGetDatarate)
         return result
 
@@ -9304,7 +9324,7 @@ class RWCTesterApi(RwcSerialSetup):
         :return: It returns Sync Word size; NAK on failure
         
         '''
-        cmdGetSyncWordSize = 'CONF:NST:TX:SYNC_WORD_SIZE?' + '\n'
+        cmdGetSyncWordSize = 'READ:NST:TX:SYNC_WORD_SIZE?' + '\n'
         result = RwcSerialSetup.transceive(self, cmdGetSyncWordSize)
         return result
 
@@ -9312,19 +9332,16 @@ class RWCTesterApi(RwcSerialSetup):
         '''
         Configure the Sync Word for FSK Modulation
 
-        :param value: -
+        :param value: 1 ~ 8 bytes, as bytes, a hex string (with or without
+                   0x), or an int; for example 'C194C1' for LoRaWAN
 
         :return: ACK on success, NAK on failure
 
         '''
-        cmdValue = int(value)
-        if (cmdValue >= 1 and cmdValue <= 8):
-           cmdParam = str(cmdValue)
-           cmdSetSyncWord = 'CONF:NST:TX:SYNC_WORD ' + cmdParam + '\n'
-           result = RwcSerialSetup.transceive(self, cmdSetSyncWord)
-           return result
-        else:
-           raise Exception('Invalid Parameter received.')
+        cmdParam = '0x' + _hexparam(value, 8).rjust(16, '0')
+        cmdSetSyncWord = 'CONF:NST:TX:SYNC_WORD ' + cmdParam + '\n'
+        result = RwcSerialSetup.transceive(self, cmdSetSyncWord)
+        return result
 
     def nst_tx_getsyncword(self):
         '''
@@ -9335,7 +9352,7 @@ class RWCTesterApi(RwcSerialSetup):
         :return: It returns Sync Word; NAK on failure
         
         '''
-        cmdGetSyncWord = 'CONF:NST:TX:SYNC_WORD?' + '\n'
+        cmdGetSyncWord = 'READ:NST:TX:SYNC_WORD?' + '\n'
         result = RwcSerialSetup.transceive(self, cmdGetSyncWord)
         return result
 
@@ -9366,7 +9383,7 @@ class RWCTesterApi(RwcSerialSetup):
         :return: It returns TX signal polarity; NAK on failure
         
         '''
-        cmdGetTxPolarity = 'CONF:NST:TX:TX_POLARITY?' + '\n'
+        cmdGetTxPolarity = 'READ:NST:TX:TX_POLARITY?' + '\n'
         result = RwcSerialSetup.transceive(self, cmdGetTxPolarity)
         return result
 
@@ -9413,7 +9430,7 @@ class RWCTesterApi(RwcSerialSetup):
         verStatus = self.validate_sys_swversion(cmdSupportedVersion)
 
         if verStatus:
-            cmdGetDutType = 'CONF:NST:TX:DUT_TYPE?' + '\n'
+            cmdGetDutType = 'READ:NST:TX:DUT_TYPE?' + '\n'
             result = RwcSerialSetup.transceive(self, cmdGetDutType)
             return result
 
@@ -9781,7 +9798,7 @@ class RWCTesterApi(RwcSerialSetup):
         :return: It returns Data rate value; NAK on failure
         
         '''
-        cmdGetDatarate = 'CONF:NST:RX:DATA_RATE?' + '\n'
+        cmdGetDatarate = 'READ:NST:RX:DATA_RATE?' + '\n'
         result = RwcSerialSetup.transceive(self, cmdGetDatarate)
         return result
 
@@ -9813,7 +9830,7 @@ class RWCTesterApi(RwcSerialSetup):
         :return: It returns Sync Word size; NAK on failure
         
         '''
-        cmdGetSyncWordSize = 'CONF:NST:RX:SYNC_WORD_SIZE?' + '\n'
+        cmdGetSyncWordSize = 'READ:NST:RX:SYNC_WORD_SIZE?' + '\n'
         result = RwcSerialSetup.transceive(self, cmdGetSyncWordSize)
         return result
 
@@ -9821,19 +9838,16 @@ class RWCTesterApi(RwcSerialSetup):
         '''
         Configure the Sync Word for FSK Modulation
 
-        :param value: -
+        :param sizevalue: 1 ~ 8 bytes, as bytes, a hex string (with or without
+                   0x), or an int; for example 'C194C1' for LoRaWAN
 
         :return: ACK on success, NAK on failure
 
         '''
-        cmdValue = int(sizevalue)
-        if (cmdValue >= 1 and cmdValue <= 8):
-           cmdParam = str(cmdValue)
-           cmdSetSyncWord = 'CONF:NST:RX:SYNC_WORD ' + cmdParam + '\n'
-           result = RwcSerialSetup.transceive(self, cmdSetSyncWord)
-           return result
-        else:
-           raise Exception('Invalid Parameter received.')
+        cmdParam = '0x' + _hexparam(sizevalue, 8).rjust(16, '0')
+        cmdSetSyncWord = 'CONF:NST:RX:SYNC_WORD ' + cmdParam + '\n'
+        result = RwcSerialSetup.transceive(self, cmdSetSyncWord)
+        return result
 
     def nst_rx_getsyncword(self):
         '''
@@ -9844,7 +9858,7 @@ class RWCTesterApi(RwcSerialSetup):
         :return: It returns Sync Word; NAK on failure
         
         '''
-        cmdGetSyncWord = 'CONF:NST:RX:SYNC_WORD?' + '\n'
+        cmdGetSyncWord = 'READ:NST:RX:SYNC_WORD?' + '\n'
         result = RwcSerialSetup.transceive(self, cmdGetSyncWord)
         return result
 
@@ -9875,7 +9889,7 @@ class RWCTesterApi(RwcSerialSetup):
         :return: It returns RX signal polarity; NAK on failure
         
         '''
-        cmdGetRxPolarity = 'CONF:NST:RX:TX_POLARITY?' + '\n'
+        cmdGetRxPolarity = 'READ:NST:RX:RX_POLARITY?' + '\n'
         result = RwcSerialSetup.transceive(self, cmdGetRxPolarity)
         return result
 
@@ -9922,7 +9936,7 @@ class RWCTesterApi(RwcSerialSetup):
         verStatus = self.validate_sys_swversion(cmdSupportedVersion)
 
         if verStatus:
-            cmdGetDutType = 'CONF:NST:RX:DUT_TYPE?' + '\n'
+            cmdGetDutType = 'READ:NST:RX:DUT_TYPE?' + '\n'
             result = RwcSerialSetup.transceive(self, cmdGetDutType)
             return result
 
@@ -9969,7 +9983,7 @@ class RWCTesterApi(RwcSerialSetup):
         verStatus = self.validate_sys_swversion(cmdSupportedVersion)
 
         if verStatus:
-            cmdGetDutType = 'CONF:NST:MFG:DUT_TYPE?' + '\n'
+            cmdGetDutType = 'READ:NST:MFG:DUT_TYPE?' + '\n'
             result = RwcSerialSetup.transceive(self, cmdGetDutType)
             return result
 
@@ -10602,7 +10616,7 @@ class RWCTesterApi(RwcSerialSetup):
         :return: It returns FM deviation value; NAK on failure
         
         '''
-        cmdGetFmDeviation = 'CONF:NST:MFG:FM_DEVIATION?' + '\n'
+        cmdGetFmDeviation = 'READ:NST:MFG:FM_DEVIATION?' + '\n'
         result = RwcSerialSetup.transceive(self, cmdGetFmDeviation)
         return result
 
@@ -10633,7 +10647,7 @@ class RWCTesterApi(RwcSerialSetup):
         :return: It returns Data rate value; NAK on failure
         
         '''
-        cmdGetDatarate = 'CONF:NST:MFG:DATA_RATE?' + '\n'
+        cmdGetDatarate = 'READ:NST:MFG:DATA_RATE?' + '\n'
         result = RwcSerialSetup.transceive(self, cmdGetDatarate)
         return result
 
@@ -10665,7 +10679,7 @@ class RWCTesterApi(RwcSerialSetup):
         :return: It returns Sync Word size; NAK on failure
         
         '''
-        cmdGetSyncWordSize = 'CONF:NST:MFG:SYNC_WORD_SIZE?' + '\n'
+        cmdGetSyncWordSize = 'READ:NST:MFG:SYNC_WORD_SIZE?' + '\n'
         result = RwcSerialSetup.transceive(self, cmdGetSyncWordSize)
         return result
 
@@ -10673,19 +10687,16 @@ class RWCTesterApi(RwcSerialSetup):
         '''
         Configure the Sync Word for FSK Modulation
 
-        :param value: -
+        :param sizevalue: 1 ~ 8 bytes, as bytes, a hex string (with or without
+                   0x), or an int; for example 'C194C1' for LoRaWAN
 
         :return: ACK on success, NAK on failure
 
         '''
-        cmdValue = int(sizevalue)
-        if (cmdValue >= 1 and cmdValue <= 8):
-           cmdParam = str(cmdValue)
-           cmdSetSyncWord = 'CONF:NST:MFG:SYNC_WORD ' + cmdParam + '\n'
-           result = RwcSerialSetup.transceive(self, cmdSetSyncWord)
-           return result
-        else:
-           raise Exception('Invalid Parameter received.')
+        cmdParam = '0x' + _hexparam(sizevalue, 8).rjust(16, '0')
+        cmdSetSyncWord = 'CONF:NST:MFG:SYNC_WORD ' + cmdParam + '\n'
+        result = RwcSerialSetup.transceive(self, cmdSetSyncWord)
+        return result
 
     def nst_mfg_getsyncword(self):
         '''
@@ -10696,7 +10707,7 @@ class RWCTesterApi(RwcSerialSetup):
         :return: It returns Sync Word; NAK on failure
         
         '''
-        cmdGetSyncWord = 'CONF:NST:MFG:SYNC_WORD?' + '\n'
+        cmdGetSyncWord = 'READ:NST:MFG:SYNC_WORD?' + '\n'
         result = RwcSerialSetup.transceive(self, cmdGetSyncWord)
         return result
 
@@ -10727,7 +10738,7 @@ class RWCTesterApi(RwcSerialSetup):
         :return: It returns TX signal polarity; NAK on failure
         
         '''
-        cmdGetMfgTxPolarity = 'CONF:NST:MFG:TX_POLARITY?' + '\n'
+        cmdGetMfgTxPolarity = 'READ:NST:MFG:TX_POLARITY?' + '\n'
         result = RwcSerialSetup.transceive(self, cmdGetMfgTxPolarity)
         return result
 
@@ -10758,7 +10769,7 @@ class RWCTesterApi(RwcSerialSetup):
         :return: It returns RX signal polarity; NAK on failure
         
         '''
-        cmdGetMfgRxPolarity = 'CONF:NST:MFG:RX_POLARITY?' + '\n'
+        cmdGetMfgRxPolarity = 'READ:NST:MFG:RX_POLARITY?' + '\n'
         result = RwcSerialSetup.transceive(self, cmdGetMfgRxPolarity)
         return result
 

@@ -21,7 +21,6 @@
 
 # Built-in imports
 import logging
-import os
 import re
 import socket
 import sys
@@ -63,14 +62,11 @@ class RwcSerialSetup:
         self.udpport = port
         self.udpipaddr = addr
 
-        self.log_dir = os.path.join(os.path.normpath(
-            os.getcwd() + os.sep + os.pardir), 'logs')
-        self.log_fname = os.path.join(self.log_dir, 'rwcapi.log')
+        # Log through the "rwclib.cRWCSerialSetup" logger. The
+        # application chooses handlers and levels; for example,
+        # logging.basicConfig(level=logging.INFO) shows each command
+        # and response.
         self.logger = logging.getLogger(__name__)
-        logging.basicConfig(filename = self.log_fname,
-                            format = '[%(asctime)s]: [%(name)s]: \
-[%(levelname)s]: [%(funcName)s:%(lineno)d]: %(message)s')
-        self.logger.setLevel(logging.DEBUG)
 
     def open_port(self):
         '''
@@ -121,7 +117,7 @@ class RwcSerialSetup:
         readResult = None
 
         if not self.udpipaddr:
-            if not self.myport.in_waiting is 0:
+            if self.myport.in_waiting != 0:
                 self.myport.reset_input_buffer()
 
             try:

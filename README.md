@@ -68,9 +68,15 @@ Example scripts showing how to use the library can be found in the [`examples`](
 
 ## Support
 
-The Python library supports RWC5020x firmware from v1.150 to latest version (v1.310 at time of release).
+The Python library supports RWC5020x firmware from v1.150 on. v1.0.5 was tested with an RWC5020B running firmware v1.500.
+
+The library logs each command and response through Python's `logging` module, under the logger `rwclib.cRWCSerialSetup`. To see them, configure logging in your script, for example `logging.basicConfig(level=logging.INFO)`.
 
 ## Release History
+
+- v1.0.5 has the following changes:
+  - Fix [#14](https://github.com/mcci-catena/rwc-python-api/issues/14): commands that failed on firmware v1.500. Data-rate setters accept any firmware from v1.170 on; frequency setters accept fractional MHz; `nst_tx_setpayloadsize()` sends the NST command; `nst_tx_setpayload()` and the sync-word setters take bytes or hex strings; NST getters use `READ:` queries.
+  - Fix [#13](https://github.com/mcci-catena/rwc-python-api/issues/13): the library no longer configures logging or writes `../logs/rwcapi.log`; `setup.py` requires pyserial.
 
 - v1.0.4 has the following changes:
   - Fix [#6](https://github.com/mcci-catena/rwc-python-api/issues/6): Added new remote commands for the latest firmware v1.310

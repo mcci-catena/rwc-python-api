@@ -7,3 +7,7 @@ doc/build/html/*.inv
 doc/source/
 
 rwclib/__pycache__/
+
+# log files
+logs/
+*.egg-info/
