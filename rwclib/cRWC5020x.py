@@ -3288,6 +3288,8 @@ class RWCTesterApi(RwcSerialSetup):
         :return: ACK on success, NAK on failure
         
         '''
+        # deleted in firmware V1.32
+        self.require_swversion(before = 1.320)
         cmdClaaMode = claamode
         if cmdClaaMode == 'D':
             cmdSetClaaMode = 'CONF:PROTOCOL:CLAA_MODE D' + '\n'
@@ -3309,6 +3311,8 @@ class RWCTesterApi(RwcSerialSetup):
         :return: It returns CLAA mode; NAK on failure
 
         '''
+        # deleted in firmware V1.32
+        self.require_swversion(before = 1.320)
         cmdGetClaaMode = 'READ:PROTOCOL:CLAA_MODE?' + '\n'
         result = RwcSerialSetup.transceive(self, cmdGetClaaMode)
         return result
@@ -4067,7 +4071,7 @@ class RWCTesterApi(RwcSerialSetup):
         '''
         Configure CH_MASK value for LinkADRReq
 
-        :param index: 1 - 3
+        :param index: 1 - 3 (2 and 3: firmware before v1.320 only)
         :param macnum: MAC Command Number
         :param value: 0x00 ~ 0xFF
 
@@ -4088,6 +4092,8 @@ class RWCTesterApi(RwcSerialSetup):
             else:
                 raise Exception('Invalid parameter received.')
         elif (cmdIndex > 1 and cmdIndex <= 3):
+            # ADR_CH_MASK2/3 and ADR_MASK2/3_CTRL: deleted in V1.32
+            self.require_swversion(before = 1.320)
             if (cmdValue >= 0 and cmdValue <= 2**8 - 1):
                 cmdHexValue = hex(cmdValue)
                 cmdSetAdrChMask = 'CONF:LINK:ADR_CH_MASK' \
@@ -4105,7 +4111,7 @@ class RWCTesterApi(RwcSerialSetup):
         '''
         Read CH_MASK value for LinkADRReq
 
-        :param index: 1 - 3
+        :param index: 1 - 3 (2 and 3: firmware before v1.320 only)
         :param macnum: MAC Command Number
 
         :return: It returns channel mask value; NAK on failure
@@ -4118,6 +4124,8 @@ class RWCTesterApi(RwcSerialSetup):
             result = RwcSerialSetup.transceive(self, cmdGetAdrChMask)
             return result
         elif (cmdIndex > 1 and cmdIndex <= 3):
+            # ADR_CH_MASK2/3 and ADR_MASK2/3_CTRL: deleted in V1.32
+            self.require_swversion(before = 1.320)
             cmdGetAdrChMask = 'READ:LINK:ADR_CH_MASK' \
             + str(cmdIndex) + '? '  + cmdMacNum + '\n'
             result = RwcSerialSetup.transceive(self, cmdGetAdrChMask)
@@ -4129,7 +4137,7 @@ class RWCTesterApi(RwcSerialSetup):
         '''
         Configure MASK_CTRL value for LinkADRReq
 
-        :param index: 1 - 3
+        :param index: 1 - 3 (2 and 3: firmware before v1.320 only)
         :param macnum: MAC Command Number
         :param value: 0x00 ~ 0xFF
 
@@ -4150,6 +4158,8 @@ class RWCTesterApi(RwcSerialSetup):
             else:
                 raise Exception('Invalid parameter received.')
         elif (cmdIndex > 1 and cmdIndex <= 3):
+            # ADR_CH_MASK2/3 and ADR_MASK2/3_CTRL: deleted in V1.32
+            self.require_swversion(before = 1.320)
             if (cmdValue >= 0 and cmdValue <= 2**8 - 1):
                 cmdHexValue = hex(cmdValue)
                 cmdSetAdrMaskCtrl = 'CONF:LINK:ADR_MASK' \
@@ -4167,7 +4177,7 @@ class RWCTesterApi(RwcSerialSetup):
         '''
         Read MASK_CTRL value for LinkADRReq
 
-        :param index: 1 - 3
+        :param index: 1 - 3 (2 and 3: firmware before v1.320 only)
         :param macnum: MAC Command Number
 
         :return: It returns mask control value; NAK on failure
@@ -4180,6 +4190,8 @@ class RWCTesterApi(RwcSerialSetup):
             result = RwcSerialSetup.transceive(self, cmdGetAdrMaskCtrl)
             return result
         elif (cmdIndex > 1 and cmdIndex <= 3):
+            # ADR_CH_MASK2/3 and ADR_MASK2/3_CTRL: deleted in V1.32
+            self.require_swversion(before = 1.320)
             cmdGetAdrMaskCtrl = 'READ:LINK:ADR_MASK' \
                                     + str(cmdIndex) + '_CTRL? ' \
                                     + cmdMacNum + '\n'
@@ -4198,6 +4210,8 @@ class RWCTesterApi(RwcSerialSetup):
         :return: ACK on success, NAK on failure
         
         '''
+        # deleted in firmware V1.32
+        self.require_swversion(before = 1.320)
         cmdMoreChannelMask = chmaskval
         if cmdMoreChannelMask == 'OFF':
             cmdSetMoreChannelMask = 'CONF:LINK:ADR_MORE_CH_MASK OFF' + '\n'
@@ -4219,15 +4233,21 @@ class RWCTesterApi(RwcSerialSetup):
         :return: It returns ADR_MORE_CH_MASK value; NAK on failure
         
         '''
+        # deleted in firmware V1.32
+        self.require_swversion(before = 1.320)
         cmdGetMoreChannelMask = 'READ:LINK:ADR_MORE_CH_MASK?' + '\n'
         result = RwcSerialSetup.transceive(self, cmdGetMoreChannelMask)
         return result
 
-    def link_setadrchmask_optdr(self, value):
+    def link_setadrchmask_optdr(self, value, macnum = 1):
         '''
-        Configure CH_MASK value for optional DR for LinkADRReq
+        Configure CH_MASK value for optional DR for LinkADRReq. Only one
+        channel (bit) can be enabled.
 
         :param value: 0x01 ~ 0x80
+        :param macnum: MAC Command Number; firmware v1.200 and later
+                       (CONF:LINK:ADR_CH_MASK_OPT). Earlier firmware
+                       uses CONF:LINK:ADR_CH_MASK_OPT_DR and ignores it.
 
         :return: ACK on success, NAK on failure
 
@@ -4235,24 +4255,32 @@ class RWCTesterApi(RwcSerialSetup):
         cmdValue = int(value)
         if (cmdValue >= 1 and cmdValue <= 2**7):
             cmdHexValue = hex(cmdValue)
-            cmdSetAdrChMaskOptDr = 'CONF:LINK:ADR_CH_MASK_OPT_DR ' \
-            + cmdHexValue \
-            + '\n'
+            if self.swversion_number() >= 1.200:
+                cmdSetAdrChMaskOptDr = 'CONF:LINK:ADR_CH_MASK_OPT ' \
+                + str(macnum) + ' ' + cmdHexValue + '\n'
+            else:
+                cmdSetAdrChMaskOptDr = 'CONF:LINK:ADR_CH_MASK_OPT_DR ' \
+                + cmdHexValue \
+                + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetAdrChMaskOptDr)
             return result
         else:
             raise Exception('Invalid parameter received.')
 
-    def link_getadrchmask_optdr(self):
+    def link_getadrchmask_optdr(self, macnum = 1):
         '''
         Read CH_MASK value for optional DR for LinkADRReq
 
-        :parameters: N/A (Query only)
+        :param macnum: MAC Command Number; firmware v1.200 and later
 
         :return: It returns CH_MASK value; NAK on failure
 
         '''
-        cmdGetAdrChMaskOptDr = 'READ:LINK:ADR_CH_MASK_OPT_DR?' + '\n'
+        if self.swversion_number() >= 1.200:
+            cmdGetAdrChMaskOptDr = 'READ:LINK:ADR_CH_MASK_OPT? ' \
+                                    + str(macnum) + '\n'
+        else:
+            cmdGetAdrChMaskOptDr = 'READ:LINK:ADR_CH_MASK_OPT_DR?' + '\n'
         result = RwcSerialSetup.transceive(self, cmdGetAdrChMaskOptDr)
         return result
 
@@ -6469,7 +6497,7 @@ class RWCTesterApi(RwcSerialSetup):
         
         '''
         cmdMacNum = str(macnum)
-        cmdGetMacSendResult = 'READ:LINK:MAC_SENDL_RESULT? ' \
+        cmdGetMacSendResult = 'READ:LINK:MAC_SEND_RESULT? ' \
                                 + cmdMacNum + '\n'
         result = RwcSerialSetup.transceive(self, cmdGetMacSendResult)
         return result
@@ -6959,6 +6987,8 @@ class RWCTesterApi(RwcSerialSetup):
         :return: ACK on success, NAK on failure
 
         '''
+        # deleted in firmware V1.33
+        self.require_swversion(before = 1.330)
         cmdValue = int(value)
         if (cmdValue >= 0 and cmdValue <= 2**128 - 1):
             cmdHexValue = hex(cmdValue)
@@ -8896,7 +8926,7 @@ class RWCTesterApi(RwcSerialSetup):
         :return: It returns NST TX mode; NAK on failure
         
         '''
-        cmdGetTxMode = 'READ:NST:TX:MODE?' + '\n'
+        cmdGetTxMode = 'READ:NST:TX:MODULATION?' + '\n'
         result = RwcSerialSetup.transceive(self, cmdGetTxMode)
         return result
 
@@ -9873,7 +9903,7 @@ class RWCTesterApi(RwcSerialSetup):
         '''
         polaritytypelist = ['NORMAL', 'INVERSE']
         if polaritytype in polaritytypelist:
-            cmdSetRxPolarity = 'CONF:NST:RX:TX_POLARITY ' \
+            cmdSetRxPolarity = 'CONF:NST:RX:RX_POLARITY ' \
                                 + polaritytype + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetRxPolarity)
             return result
@@ -11031,4 +11061,33 @@ class RWCTesterApi(RwcSerialSetup):
             return True
         else:
             raise Exception('Command not supported in current version')
+
+    def swversion_number(self):
+        '''
+        Read the tester firmware version as a number
+
+        :return: version, e.g. 1.5 for firmware "1.500"; raises if the
+                 tester does not answer with a version
+        '''
+        currVersion = self.query_sysversion()
+        try:
+            return float(currVersion)
+        except (TypeError, ValueError):
+            raise Exception('Cannot read tester firmware version: {!r}'
+                            .format(currVersion))
+
+    def require_swversion(self, since = None, before = None):
+        '''
+        Raise unless the tester firmware is in a version range
+
+        :param since: lowest supported version, e.g. 1.200; None for no limit
+        :param before: first unsupported version, e.g. 1.320; None for no limit
+
+        :return: firmware version as a number
+        '''
+        currVersion = self.swversion_number()
+        if ((since is not None and currVersion < since) or
+                (before is not None and currVersion >= before)):
+            raise Exception('Command not supported in current version')
+        return currVersion
         
