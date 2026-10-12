@@ -277,3 +277,73 @@ def test_old_datarate_names(rwc):
 def test_float_version_sites_unreadable(rwc):
     with pytest.raises(Exception, match = 'Cannot read tester firmware version'):
         rwc.nst_tx_setinterval(1)
+
+
+# step 4 of #18: commands added from the v1.500 manual
+
+def test_new_choice_commands(rwc):
+    rwc.rf_setedtmultichannel('64-CH')
+    rwc.rf_getedtmultichannel()
+    rwc.rf_setrxagc('ON')
+    rwc.nst_tx_setimplicitheader('OFF')
+    rwc.nst_rx_setimplicitheader('ON')
+    rwc.nst_rx_setimplicitcr('NO_CRC')
+    rwc.protocol_setdownlinkdwelltime('400ms')
+    rwc.protocol_setuplinkdwelltime('NO_LIMIT')
+    assert sent(rwc) == ['CONF:RF:EDT_MULTI_CH 64-CH\n',
+                         'READ:RF:EDT_MULTI_CH?\n',
+                         'CONF:RF:RX_AGC ON\n',
+                         'CONF:NST:TX:IMPLICIT_HEADER OFF\n',
+                         'CONF:NST:RX:IMPLICIT_HEADER ON\n',
+                         'CONF:NST:RX:IMPLICIT_CR NO_CRC\n',
+                         'CONF:PROTOCOL:DL_DWELL_TIME 400ms\n',
+                         'CONF:PROTOCOL:UL_DWELL_TIME NO_LIMIT\n']
+
+
+def test_new_int_commands(rwc):
+    rwc.nst_rx_setfcntavgn(10)
+    rwc.nst_rx_setimplicitpayloadsize(0)
+    rwc.link_setfoptspayloadsize(250)
+    rwc.link_setfoptspayload('0x0001')
+    rwc.sensitivity_getperresult(3)
+    assert sent(rwc) == ['CONF:NST:RX:FCNT_AVG_N 10\n',
+                         'CONF:NST:RX:IMPLICIT_PAYLOAD_SIZE 0\n',
+                         'CONF:LINK:FOPTS_PAYLOAD_SIZE 250\n',
+                         'CONF:LINK:FOPTS_PAYLOAD 0001\n',
+                         'READ:SENSITIVITY:PER_RESULT? 3\n']
+
+
+def test_genappkey(rwc):
+    rwc.protocol_setgenappkey('0x' + '00' * 15 + '01')
+    rwc.protocol_setgenappkey(1)
+    assert sent(rwc) == ['CONF:PROTOCOL:GEN_APP_KEY ' + '00' * 15 + '01\n'] * 2
+    with pytest.raises(Exception):
+        rwc.protocol_setgenappkey('0x0001')
+
+
+@pytest.mark.parametrize('call', [
+    lambda r: r.rf_setedtmultichannel('16-CH'),
+    lambda r: r.rf_setrxagc('AUTO'),
+    lambda r: r.nst_rx_setfcntavgn(11),
+    lambda r: r.nst_rx_setimplicitpayloadsize(256),
+    lambda r: r.nst_rx_setimplicitcr('4_9'),
+    lambda r: r.link_setfoptspayloadsize(251),
+    lambda r: r.protocol_setdownlinkdwelltime('1s'),
+    ])
+def test_new_commands_out_of_range(rwc, call):
+    with pytest.raises(Exception):
+        call(rwc)
+    assert sent(rwc) == []
+
+
+def test_option_queries(rwc):
+    rwc.query_64choptinfo()
+    rwc.query_aucertoptinfo()
+    rwc.query_rucertoptinfo()
+    rwc.query_ilcertoptinfo()
+    rwc.query_eu433certoptinfo()
+    assert sent(rwc) == ['READ:SYSTEM:OPTION_64_CH?\n',
+                         'READ:SYSTEM:OPTION_CERTI_AU?\n',
+                         'READ:SYSTEM:OPTION_CERTI_RU?\n',
+                         'READ:SYSTEM:OPTION_CERTI_IL?\n',
+                         'READ:SYSTEM:OPTION_CERTI_EU433?\n']

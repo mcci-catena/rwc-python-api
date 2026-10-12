@@ -785,6 +785,66 @@ class RWCTesterApi(RwcSerialSetup):
         result = RwcSerialSetup.transceive(self, cmdGetChGroup)
         return result
 
+    def rf_setedtmultichannel(self, value):
+        '''
+        Configure the EDT channel plan (US915, AU915 and CN470; RWC5020B/M).
+        8-CH or 64-CH for US/AU; 8-CH or 96-CH for CN;
+        8-CH, 32-CH_GROUP1 or 32-CH_GROUP2 for CN-20A
+
+        :param value: 8-CH, 64-CH, 96-CH, 32-CH_GROUP1, 32-CH_GROUP2
+
+        :return: ACK on success, NAK on failure
+
+        '''
+        if value in ['8-CH', '64-CH', '96-CH', '32-CH_GROUP1', '32-CH_GROUP2']:
+            cmdSet = 'CONF:RF:EDT_MULTI_CH ' + value + '\n'
+            result = RwcSerialSetup.transceive(self, cmdSet)
+            return result
+        else:
+            raise Exception('Invalid parameter received.')
+
+    def rf_getedtmultichannel(self):
+        '''
+        Read the EDT channel plan (US915, AU915 and CN470; RWC5020B/M)
+
+        :Parameters: Query only
+
+        :return: It returns the setting; NAK on failure
+
+        '''
+        cmdGet = 'READ:RF:EDT_MULTI_CH?' + '\n'
+        result = RwcSerialSetup.transceive(self, cmdGet)
+        return result
+
+    def rf_setrxagc(self, value):
+        '''
+        Configure the RX AGC of the tester (NST RX only)
+
+        :param value: OFF, ON
+
+        :return: ACK on success, NAK on failure
+
+        '''
+        if value in ['OFF', 'ON']:
+            cmdSet = 'CONF:RF:RX_AGC ' + value + '\n'
+            result = RwcSerialSetup.transceive(self, cmdSet)
+            return result
+        else:
+            raise Exception('Invalid parameter received.')
+
+    def rf_getrxagc(self):
+        '''
+        Read the RX AGC of the tester (NST RX only)
+
+        :Parameters: Query only
+
+        :return: It returns the setting; NAK on failure
+
+        '''
+        cmdGet = 'READ:RF:RX_AGC?' + '\n'
+        result = RwcSerialSetup.transceive(self, cmdGet)
+        return result
+
     def rf_setuplinkchannel(self, ulchfreqrange, channel = None):
         '''
         Write uplink Channel n frequency in MHz;
@@ -2886,6 +2946,70 @@ class RWCTesterApi(RwcSerialSetup):
         result = RwcSerialSetup.transceive(self, cmdGetUplinkDwellTime)
         return result
 
+    def protocol_setdownlinkdwelltime(self, value):
+        '''
+        Configure the downlink dwell time
+
+        :param value: 400ms, NO_LIMIT
+
+        :return: ACK on success, NAK on failure
+
+        '''
+        if value in ['400ms', 'NO_LIMIT']:
+            cmdSet = 'CONF:PROTOCOL:DL_DWELL_TIME ' + value + '\n'
+            result = RwcSerialSetup.transceive(self, cmdSet)
+            return result
+        else:
+            raise Exception('Invalid parameter received.')
+
+    def protocol_setuplinkdwelltime(self, value):
+        '''
+        Configure the uplink dwell time
+
+        :param value: 400ms, NO_LIMIT
+
+        :return: ACK on success, NAK on failure
+
+        '''
+        if value in ['400ms', 'NO_LIMIT']:
+            cmdSet = 'CONF:PROTOCOL:UL_DWELL_TIME ' + value + '\n'
+            result = RwcSerialSetup.transceive(self, cmdSet)
+            return result
+        else:
+            raise Exception('Invalid parameter received.')
+
+    def protocol_setgenappkey(self, value):
+        '''
+        Configure the General Application Key
+
+        :param value: 16 bytes, as bytes or a hex string starting with
+                      0x; or an int, which is padded to 16 bytes
+
+        :return: ACK on success, NAK on failure
+
+        '''
+        cmdHexValue = _hexparam(value, 16)
+        if isinstance(value, int):
+            cmdHexValue = cmdHexValue.rjust(32, '0')
+        if len(cmdHexValue) != 32:
+            raise Exception('Invalid parameter received.')
+        cmdSet = 'CONF:PROTOCOL:GEN_APP_KEY ' + cmdHexValue + '\n'
+        result = RwcSerialSetup.transceive(self, cmdSet)
+        return result
+
+    def protocol_getgenappkey(self):
+        '''
+        Read the General Application Key
+
+        :Parameters: Query only
+
+        :return: It returns the key; NAK on failure
+
+        '''
+        cmdGet = 'READ:PROTOCOL:GEN_APP_KEY?' + '\n'
+        result = RwcSerialSetup.transceive(self, cmdGet)
+        return result
+
     def protocol_setlatitude(self, lat):
         '''
         Configure the latitude value in Beacon frame for Class B
@@ -4920,6 +5044,65 @@ class RWCTesterApi(RwcSerialSetup):
         '''
         cmdGetMsgData = 'READ:LINK:FOPTS?' + '\n'
         result = RwcSerialSetup.transceive(self, cmdGetMsgData)
+        return result
+
+    def link_setfoptspayloadsize(self, value):
+        '''
+        Configure the length in bytes of the user-defined payload sent with FOpts
+
+        :param value: 0 ~ 250
+
+        :return: ACK on success, NAK on failure
+
+        '''
+        cmdValue = int(value)
+        if cmdValue >= 0 and cmdValue <= 250:
+            cmdSet = 'CONF:LINK:FOPTS_PAYLOAD_SIZE ' + str(cmdValue) + '\n'
+            result = RwcSerialSetup.transceive(self, cmdSet)
+            return result
+        else:
+            raise Exception('Invalid parameter received.')
+
+    def link_getfoptspayloadsize(self):
+        '''
+        Read the length in bytes of the user-defined payload sent with FOpts
+
+        :Parameters: Query only
+
+        :return: It returns the value; NAK on failure
+
+        '''
+        cmdGet = 'READ:LINK:FOPTS_PAYLOAD_SIZE?' + '\n'
+        result = RwcSerialSetup.transceive(self, cmdGet)
+        return result
+
+    def link_setfoptspayload(self, value):
+        '''
+        Configure the user-defined payload sent with FOpts
+
+        :param value: 1 ~ 250 bytes, as bytes, a hex string starting
+                     with 0x, an int, or a decimal string. The length
+                     should match LINK:FOPTS_PAYLOAD_SIZE.
+
+        :return: ACK on success, NAK on failure
+
+        '''
+        cmdHexValue = _hexparam(value, 250)
+        cmdSetPayload = 'CONF:LINK:FOPTS_PAYLOAD ' + cmdHexValue + '\n'
+        result = RwcSerialSetup.transceive(self, cmdSetPayload)
+        return result
+
+    def link_getfoptspayload(self):
+        '''
+        Read the user-defined payload sent with FOpts
+
+        :Parameters: Query only
+
+        :return: It returns the payload data; NAK on failure
+
+        '''
+        cmdGetPayload = 'READ:LINK:FOPTS_PAYLOAD?' + '\n'
+        result = RwcSerialSetup.transceive(self, cmdGetPayload)
         return result
 
     def link_setbeaconfrequency(self, *args):
@@ -8827,6 +9010,20 @@ class RWCTesterApi(RwcSerialSetup):
         return result
 
     # NST Command Methods
+
+    def sensitivity_getperresult(self, index):
+        '''
+        Read the PER measured at one power step of the sensitivity test
+
+        :param index: power index
+
+        :return: It returns the PER value; NAK on failure
+
+        '''
+        cmdGet = 'READ:SENSITIVITY:PER_RESULT? ' + str(int(index)) + '\n'
+        result = RwcSerialSetup.transceive(self, cmdGet)
+        return result
+
     def nst_tx_run(self):
         '''
         Run the Signal Generator to transmit test packets to DUT
@@ -9436,6 +9633,35 @@ class RWCTesterApi(RwcSerialSetup):
         result = RwcSerialSetup.transceive(self, cmdGetTxPolarity)
         return result
 
+    def nst_tx_setimplicitheader(self, value):
+        '''
+        Configure the TX implicit header option
+
+        :param value: OFF, ON
+
+        :return: ACK on success, NAK on failure
+
+        '''
+        if value in ['OFF', 'ON']:
+            cmdSet = 'CONF:NST:TX:IMPLICIT_HEADER ' + value + '\n'
+            result = RwcSerialSetup.transceive(self, cmdSet)
+            return result
+        else:
+            raise Exception('Invalid parameter received.')
+
+    def nst_tx_getimplicitheader(self):
+        '''
+        Read the TX implicit header option
+
+        :Parameters: Query only
+
+        :return: It returns the setting; NAK on failure
+
+        '''
+        cmdGet = 'READ:NST:TX:IMPLICIT_HEADER?' + '\n'
+        result = RwcSerialSetup.transceive(self, cmdGet)
+        return result
+
     def nst_tx_setduttype(self, duttype):
         '''
         Configure the DUT Type for TX NST test 
@@ -9843,6 +10069,124 @@ class RWCTesterApi(RwcSerialSetup):
         '''
         cmdGetDatarate = 'READ:NST:RX:DATA_RATE?' + '\n'
         result = RwcSerialSetup.transceive(self, cmdGetDatarate)
+        return result
+
+    def nst_rx_setfcntavgn(self, value):
+        '''
+        Configure the running average number of frequency counter values
+
+        :param value: 1 ~ 10
+
+        :return: ACK on success, NAK on failure
+
+        '''
+        cmdValue = int(value)
+        if cmdValue >= 1 and cmdValue <= 10:
+            cmdSet = 'CONF:NST:RX:FCNT_AVG_N ' + str(cmdValue) + '\n'
+            result = RwcSerialSetup.transceive(self, cmdSet)
+            return result
+        else:
+            raise Exception('Invalid parameter received.')
+
+    def nst_rx_getfcntavgn(self):
+        '''
+        Read the running average number of frequency counter values
+
+        :Parameters: Query only
+
+        :return: It returns the value; NAK on failure
+
+        '''
+        cmdGet = 'READ:NST:RX:FCNT_AVG_N?' + '\n'
+        result = RwcSerialSetup.transceive(self, cmdGet)
+        return result
+
+    def nst_rx_setimplicitheader(self, value):
+        '''
+        Configure the RX implicit header option
+
+        :param value: OFF, ON
+
+        :return: ACK on success, NAK on failure
+
+        '''
+        if value in ['OFF', 'ON']:
+            cmdSet = 'CONF:NST:RX:IMPLICIT_HEADER ' + value + '\n'
+            result = RwcSerialSetup.transceive(self, cmdSet)
+            return result
+        else:
+            raise Exception('Invalid parameter received.')
+
+    def nst_rx_getimplicitheader(self):
+        '''
+        Read the RX implicit header option
+
+        :Parameters: Query only
+
+        :return: It returns the setting; NAK on failure
+
+        '''
+        cmdGet = 'READ:NST:RX:IMPLICIT_HEADER?' + '\n'
+        result = RwcSerialSetup.transceive(self, cmdGet)
+        return result
+
+    def nst_rx_setimplicitcr(self, value):
+        '''
+        Configure the RX implicit coding rate
+
+        :param value: 4_5, 4_6, 4_7, 4_8, NO_CRC
+
+        :return: ACK on success, NAK on failure
+
+        '''
+        if value in ['4_5', '4_6', '4_7', '4_8', 'NO_CRC']:
+            cmdSet = 'CONF:NST:RX:IMPLICIT_CR ' + value + '\n'
+            result = RwcSerialSetup.transceive(self, cmdSet)
+            return result
+        else:
+            raise Exception('Invalid parameter received.')
+
+    def nst_rx_getimplicitcr(self):
+        '''
+        Read the RX implicit coding rate
+
+        :Parameters: Query only
+
+        :return: It returns the setting; NAK on failure
+
+        '''
+        cmdGet = 'READ:NST:RX:IMPLICIT_CR?' + '\n'
+        result = RwcSerialSetup.transceive(self, cmdGet)
+        return result
+
+    def nst_rx_setimplicitpayloadsize(self, value):
+        '''
+        Configure the RX implicit payload size in bytes
+
+        :param value: 0 ~ 255
+
+        :return: ACK on success, NAK on failure
+
+        '''
+        cmdValue = int(value)
+        if cmdValue >= 0 and cmdValue <= 255:
+            cmdSet = 'CONF:NST:RX:IMPLICIT_PAYLOAD_SIZE ' + str(cmdValue) + '\n'
+            result = RwcSerialSetup.transceive(self, cmdSet)
+            return result
+        else:
+            raise Exception('Invalid parameter received.')
+
+    def nst_rx_getimplicitpayloadsize(self):
+        '''
+        Read the RX implicit payload size in bytes
+
+        :Parameters: Query only
+
+        :return: It returns the value; NAK on failure
+
+        '''
+        cmdGet = 'READ:NST:RX:IMPLICIT_PAYLOAD_SIZE?' + '\n'
+        result = RwcSerialSetup.transceive(self, cmdGet)
         return result
 
     def nst_rx_setsyncwordsize(self, sizevalue):
@@ -10987,6 +11331,75 @@ class RWCTesterApi(RwcSerialSetup):
         '''
         cmdGetKRCertiOptInfo = 'READ:SYSTEM:OPTION_CERTI_KR?' + '\n'
         result = RwcSerialSetup.transceive(self, cmdGetKRCertiOptInfo)
+        return result
+
+    def query_64choptinfo(self):
+        '''
+        Read the software option information about 64-CH capability
+
+        :Parameters: N/A (Query only)
+
+        :return: It returns the option info; NAK on failure
+
+        '''
+        cmdGet = 'READ:SYSTEM:OPTION_64_CH?' + '\n'
+        result = RwcSerialSetup.transceive(self, cmdGet)
+        return result
+
+    def query_aucertoptinfo(self):
+        '''
+        Read the software option information about Certification
+        test of AU915
+
+        :Parameters: N/A (Query only)
+
+        :return: It returns the option info; NAK on failure
+
+        '''
+        cmdGet = 'READ:SYSTEM:OPTION_CERTI_AU?' + '\n'
+        result = RwcSerialSetup.transceive(self, cmdGet)
+        return result
+
+    def query_rucertoptinfo(self):
+        '''
+        Read the software option information about Certification
+        test of RU864
+
+        :Parameters: N/A (Query only)
+
+        :return: It returns the option info; NAK on failure
+
+        '''
+        cmdGet = 'READ:SYSTEM:OPTION_CERTI_RU?' + '\n'
+        result = RwcSerialSetup.transceive(self, cmdGet)
+        return result
+
+    def query_ilcertoptinfo(self):
+        '''
+        Read the software option information about Certification
+        test of IL915
+
+        :Parameters: N/A (Query only)
+
+        :return: It returns the option info; NAK on failure
+
+        '''
+        cmdGet = 'READ:SYSTEM:OPTION_CERTI_IL?' + '\n'
+        result = RwcSerialSetup.transceive(self, cmdGet)
+        return result
+
+    def query_eu433certoptinfo(self):
+        '''
+        Read the software option information about Certification
+        test of EU433
+
+        :Parameters: N/A (Query only)
+
+        :return: It returns the option info; NAK on failure
+
+        '''
+        cmdGet = 'READ:SYSTEM:OPTION_CERTI_EU433?' + '\n'
+        result = RwcSerialSetup.transceive(self, cmdGet)
         return result
 
     def sys_setiptype(self, ipType):
