@@ -2926,7 +2926,7 @@ class RWCTesterApi(RwcSerialSetup):
 
         :param: Query only
 
-        :return: -
+        :return: '1' for 400ms, '0' for NO_LIMIT; NAK on failure
         
         '''
         cmdGetDownlinkDwellTime = 'READ:PROTOCOL:DL_DWELL_TIME?' + '\n'
@@ -2939,7 +2939,7 @@ class RWCTesterApi(RwcSerialSetup):
 
         :param: Query only
 
-        :return: -
+        :return: '1' for 400ms, '0' for NO_LIMIT; NAK on failure
         
         '''
         cmdGetUplinkDwellTime = 'READ:PROTOCOL:UL_DWELL_TIME?' + '\n'
@@ -5095,6 +5095,9 @@ class RWCTesterApi(RwcSerialSetup):
     def link_getfoptspayload(self):
         '''
         Read the user-defined payload sent with FOpts
+
+        On firmware 1.500 the tester answers NAK, even after
+        link_setfoptspayload() has set a payload.
 
         :Parameters: Query only
 

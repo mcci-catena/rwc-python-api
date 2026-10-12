@@ -68,11 +68,15 @@ Example scripts showing how to use the library can be found in the [`examples`](
 
 ## Support
 
-The Python library supports RWC5020x firmware from v1.150 on. v1.0.5 to v1.0.9 were tested with an RWC5020B running firmware v1.500.
+The Python library supports RWC5020x firmware from v1.150 on. v1.0.5 to v1.1.0 were tested with an RWC5020B running firmware v1.500.
 
 The library logs each command and response through Python's `logging` module, under the logger `rwclib.cRWCSerialSetup`. To see them, configure logging in your script, for example `logging.basicConfig(level=logging.INFO)`.
 
 ## Release History
+
+- v1.1.0 has the following changes:
+  - Part of [#18](https://github.com/mcci-catena/rwc-python-api/issues/18): methods for commands in the v1.500 manual that the library lacked: EDT channel plan, RX AGC, NST implicit header, coding rate and payload size, NST frame-count averaging, FOpts user payload and its size, uplink and downlink dwell time, general application key, sensitivity PER result by index, and the 64-channel and AU, RU, IL and EU433 certification option queries.
+  - On firmware v1.500, `link_getfoptspayload()` gets NAK even after `link_setfoptspayload()` has set a payload. The dwell-time getters return `1` for 400ms and `0` for NO_LIMIT.
 
 - v1.0.9 has the following changes:
   - Part of [#18](https://github.com/mcci-catena/rwc-python-api/issues/18): `sensitivity_setrx2frequency()` works (it was a stub); uplink and downlink channel methods take an optional channel number; firmware version checks use numeric ranges instead of lists, and fail with a clear error if the tester doesn't report its version.
