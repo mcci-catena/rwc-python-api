@@ -68,11 +68,15 @@ Example scripts showing how to use the library can be found in the [`examples`](
 
 ## Support
 
-The Python library supports RWC5020x firmware from v1.150 on. v1.0.5 was tested with an RWC5020B running firmware v1.500.
+The Python library supports RWC5020x firmware from v1.150 on. v1.0.5 and v1.0.6 were tested with an RWC5020B running firmware v1.500.
 
 The library logs each command and response through Python's `logging` module, under the logger `rwclib.cRWCSerialSetup`. To see them, configure logging in your script, for example `logging.basicConfig(level=logging.INFO)`.
 
 ## Release History
+
+- v1.0.6 has the following changes:
+  - All six RF frequency setters send the frequency to 1 Hz. v1.0.5 kept only 6 significant digits in `rf_setfrequency()` and `rf_settxfrequency()` (865.0625 MHz went out as 865.062), and the other four truncated to whole MHz.
+  - Over Ethernet, `transceive()` discards replies that arrive after a timeout, so they no longer shift every later reply by one. The timeout is 15 s; `CONF:RF:RX_FREQ` takes about 5.5 s.
 
 - v1.0.5 has the following changes:
   - Fix [#14](https://github.com/mcci-catena/rwc-python-api/issues/14): commands that failed on firmware v1.500. Data-rate setters accept any firmware from v1.170 on; frequency setters accept fractional MHz; `nst_tx_setpayloadsize()` sends the NST command; `nst_tx_setpayload()` and the sync-word setters take bytes or hex strings; NST getters use `READ:` queries.
