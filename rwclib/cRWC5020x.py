@@ -789,14 +789,18 @@ class RWCTesterApi(RwcSerialSetup):
         '''
         Configure the EDT channel plan (US915, AU915 and CN470; RWC5020B/M).
         8-CH or 64-CH for US/AU; 8-CH or 96-CH for CN;
-        8-CH, 32-CH_GROUP1 or 32-CH_GROUP2 for CN-20A
+        8-CH, 32-CH_GROUP1 or 32-CH_GROUP2 for CN-20A. Firmware v1.510
+        added a 16-channel option; the tester NAKs 16-CH without it.
 
-        :param value: 8-CH, 64-CH, 96-CH, 32-CH_GROUP1, 32-CH_GROUP2
+        :param value: 8-CH, 16-CH, 64-CH, 96-CH, 32-CH_GROUP1, 32-CH_GROUP2
 
         :return: ACK on success, NAK on failure
 
         '''
-        if value in ['8-CH', '64-CH', '96-CH', '32-CH_GROUP1', '32-CH_GROUP2']:
+        if value in ['8-CH', '16-CH', '64-CH', '96-CH', '32-CH_GROUP1',
+                     '32-CH_GROUP2']:
+            if value == '16-CH':
+                self.require_swversion(since = 1.510)
             cmdSet = 'CONF:RF:EDT_MULTI_CH ' + value + '\n'
             result = RwcSerialSetup.transceive(self, cmdSet)
             return result
@@ -2946,6 +2950,38 @@ class RWCTesterApi(RwcSerialSetup):
         result = RwcSerialSetup.transceive(self, cmdGetUplinkDwellTime)
         return result
 
+    def protocol_setrelaymode(self, value):
+        '''
+        Configure end-device-under-relay test mode in EDT; firmware
+        v1.600 and later. With ON, the tester answers the DUT's WOR
+        messages as a relay would.
+
+        :param value: ON, OFF
+
+        :return: ACK on success, NAK on failure
+
+        '''
+        if value not in ['ON', 'OFF']:
+            raise Exception('Invalid parameter received.')
+        self.require_swversion(since = 1.600)
+        cmdSet = 'CONF:PROTOCOL:RELAY_MODE ' + value + '\n'
+        result = RwcSerialSetup.transceive(self, cmdSet)
+        return result
+
+    def protocol_getrelaymode(self):
+        '''
+        Read end-device-under-relay test mode; firmware v1.600 and later
+
+        :Parameters: Query only
+
+        :return: ON or OFF; NAK on failure
+
+        '''
+        self.require_swversion(since = 1.600)
+        cmdGet = 'READ:PROTOCOL:RELAY_MODE?' + '\n'
+        result = RwcSerialSetup.transceive(self, cmdGet)
+        return result
+
     def protocol_setdownlinkdwelltime(self, value):
         '''
         Configure the downlink dwell time
@@ -4362,6 +4398,9 @@ class RWCTesterApi(RwcSerialSetup):
         '''
         Configure CH_MASK value for optional DR for LinkADRReq. Only one
         channel (bit) can be enabled.
+        Firmware v1.500 answers CONF/READ:LINK:ADR_CH_MASK_OPT; v1.604
+        answers NAK, and its release notes don't say why. Versions
+        between are not checked.
 
         :param value: 0x01 ~ 0x80
         :param macnum: MAC Command Number; firmware v1.200 and later
@@ -4374,7 +4413,7 @@ class RWCTesterApi(RwcSerialSetup):
         cmdValue = int(value)
         if (cmdValue >= 1 and cmdValue <= 2**7):
             cmdHexValue = hex(cmdValue)
-            if self.swversion_number() >= 1.200:
+            if self.require_swversion(before = 1.604) >= 1.200:
                 cmdSetAdrChMaskOptDr = 'CONF:LINK:ADR_CH_MASK_OPT ' \
                 + str(macnum) + ' ' + cmdHexValue + '\n'
             else:
@@ -4389,13 +4428,16 @@ class RWCTesterApi(RwcSerialSetup):
     def link_getadrchmask_optdr(self, macnum = 1):
         '''
         Read CH_MASK value for optional DR for LinkADRReq
+        Firmware v1.500 answers CONF/READ:LINK:ADR_CH_MASK_OPT; v1.604
+        answers NAK, and its release notes don't say why. Versions
+        between are not checked.
 
         :param macnum: MAC Command Number; firmware v1.200 and later
 
         :return: It returns CH_MASK value; NAK on failure
 
         '''
-        if self.swversion_number() >= 1.200:
+        if self.require_swversion(before = 1.604) >= 1.200:
             cmdGetAdrChMaskOptDr = 'READ:LINK:ADR_CH_MASK_OPT? ' \
                                     + str(macnum) + '\n'
         else:
@@ -5022,13 +5064,23 @@ class RWCTesterApi(RwcSerialSetup):
         Configure the Message data of user-defined FOpts field
 
         :param value: 1 ~ 15 bytes, as bytes, a hex string starting
-                     with 0x, an int, or a decimal string. The length should match
-                     LINK:FOPTS_SIZE.
+                     with 0x, an int, or a decimal string. The length must
+                     match LINK:FOPTS_SIZE; this method checks, because
+                     the tester accepts a shorter value and keeps the old
+                     bytes after it.
 
         :return: ACK on success, NAK on failure
 
         '''
         cmdHexValue = _hexparam(value, 15)
+        size = self.link_getfoptssize()
+        try:
+            size = int(size)
+        except (TypeError, ValueError):
+            raise Exception('Cannot read FOPTS_SIZE: {!r}'.format(size))
+        if len(cmdHexValue) != 2 * size:
+            raise Exception('FOpts value is {} bytes; FOPTS_SIZE is {}'
+                            .format(len(cmdHexValue) // 2, size))
         cmdSetPayload = 'CONF:LINK:FOPTS ' + cmdHexValue + '\n'
         result = RwcSerialSetup.transceive(self, cmdSetPayload)
         return result
@@ -9226,13 +9278,16 @@ class RWCTesterApi(RwcSerialSetup):
         '''
         Configure the Spreading Factor of LoRa TX frame
 
-        :param index: SF7, SF8, SF9, SF10, SF11, SF12
+        :param index: SF7, SF8, SF9, SF10, SF11, SF12; SF5 and SF6 on
+                      firmware v1.520 and later
 
         :return: ACK on success, NAK on failure
         
         '''
-        sflist = ['SF7', 'SF8', 'SF9', 'SF10', 'SF11', 'SF12']
+        sflist = ['SF5', 'SF6', 'SF7', 'SF8', 'SF9', 'SF10', 'SF11', 'SF12']
         if index in sflist:
+            if index in ['SF5', 'SF6']:
+                self.require_swversion(since = 1.520)
             cmdSetTxSf = 'CONF:NST:TX:SF ' + index + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetTxSf)
             return result
@@ -9256,12 +9311,16 @@ class RWCTesterApi(RwcSerialSetup):
         '''
         Configure the Coding Rate of LoRa TX frame
 
-        :param codingrate: 4_5, 4_6, 4_7, 4_8, NO_CRC
+        :param codingrate: 4_5, 4_6, 4_7, 4_8; NO_CRC before firmware
+                           v1.520, which made CRC a separate setting
+                           (nst_tx_setcrc())
 
         :return: ACK on success, NAK on failure
         
         '''
         cmdTxCodingRate = codingrate
+        if cmdTxCodingRate == 'NO_CRC':
+            self.require_swversion(before = 1.520)
         if cmdTxCodingRate == '4_5':
             cmdSetTxCodingRate = 'CONF:NST:TX:CR 4_5' + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetTxCodingRate)
@@ -9296,6 +9355,37 @@ class RWCTesterApi(RwcSerialSetup):
         '''
         cmdGetTxCodingRate = 'READ:NST:TX:CR?' + '\n'
         result = RwcSerialSetup.transceive(self, cmdGetTxCodingRate)
+        return result
+
+    def nst_tx_setcrc(self, value):
+        '''
+        Configure the CRC of LoRa TX frame; firmware v1.520 and later,
+        which separated CRC from the coding rate
+
+        :param value: ON, OFF
+
+        :return: ACK on success, NAK on failure
+
+        '''
+        if value not in ['ON', 'OFF']:
+            raise Exception('Invalid parameter received.')
+        self.require_swversion(since = 1.520)
+        cmdSet = 'CONF:NST:TX:CRC ' + value + '\n'
+        result = RwcSerialSetup.transceive(self, cmdSet)
+        return result
+
+    def nst_tx_getcrc(self):
+        '''
+        Read the CRC setting of LoRa TX frame; firmware v1.520 and later
+
+        :Parameters: Query only
+
+        :return: ON or OFF; NAK on failure
+
+        '''
+        self.require_swversion(since = 1.520)
+        cmdGet = 'READ:NST:TX:CRC?' + '\n'
+        result = RwcSerialSetup.transceive(self, cmdGet)
         return result
 
     def nst_tx_setpreamblesize(self, preamblesize):
@@ -9813,13 +9903,16 @@ class RWCTesterApi(RwcSerialSetup):
         '''
         Configure the Spreading Factor of LoRa RX frame
 
-        :param index: SF7, SF8, SF9, SF10, SF11, SF12
+        :param index: SF7, SF8, SF9, SF10, SF11, SF12, ANY; SF5 and SF6
+                      on firmware v1.520 and later
 
         :return: ACK on success, NAK on failure
         
         '''
         #cmdSfIndex = int(index)
         sflist = [
+            'SF5',
+            'SF6',
             'SF7', 
             'SF8', 
             'SF9', 
@@ -9828,6 +9921,8 @@ class RWCTesterApi(RwcSerialSetup):
             'SF12', 
             'ANY']
         if index in sflist:
+            if index in ['SF5', 'SF6']:
+                self.require_swversion(since = 1.520)
             cmdSetRxSf = 'CONF:NST:RX:SF ' + index + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetRxSf)
             return result
@@ -9922,12 +10017,18 @@ class RWCTesterApi(RwcSerialSetup):
         '''
         Configure the Coding Rate of LoRa RX frame
 
+        Before firmware v1.520 only. On v1.604, CONF:NST:RX:CR takes
+        ON or OFF and sets the same thing as CONF:NST:RX:CRC; use
+        nst_rx_setcrc().
+
         :param codingrate: 4_5, 4_6, 4_7, 4_8, NO_CRC
 
         :return: ACK on success, NAK on failure
         
         '''
         cmdRxCodingRate = codingrate
+        if cmdRxCodingRate in ['4_5', '4_6', '4_7', '4_8', 'NO_CRC']:
+            self.require_swversion(before = 1.520)
         if cmdRxCodingRate == '4_5':
             cmdSetRxCodingRate = 'CONF:NST:RX:CR 4_5' + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetRxCodingRate)
@@ -9957,11 +10058,43 @@ class RWCTesterApi(RwcSerialSetup):
 
         :Parameters: Query only
 
-        :return: It returns RX Coding rate; NAK on failure
+        :return: It returns RX Coding rate; NAK on failure. On firmware
+                 v1.604 it returns ON or OFF, the RX CRC setting.
         
         '''
         cmdGetRxCodingRate = 'READ:NST:RX:CR?' + '\n'
         result = RwcSerialSetup.transceive(self, cmdGetRxCodingRate)
+        return result
+
+    def nst_rx_setcrc(self, value):
+        '''
+        Configure the CRC of LoRa RX frame; firmware v1.520 and later,
+        which separated CRC from the coding rate
+
+        :param value: ON, OFF
+
+        :return: ACK on success, NAK on failure
+
+        '''
+        if value not in ['ON', 'OFF']:
+            raise Exception('Invalid parameter received.')
+        self.require_swversion(since = 1.520)
+        cmdSet = 'CONF:NST:RX:CRC ' + value + '\n'
+        result = RwcSerialSetup.transceive(self, cmdSet)
+        return result
+
+    def nst_rx_getcrc(self):
+        '''
+        Read the CRC setting of LoRa RX frame; firmware v1.520 and later
+
+        :Parameters: Query only
+
+        :return: ON or OFF; NAK on failure
+
+        '''
+        self.require_swversion(since = 1.520)
+        cmdGet = 'READ:NST:RX:CRC?' + '\n'
+        result = RwcSerialSetup.transceive(self, cmdGet)
         return result
 
     def nst_rx_getnumofpkts_dut(self):
@@ -10137,12 +10270,16 @@ class RWCTesterApi(RwcSerialSetup):
         '''
         Configure the RX implicit coding rate
 
-        :param value: 4_5, 4_6, 4_7, 4_8, NO_CRC
+        :param value: 4_5, 4_6, 4_7, 4_8; NO_CRC before firmware v1.520,
+                      which made CRC a separate setting
+                      (nst_rx_setimplicitcrc())
 
         :return: ACK on success, NAK on failure
 
         '''
         if value in ['4_5', '4_6', '4_7', '4_8', 'NO_CRC']:
+            if value == 'NO_CRC':
+                self.require_swversion(before = 1.520)
             cmdSet = 'CONF:NST:RX:IMPLICIT_CR ' + value + '\n'
             result = RwcSerialSetup.transceive(self, cmdSet)
             return result
@@ -10159,6 +10296,36 @@ class RWCTesterApi(RwcSerialSetup):
 
         '''
         cmdGet = 'READ:NST:RX:IMPLICIT_CR?' + '\n'
+        result = RwcSerialSetup.transceive(self, cmdGet)
+        return result
+
+    def nst_rx_setimplicitcrc(self, value):
+        '''
+        Configure the RX implicit CRC; firmware v1.520 and later
+
+        :param value: ON, OFF
+
+        :return: ACK on success, NAK on failure
+
+        '''
+        if value not in ['ON', 'OFF']:
+            raise Exception('Invalid parameter received.')
+        self.require_swversion(since = 1.520)
+        cmdSet = 'CONF:NST:RX:IMPLICIT_CRC ' + value + '\n'
+        result = RwcSerialSetup.transceive(self, cmdSet)
+        return result
+
+    def nst_rx_getimplicitcrc(self):
+        '''
+        Read the RX implicit CRC; firmware v1.520 and later
+
+        :Parameters: Query only
+
+        :return: ON or OFF; NAK on failure
+
+        '''
+        self.require_swversion(since = 1.520)
+        cmdGet = 'READ:NST:RX:IMPLICIT_CRC?' + '\n'
         result = RwcSerialSetup.transceive(self, cmdGet)
         return result
 
@@ -10646,12 +10813,15 @@ class RWCTesterApi(RwcSerialSetup):
         '''
         Configure the Spreading Factor of LoRa TX frame in MFG test
 
-        :param index: SF7 ~ SF12, ANY
+        :param index: SF7 ~ SF12, ANY; SF5 and SF6 on firmware v1.520
+                      and later
 
         :return: ACK on success, NAK on failure
         
         '''
         sflist = [
+            'SF5',
+            'SF6',
             'SF7', 
             'SF8', 
             'SF9', 
@@ -10660,6 +10830,8 @@ class RWCTesterApi(RwcSerialSetup):
             'SF12', 
             'ANY']
         if index in sflist:
+            if index in ['SF5', 'SF6']:
+                self.require_swversion(since = 1.520)
             cmdSetMfgSf = 'CONF:NST:MFG:SF ' + index + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetMfgSf)
             return result
@@ -10683,12 +10855,16 @@ class RWCTesterApi(RwcSerialSetup):
         '''
         Configure the Coding Rate of LoRa TX frame in MFG test
 
-        :param codingrate: 4_5, 4_6, 4_7, 4_8, NO_CRC
+        :param codingrate: 4_5, 4_6, 4_7, 4_8; NO_CRC before firmware
+                           v1.520, which made CRC a separate setting
+                           (nst_mfg_setcrc())
 
         :return: ACK on success, NAK on failure
         
         '''
         cmdMfgCodingRate = codingrate
+        if cmdMfgCodingRate == 'NO_CRC':
+            self.require_swversion(before = 1.520)
         if cmdMfgCodingRate == '4_5':
             cmdSetMfgCodingRate = 'CONF:NST:MFG:CR 4_5' + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetMfgCodingRate)
@@ -10723,6 +10899,37 @@ class RWCTesterApi(RwcSerialSetup):
         '''
         cmdGetMfgCodingRate = 'READ:NST:MFG:CR?' + '\n'
         result = RwcSerialSetup.transceive(self, cmdGetMfgCodingRate)
+        return result
+
+    def nst_mfg_setcrc(self, value):
+        '''
+        Configure the CRC of LoRa TX frame in MFG test; firmware v1.520 and later,
+        which separated CRC from the coding rate
+
+        :param value: ON, OFF
+
+        :return: ACK on success, NAK on failure
+
+        '''
+        if value not in ['ON', 'OFF']:
+            raise Exception('Invalid parameter received.')
+        self.require_swversion(since = 1.520)
+        cmdSet = 'CONF:NST:MFG:CRC ' + value + '\n'
+        result = RwcSerialSetup.transceive(self, cmdSet)
+        return result
+
+    def nst_mfg_getcrc(self):
+        '''
+        Read the CRC setting of LoRa TX frame in MFG test; firmware v1.520 and later
+
+        :Parameters: Query only
+
+        :return: ON or OFF; NAK on failure
+
+        '''
+        self.require_swversion(since = 1.520)
+        cmdGet = 'READ:NST:MFG:CRC?' + '\n'
+        result = RwcSerialSetup.transceive(self, cmdGet)
         return result
 
     def nst_mfg_setpayloadsize(self, length):
@@ -11380,14 +11587,31 @@ class RWCTesterApi(RwcSerialSetup):
     def query_ilcertoptinfo(self):
         '''
         Read the software option information about Certification
-        test of IL915
+        test of IL915. Firmware v1.330 removed the IL-917 region; v1.500
+        still answers this query, v1.604 answers NAK. Versions between
+        are not checked.
 
         :Parameters: N/A (Query only)
 
         :return: It returns the option info; NAK on failure
 
         '''
+        self.require_swversion(before = 1.604)
         cmdGet = 'READ:SYSTEM:OPTION_CERTI_IL?' + '\n'
+        result = RwcSerialSetup.transceive(self, cmdGet)
+        return result
+
+    def query_incertoptinfo(self):
+        '''
+        Read the software option information about Certification
+        test of IN865. Not in the v1.500 manual; v1.604 answers it.
+
+        :Parameters: N/A (Query only)
+
+        :return: It returns the option info; NAK on failure
+
+        '''
+        cmdGet = 'READ:SYSTEM:OPTION_CERTI_IN?' + '\n'
         result = RwcSerialSetup.transceive(self, cmdGet)
         return result
 
