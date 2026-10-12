@@ -9135,12 +9135,14 @@ class RWCTesterApi(RwcSerialSetup):
         '''
         Configure the Payload size of LoRa TX frame
 
-        :param length: 8 ~ 256
+        :param length: 1 ~ 250. The v1.500 manual says 8 ~ 256, but
+                       firmware v1.500 NAKs sizes above 250 and
+                       accepts 7.
 
         :return: ACK on success, NAK on failure
         
         '''
-        if length >= 8 and length <= 256:
+        if length >= 1 and length <= 250:
             cmdMsgLength = str(length)
             cmdSetMsgLength = 'CONF:NST:TX:PAYLOAD_SIZE ' \
                                 + cmdMsgLength + '\n'
@@ -9168,13 +9170,13 @@ class RWCTesterApi(RwcSerialSetup):
         the payload size (nst_tx_setpayloadsize); the tester NAKs
         anything else.
 
-        :param data: 1 ~ 256 bytes, as bytes, a hex string (with or
+        :param data: 1 ~ 250 bytes, as bytes, a hex string (with or
                      without 0x), or an int
 
         :return: ACK on success, NAK on failure
         
         '''
-        cmdHexValue = _hexparam(data, 256)
+        cmdHexValue = _hexparam(data, 250)
         cmdSetPayload = 'CONF:NST:TX:PAYLOAD ' + cmdHexValue + '\n'
         result = RwcSerialSetup.transceive(self, cmdSetPayload)
         return result
