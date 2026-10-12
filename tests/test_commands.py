@@ -225,3 +225,55 @@ def test_syncword(rwc):
     rwc.nst_rx_setsyncword(0xC194C1)
     assert sent(rwc) == ['CONF:NST:TX:SYNC_WORD 0x0000000000C194C1\n',
                          'CONF:NST:RX:SYNC_WORD 0x0000000000C194C1\n']
+
+
+# step 3 of #18: other defects
+
+def test_sensitivity_rx2frequency(rwc):
+    rwc.sensitivity_setrx2frequency(869.525)
+    assert sent(rwc) == ['CONF:SENSITIVITY:RX2_FREQ 869.525000\n']
+    with pytest.raises(Exception):
+        rwc.sensitivity_setrx2frequency(869525000)
+
+
+def test_channel_numbers(rwc):
+    rwc.rf_getuplinkchannel()
+    rwc.rf_getuplinkchannel(3)
+    rwc.rf_getdownlinkchannel(1)
+    rwc.rf_setuplinkchannel(868.1)
+    rwc.rf_setuplinkchannel(867.1, 3)
+    assert sent(rwc) == ['READ:RF:UL_CH?\n',
+                         'READ:RF:UL_CH? 3\n',
+                         'READ:RF:DL_CH? 1\n',
+                         'CONF:RF:UL_CH 868.100000\n',
+                         'CONF:RF:UL_CH 3 867.100000\n']
+
+
+@pytest.mark.parametrize('version, ok', [
+    ('1.150', True), ('1.210', True), ('1.215', True),
+    ('1.220', False), ('1.500', False)])
+def test_version_range_dut_type(monkeypatch, version, ok):
+    # nst_tx_getduttype() is for firmware 1.150 up to 1.220
+    fake = FakeTester(version)
+    monkeypatch.setattr(RwcSerialSetup, 'transceive',
+                        lambda api, cmd, sec = 0: fake.transceive(api, cmd, sec))
+    api = RWCTesterApi('5001', '192.0.2.1')
+    if ok:
+        api.nst_tx_getduttype()
+        assert fake.sent == ['READ:NST:TX:DUT_TYPE?\n']
+    else:
+        with pytest.raises(Exception, match = 'not supported'):
+            api.nst_tx_getduttype()
+        assert fake.sent == []
+
+
+@pytest.mark.parametrize('rwc', ['1.160'], indirect = True)
+def test_old_datarate_names(rwc):
+    rwc.protocol_setrx2_dr('DR_3')
+    assert sent(rwc) == ['CONF:PROTOCOL:RX2_DR DR_3\n']
+
+
+@pytest.mark.parametrize('rwc', ['NAK'], indirect = True)
+def test_float_version_sites_unreadable(rwc):
+    with pytest.raises(Exception, match = 'Cannot read tester firmware version'):
+        rwc.nst_tx_setinterval(1)
