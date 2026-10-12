@@ -129,3 +129,77 @@ def test_adr_index1_unaffected(rwc):
 def test_version_unreadable(rwc):
     with pytest.raises(Exception, match = 'Cannot read tester firmware version'):
         rwc.protocol_getclaamode()
+
+
+# step 2 of #18: parameters and ranges
+
+@pytest.mark.parametrize('name, sent_name', [
+    ('AU_915', 'AU_915'), ('AU_921', 'AU_915'), ('KR_922', 'KR_920'),
+    ('IN_866', 'IN_865'), ('RU_864', 'RU_864')])
+def test_region(rwc, name, sent_name):
+    rwc.protocol_setregion(name)
+    assert sent(rwc) == ['CONF:PROTOCOL:REGION ' + sent_name + '\n']
+
+
+def test_operator(rwc):
+    rwc.protocol_setoperator('ICA')
+    assert sent(rwc) == ['CONF:PROTOCOL:OPERATOR ICA\n']
+
+
+@pytest.mark.parametrize('call', [
+    lambda r: r.protocol_setregion('XX_000'),
+    lambda r: r.protocol_setoperator('TTN'),
+    lambda r: r.sensitivity_settargetpower(0.6),
+    lambda r: r.power_setminyvalue(-81),
+    lambda r: r.power_setminyvalue(31),
+    lambda r: r.rf_settxpower(1),
+    lambda r: r.link_setfopts(bytes(16)),
+    lambda r: r.sensitivity_setpayload(bytes(129)),
+    lambda r: r.link_setpayload(bytes(251)),
+    lambda r: r.power_getavgdutpower_ch(96),
+    ])
+def test_out_of_range(rwc, call):
+    with pytest.raises(Exception):
+        call(rwc)
+    assert sent(rwc) == []
+
+
+def test_ranges_accepted(rwc):
+    rwc.sensitivity_settargetpower(0.5)
+    rwc.power_setminyvalue(-80)
+    rwc.link_setfragemntpadding(0)
+    rwc.rf_settxpower(0)
+    rwc.nst_mfg_setinterval(0.01)
+    assert sent(rwc) == ['CONF:SENSITIVITY:TARGET_PER 0.5\n',
+                         'CONF:POWER:MIN_Y -80\n',
+                         'CONF:LINK:FRAG_PADDING 0\n',
+                         'CONF:RF:TX_POW 0\n',
+                         'CONF:NST:MFG:PACKET_INTERVAL 0.01\n']
+
+
+def test_payload_setters_keep_leading_zeros(rwc):
+    rwc.link_setpayload('000102')
+    rwc.link_setechopayload(1, bytes([0, 1, 2]))
+    rwc.link_setfopts('0x0001')
+    rwc.sensitivity_setpayload(bytes(range(16)))
+    rwc.nst_mfg_setpayload('00ff')
+    assert sent(rwc) == ['CONF:LINK:PAYLOAD 000102\n',
+                         'CONF:LINK:ECHO_PAYLOAD 1 000102\n',
+                         'CONF:LINK:FOPTS 0001\n',
+                         'CONF:SENSITIVITY:PAYLOAD 000102030405060708090A0B0C0D0E0F\n',
+                         'CONF:NST:MFG:PAYLOAD 00FF\n']
+
+
+def test_power_per_channel(rwc):
+    rwc.power_getnumofpkts_dut_ch(7)
+    rwc.power_getavgdutpower_ch(8)
+    rwc.power_getmindutpower_ch(63)
+    assert sent(rwc) == ['READ:POWER:CH_7:NUM?\n',
+                         'READ:POWER:CH:AVG? 8\n',
+                         'READ:POWER:CH:MIN? 63\n']
+
+
+@pytest.mark.parametrize('rwc', ['1.310'], indirect = True)
+def test_power_per_channel_old_firmware(rwc):
+    with pytest.raises(Exception, match = 'not supported'):
+        rwc.power_getmaxdutpower_ch(8)

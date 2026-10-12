@@ -450,13 +450,14 @@ class RWCTesterApi(RwcSerialSetup):
         '''
         Configure TX POWER in dBm
 
-        :param txpow: TX Power value (-10 ~ -150)
+        :param txpow: TX Power in dBm: -150 ~ -10 (RWC5020A),
+                      -150 ~ 0 (RWC5020B/M), -30 ~ 0 (P)
 
         :return: ACK on success, NAK on failure
 
         '''
         txpownum = int(txpow)
-        if (txpownum >= -150 and txpownum <= 10):
+        if (txpownum >= -150 and txpownum <= 0):
             cmdTxPowerRange = str(txpownum)
             cmdSetTxPower = 'CONF:RF:TX_POW ' + cmdTxPowerRange + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetTxPower)
@@ -1272,51 +1273,25 @@ class RWCTesterApi(RwcSerialSetup):
         '''
         Configure an operating Region of RWC5020A
 
-        :param region: EU_868, EU_433, US_915, AU_921, CN_470, KR_922, 
-                       AS_923, IN_866
+        :param region: EU_868, EU_433, US_915, AU_915, CN_470, KR_920,
+                       AS_923, IN_865, RU_864. The names AU_921, KR_922
+                       and IN_866 used by firmware before v1.14 are
+                       accepted and sent as the current names.
 
         :return: ACK on success, NAK on failure
         
         '''
-        cmdRegion = region
-        if cmdRegion == 'EU_868':
-            cmdSetRegion = 'CONF:PROTOCOL:REGION EU_868' + '\n'
-            result = RwcSerialSetup.transceive(self, cmdSetRegion)
-            return result
-        elif cmdRegion == 'EU_433':
-            cmdSetRegion = 'CONF:PROTOCOL:REGION EU_433' + '\n'
-            result = RwcSerialSetup.transceive(self, cmdSetRegion)
-            return result
-        elif cmdRegion == 'US_915':
-            cmdSetRegion = 'CONF:PROTOCOL:REGION US_915' + '\n'
-            result = RwcSerialSetup.transceive(self, cmdSetRegion)
-            return result
-        elif cmdRegion == 'AU_921':
-            cmdSetRegion = 'CONF:PROTOCOL:REGION AU_921' + '\n'
-            result = RwcSerialSetup.transceive(self, cmdSetRegion)
-            return result
-        elif cmdRegion == 'CN_470':
-            cmdSetRegion = 'CONF:PROTOCOL:REGION CN_470' + '\n'
-            result = RwcSerialSetup.transceive(self, cmdSetRegion)
-            return result
-        elif cmdRegion == 'KR_922':
-            cmdSetRegion = 'CONF:PROTOCOL:REGION KR_922' + '\n'
-            result = RwcSerialSetup.transceive(self, cmdSetRegion)
-            return result
-        elif cmdRegion == 'AS_923':
-            cmdSetRegion = 'CONF:PROTOCOL:REGION AS_923' + '\n'
-            result = RwcSerialSetup.transceive(self, cmdSetRegion)
-            return result
-        elif cmdRegion == 'IN_866':
-            cmdSetRegion = 'CONF:PROTOCOL:REGION IN_866' + '\n'
-            result = RwcSerialSetup.transceive(self, cmdSetRegion)
-            return result
-        elif cmdRegion == 'RU_864':
-            cmdSetRegion = 'CONF:PROTOCOL:REGION RU_864' + '\n'
+        regionlist = ['EU_868', 'EU_433', 'US_915', 'AU_915', 'CN_470',
+                      'KR_920', 'AS_923', 'IN_865', 'RU_864']
+        oldnames = {'AU_921': 'AU_915', 'KR_922': 'KR_920',
+                    'IN_866': 'IN_865'}
+        cmdRegion = oldnames.get(region, region)
+        if cmdRegion in regionlist:
+            cmdSetRegion = 'CONF:PROTOCOL:REGION ' + cmdRegion + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetRegion)
             return result
         else:
-            raise Exception('Invalid parameter received.')          
+            raise Exception('Invalid parameter received.')
 
     def protocol_getregion(self):
         '''
@@ -1333,20 +1308,15 @@ class RWCTesterApi(RwcSerialSetup):
 
     def protocol_setoperator(self, serviceop):
         '''
-        Configure the LoRa service operator in case of KR_922
+        Configure the LoRa service operator for KR_920 or CN_470
 
-        :param serviceop: LoRaWAN, SKT
+        :param serviceop: LoRaWAN; SKT (KR_920); ICA (CN_470)
 
         :return: ACK on success, NAK on failure
         
         '''
-        cmdServiceOperator = serviceop
-        if cmdServiceOperator == 'LoRaWAN':
-            cmdSetOperator = 'CONF:PROTOCOL:OPERATOR LoRaWAN' + '\n'
-            result = RwcSerialSetup.transceive(self, cmdSetOperator)
-            return result
-        elif cmdServiceOperator == 'SKT':
-            cmdSetOperator = 'CONF:PROTOCOL:OPERATOR SKT' + '\n'
+        if serviceop in ['LoRaWAN', 'SKT', 'ICA']:
+            cmdSetOperator = 'CONF:PROTOCOL:OPERATOR ' + serviceop + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetOperator)
             return result
         else:
@@ -4840,19 +4810,17 @@ class RWCTesterApi(RwcSerialSetup):
         '''
         Configure the Message data of user-defined MAC command
 
-        :param value: 250-byte HEX value
+        :param value: 1 ~ 250 bytes, as bytes, a hex string (with or
+                     without 0x), or an int. The length should match
+                     LINK:PAYLOAD_SIZE.
 
         :return: ACK on success, NAK on failure
-        
+
         '''
-        cmdValue = int(value)
-        if (cmdValue >= 0 and cmdValue <= 2**250 -1) :
-            cmdHexValue = hex(cmdValue)
-            cmdSetPayload = 'CONF:LINK:PAYLOAD ' + cmdHexValue + '\n'
-            result = RwcSerialSetup.transceive(self, cmdSetPayload)
-            return result
-        else:
-            raise Exception('Invalid parameter received.')
+        cmdHexValue = _hexparam(value, 250)
+        cmdSetPayload = 'CONF:LINK:PAYLOAD ' + cmdHexValue + '\n'
+        result = RwcSerialSetup.transceive(self, cmdSetPayload)
+        return result
 
     def link_getpayload(self):
         '''
@@ -4902,19 +4870,17 @@ class RWCTesterApi(RwcSerialSetup):
         '''
         Configure the Message data of user-defined FOpts field
 
-        :param value: 15-byte HEX value
+        :param value: 1 ~ 15 bytes, as bytes, a hex string (with or
+                     without 0x), or an int. The length should match
+                     LINK:FOPTS_SIZE.
 
         :return: ACK on success, NAK on failure
-        
+
         '''
-        cmdValue = int(value)
-        if (cmdValue >= 0 and cmdValue <= 2**15 -1) :
-            cmdHexValue = hex(cmdValue)
-            cmdSetFOpts = 'CONF:LINK:FOPTS ' + cmdHexValue + '\n'
-            result = RwcSerialSetup.transceive(self, cmdSetFOpts)
-            return result
-        else:
-            raise Exception('Invalid parameter received.')
+        cmdHexValue = _hexparam(value, 15)
+        cmdSetPayload = 'CONF:LINK:FOPTS ' + cmdHexValue + '\n'
+        result = RwcSerialSetup.transceive(self, cmdSetPayload)
+        return result
 
     def link_getfopts(self):
         '''
@@ -6216,22 +6182,19 @@ class RWCTesterApi(RwcSerialSetup):
         '''
         Configure the Message data of echo request command
 
-        :param value: 250-byte HEX value
+        :param macnum: MAC Command Number
+        :param value: 1 ~ 250 bytes, as bytes, a hex string (with or
+                     without 0x), or an int. The length should match
+                     LINK:ECHO_LEN.
 
         :return: ACK on success, NAK on failure
-        
+
         '''
-        cmdMacNum = str(macnum)
-        cmdValue = int(value)
-        if (cmdValue >= 0 and cmdValue <= 2**250 -1) :
-            cmdHexValue = hex(cmdValue)
-            cmdSetEchoPayload = 'CONF:LINK:ECHO_PAYLOAD ' \
-                                    + cmdMacNum + ' ' \
-                                    + cmdHexValue + '\n'
-            result = RwcSerialSetup.transceive(self, cmdSetEchoPayload)
-            return result
-        else:
-            raise Exception('Invalid parameter received.')
+        cmdHexValue = _hexparam(value, 250)
+        cmdSetPayload = 'CONF:LINK:ECHO_PAYLOAD ' + str(macnum) + ' ' \
+                        + cmdHexValue + '\n'
+        result = RwcSerialSetup.transceive(self, cmdSetPayload)
+        return result
 
     def link_getechopayload(self, macnum):
         '''
@@ -6915,12 +6878,12 @@ class RWCTesterApi(RwcSerialSetup):
         '''
         To configure fragment padding for application layer
 
-        :param paddingval: 1 - 255
+        :param paddingval: 0 - 255
 
         :return: ACK on success, NAK on failure
 
         '''
-        if paddingval >= 1 and paddingval <= 255:
+        if paddingval >= 0 and paddingval <= 255:
             cmdPaddingval= str(paddingval)
             cmdSetFragPadding = 'CONF:LINK:FRAG_PADDING ' \
                                     + cmdPaddingval + '\n'
@@ -7428,13 +7391,13 @@ class RWCTesterApi(RwcSerialSetup):
         '''
         Configure the minimum value of Y-axis 
 
-        :param minval: 30 ~ -80
+        :param minval: -80 ~ 30
 
         :return: ACK on success, NAK on failure
         
         '''
         minnum = int(minval)
-        if minnum >= -60 and minnum <= 40:
+        if minnum >= -80 and minnum <= 30:
             cmdMinVal = str(minnum)
             cmdSetMinVal = 'CONF:POWER:MIN_Y ' + cmdMinVal + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetMinVal)
@@ -7583,73 +7546,93 @@ class RWCTesterApi(RwcSerialSetup):
         '''
         Read the number of received packets
 
-        :param index: 0 - 7
+        :param index: channel 0 - 95. Channels 0 - 7 use
+                      READ:POWER:CH_<n>:NUM?; higher channels use
+                      READ:POWER:CH:NUM? <n> (firmware v1.500 and
+                      later; the region sets the highest channel)
 
         :return: It returns number of packets received; NAK on failure
         
         '''
         indexnum = int(index)
         if indexnum >= 0 and indexnum <= 7:
-            cmdChIndex = str(indexnum)
-            cmdGetChNumPkts = 'READ:POWER:CH_' + cmdChIndex + ':NUM?' + '\n'
-            result = RwcSerialSetup.transceive(self, cmdGetChNumPkts)
-            return result
+            cmdGetCh = 'READ:POWER:CH_' + str(indexnum) + ':NUM?' + '\n'
+        elif indexnum >= 8 and indexnum <= 95:
+            self.require_swversion(since = 1.500)
+            cmdGetCh = 'READ:POWER:CH:NUM? ' + str(indexnum) + '\n'
         else:
             raise Exception('Invalid parameter received.')
+        result = RwcSerialSetup.transceive(self, cmdGetCh)
+        return result
 
     def power_getmaxdutpower_ch(self, index):
         '''
         Read the maximum DUT power using CH_* of all the measured
 
-        :param index: 0 - 7
+        :param index: channel 0 - 95. Channels 0 - 7 use
+                      READ:POWER:CH_<n>:MAX?; higher channels use
+                      READ:POWER:CH:MAX? <n> (firmware v1.500 and
+                      later; the region sets the highest channel)
 
         :return: It returns max DUT power; NAK on failure
         
         '''
         indexnum = int(index)
         if indexnum >= 0 and indexnum <= 7:
-            cmdChIndex = str(indexnum)
-            cmdGetChMaxDut = 'READ:POWER:CH_' + cmdChIndex + ':MAX?' + '\n'
-            result = RwcSerialSetup.transceive(self, cmdGetChMaxDut)
-            return result
+            cmdGetCh = 'READ:POWER:CH_' + str(indexnum) + ':MAX?' + '\n'
+        elif indexnum >= 8 and indexnum <= 95:
+            self.require_swversion(since = 1.500)
+            cmdGetCh = 'READ:POWER:CH:MAX? ' + str(indexnum) + '\n'
         else:
             raise Exception('Invalid parameter received.')
+        result = RwcSerialSetup.transceive(self, cmdGetCh)
+        return result
 
     def power_getavgdutpower_ch(self, index):
         '''
         Read the average DUT power using CH_* of all the measured
 
-        :param index: 0 - 7
+        :param index: channel 0 - 95. Channels 0 - 7 use
+                      READ:POWER:CH_<n>:AVG?; higher channels use
+                      READ:POWER:CH:AVG? <n> (firmware v1.500 and
+                      later; the region sets the highest channel)
 
         :return: It returns average DUT power; NAK on failure
         
         '''
         indexnum = int(index)
         if indexnum >= 0 and indexnum <= 7:
-            cmdChIndex = str(indexnum)
-            cmdGetChAvgDut = 'READ:POWER:CH_' + cmdChIndex + ':AVG?' + '\n'
-            result = RwcSerialSetup.transceive(self, cmdGetChAvgDut)
-            return result
+            cmdGetCh = 'READ:POWER:CH_' + str(indexnum) + ':AVG?' + '\n'
+        elif indexnum >= 8 and indexnum <= 95:
+            self.require_swversion(since = 1.500)
+            cmdGetCh = 'READ:POWER:CH:AVG? ' + str(indexnum) + '\n'
         else:
             raise Exception('Invalid parameter received.')
+        result = RwcSerialSetup.transceive(self, cmdGetCh)
+        return result
 
     def power_getmindutpower_ch(self, index):
         '''
         Read the minimum DUT power using CH_* of all the measured
 
-        :param index: 0 - 7
+        :param index: channel 0 - 95. Channels 0 - 7 use
+                      READ:POWER:CH_<n>:MIN?; higher channels use
+                      READ:POWER:CH:MIN? <n> (firmware v1.500 and
+                      later; the region sets the highest channel)
 
         :return: It returns minimum DUT power; NAK on failure
         
         '''
         indexnum = int(index)
         if indexnum >= 0 and indexnum <= 7:
-            cmdChIndex = str(indexnum)
-            cmdGetChMinDut = 'READ:POWER:CH_' + cmdChIndex + ':MIN?' + '\n'
-            result = RwcSerialSetup.transceive(self, cmdGetChMinDut)
-            return result
+            cmdGetCh = 'READ:POWER:CH_' + str(indexnum) + ':MIN?' + '\n'
+        elif indexnum >= 8 and indexnum <= 95:
+            self.require_swversion(since = 1.500)
+            cmdGetCh = 'READ:POWER:CH:MIN? ' + str(indexnum) + '\n'
         else:
             raise Exception('Invalid parameter received.')
+        result = RwcSerialSetup.transceive(self, cmdGetCh)
+        return result
 
     def power_getnumofpkts_dut_rx2(self):
         '''
@@ -8338,13 +8321,13 @@ class RWCTesterApi(RwcSerialSetup):
         '''
         Configure the value of users target PER
 
-        :param value: Targer power (0 ~ 0.999)
+        :param value: Target PER (0 ~ 0.5)
 
         :return: ACK on success, NAK on failure
         
         '''
         cmdValue = float(value)
-        if (cmdValue >= 0.000 and cmdValue <= 0.999):
+        if (cmdValue >= 0.000 and cmdValue <= 0.5):
             cmdPerValue = str(cmdValue)
             cmdSetTargetPer = 'CONF:SENSITIVITY:TARGET_PER ' \
                                 + cmdPerValue + '\n'
@@ -8752,21 +8735,19 @@ class RWCTesterApi(RwcSerialSetup):
 
     def sensitivity_setpayload(self, data):
         '''
-        Configure the Message data of user-defined MAC command
+        Configure the Message data of user-defined MAC command for sensitivity test
 
-        :param data: Payload data (128-byte HEX value)
+        :param data: 1 ~ 128 bytes, as bytes, a hex string (with or
+                     without 0x), or an int. The length should match
+                     SENSITIVITY:PAYLOAD_SIZE.
 
         :return: ACK on success, NAK on failure
-        
+
         '''
-        cmdData = int(data)
-        if (cmdData >= 0 and cmdData <= 2**128 - 1) :
-            cmdHexValue = hex(cmdData)
-            cmdSetPayload = 'CONF:SENSITIVITY:PAYLOAD ' + cmdHexValue + '\n'
-            result = RwcSerialSetup.transceive(self, cmdSetPayload)
-            return result
-        else:
-            raise Exception('Invalid parameter received.')
+        cmdHexValue = _hexparam(data, 128)
+        cmdSetPayload = 'CONF:SENSITIVITY:PAYLOAD ' + cmdHexValue + '\n'
+        result = RwcSerialSetup.transceive(self, cmdSetPayload)
+        return result
 
     def sensitivity_getpayload(self):
         '''
@@ -10222,7 +10203,7 @@ class RWCTesterApi(RwcSerialSetup):
         Configure the interval in sec between consecutive LoRa TX frames 
         in MFG test
 
-        :param value: 0.05 ~ 1000
+        :param value: 0.01 ~ 1000 (0.05 ~ 1000 before firmware v1.300)
 
         :return: ACK on success, NAK on failure
         
@@ -10236,7 +10217,7 @@ class RWCTesterApi(RwcSerialSetup):
                                 + cmdIntervalValue + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetInterval)
             return result
-        elif (cmdValue >= 0.05 and cmdValue <= 1000.00 
+        elif (cmdValue >= 0.01 and cmdValue <= 1000.00 
                 and float(currVersion) > 1.290):
             cmdIntervalValue = str(cmdValue)
             cmdSetInterval = 'CONF:NST:MFG:PACKET_INTERVAL ' \
@@ -10410,21 +10391,19 @@ class RWCTesterApi(RwcSerialSetup):
 
     def nst_mfg_setpayload(self, value):
         '''
-        Configure the Message data of LoRa TX frame
+        Configure the Payload data of LoRa TX frame in MFG test
 
-        :param value: 128-byte HEX value
+        :param value: 1 ~ 250 bytes, as bytes, a hex string (with or
+                     without 0x), or an int. The length should match
+                     NST:MFG:PAYLOAD_SIZE.
 
         :return: ACK on success, NAK on failure
-        
+
         '''
-        cmdValue = int(value)
-        if (cmdValue >= 0 and cmdValue <= 2**128 -1) :
-            cmdHexValue = hex(cmdValue)
-            cmdSetPayload = 'CONF:NST:MFG:PAYLOAD ' + cmdHexValue + '\n'
-            result = RwcSerialSetup.transceive(self, cmdSetPayload)
-            return result
-        else:
-            raise Exception('Invalid parameter received.')
+        cmdHexValue = _hexparam(value, 250)
+        cmdSetPayload = 'CONF:NST:MFG:PAYLOAD ' + cmdHexValue + '\n'
+        result = RwcSerialSetup.transceive(self, cmdSetPayload)
+        return result
 
     def nst_mfg_getpayload(self):
         '''
