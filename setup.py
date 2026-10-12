@@ -28,4 +28,5 @@ setup(
     author='Sivaprakash Veluthambi',
     author_email='',
     packages=['rwclib'],
+    install_requires=['pyserial'],
 )
