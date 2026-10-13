@@ -11,3 +11,4 @@ rwclib/__pycache__/
 # log files
 logs/
 *.egg-info/
+tests/__pycache__/

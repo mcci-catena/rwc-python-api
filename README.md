@@ -68,11 +68,18 @@ Example scripts showing how to use the library can be found in the [`examples`](
 
 ## Support
 
-The Python library supports RWC5020x firmware from v1.150 on. v1.0.5 to v1.1.0 were tested with an RWC5020B running firmware v1.500.
+The Python library supports RWC5020x firmware from v1.150 on. v1.0.5 to v1.1.0 were tested with an RWC5020B running firmware v1.500; v1.2.0 was tested with firmware v1.500 and v1.604. There is no manual for firmware later than v1.500; commands for later firmware come from the firmware release notes and from tests on the tester.
 
 The library logs each command and response through Python's `logging` module, under the logger `rwclib.cRWCSerialSetup`. To see them, configure logging in your script, for example `logging.basicConfig(level=logging.INFO)`.
 
 ## Release History
+
+- v1.2.0 has the following changes:
+  - Part of [#18](https://github.com/mcci-catena/rwc-python-api/issues/18): firmware v1.604.
+  - Firmware v1.520 separated LoRa CRC from the coding rate. New `nst_tx/rx/mfg_set/getcrc()` and `nst_rx_set/getimplicitcrc()`. On v1.520 and later, `nst_tx_setcr()`, `nst_mfg_setcr()` and `nst_rx_setimplicitcr()` raise for `NO_CRC`, and `nst_rx_setcr()` raises for any coding rate: on v1.604, `CONF:NST:RX:CR` takes ON or OFF and sets the RX CRC.
+  - SF5 and SF6 for NST TX, RX and MFG on v1.520 and later; `16-CH` for `rf_setedtmultichannel()` on v1.510 and later (it needs the tester's 16-channel option); `protocol_set/getrelaymode()` on v1.600 and later; `query_incertoptinfo()`.
+  - `link_set/getadrchmask_optdr()` and `query_ilcertoptinfo()` raise on v1.604, which answers NAK; the release notes don't say when or why these went.
+  - `link_setfopts()` raises unless the value's length matches `FOPTS_SIZE`. The tester accepts a shorter value and keeps the old bytes after it; a hex string passed without `0x` is read as decimal and is usually shorter.
 
 - v1.1.0 has the following changes:
   - Part of [#18](https://github.com/mcci-catena/rwc-python-api/issues/18): methods for commands in the v1.500 manual that the library lacked: EDT channel plan, RX AGC, NST implicit header, coding rate and payload size, NST frame-count averaging, FOpts user payload and its size, uplink and downlink dwell time, general application key, sensitivity PER result by index, and the 64-channel and AU, RU, IL and EU433 certification option queries.

@@ -30,15 +30,19 @@ from rwclib.cRWCSerialSetup import RwcSerialSetup
 
 
 class FakeTester:
-    '''Records each command; answers version queries and ACKs the rest.'''
+    '''Records each command; answers version queries and the queries in
+    answers, and ACKs the rest.'''
 
     def __init__(self, version):
         self.version = version
+        self.answers = {}
         self.sent = []
 
     def transceive(self, api, cmd, sec = 0):
         if cmd == 'READ:SYSTEM:SW_VERSION?\n':
             return self.version
+        if cmd in self.answers:
+            return self.answers[cmd]
         self.sent.append(cmd)
         return 'ACK'
 
@@ -178,6 +182,7 @@ def test_ranges_accepted(rwc):
 
 
 def test_payload_setters_keep_leading_zeros(rwc):
+    rwc.fake.answers['READ:LINK:FOPTS_SIZE?\n'] = '2'
     rwc.link_setpayload('0x000102')
     rwc.link_setechopayload(1, bytes([0, 1, 2]))
     rwc.link_setfopts('0x0001')
@@ -287,7 +292,7 @@ def test_new_choice_commands(rwc):
     rwc.rf_setrxagc('ON')
     rwc.nst_tx_setimplicitheader('OFF')
     rwc.nst_rx_setimplicitheader('ON')
-    rwc.nst_rx_setimplicitcr('NO_CRC')
+    rwc.nst_rx_setimplicitcr('4_8')
     rwc.protocol_setdownlinkdwelltime('400ms')
     rwc.protocol_setuplinkdwelltime('NO_LIMIT')
     assert sent(rwc) == ['CONF:RF:EDT_MULTI_CH 64-CH\n',
@@ -295,7 +300,7 @@ def test_new_choice_commands(rwc):
                          'CONF:RF:RX_AGC ON\n',
                          'CONF:NST:TX:IMPLICIT_HEADER OFF\n',
                          'CONF:NST:RX:IMPLICIT_HEADER ON\n',
-                         'CONF:NST:RX:IMPLICIT_CR NO_CRC\n',
+                         'CONF:NST:RX:IMPLICIT_CR 4_8\n',
                          'CONF:PROTOCOL:DL_DWELL_TIME 400ms\n',
                          'CONF:PROTOCOL:UL_DWELL_TIME NO_LIMIT\n']
 
@@ -322,7 +327,7 @@ def test_genappkey(rwc):
 
 
 @pytest.mark.parametrize('call', [
-    lambda r: r.rf_setedtmultichannel('16-CH'),
+    lambda r: r.rf_setedtmultichannel('12-CH'),
     lambda r: r.rf_setrxagc('AUTO'),
     lambda r: r.nst_rx_setfcntavgn(11),
     lambda r: r.nst_rx_setimplicitpayloadsize(256),
@@ -347,3 +352,100 @@ def test_option_queries(rwc):
                          'READ:SYSTEM:OPTION_CERTI_RU?\n',
                          'READ:SYSTEM:OPTION_CERTI_IL?\n',
                          'READ:SYSTEM:OPTION_CERTI_EU433?\n']
+
+
+# step 5 of #18: firmware v1.604
+
+def test_fopts_length_must_match_size(rwc):
+    rwc.fake.answers['READ:LINK:FOPTS_SIZE?\n'] = '8'
+    rwc.link_setfopts('0x0001020304050607')
+    assert sent(rwc) == ['CONF:LINK:FOPTS 0001020304050607\n']
+    # 1020304050607 decimal is 5 bytes; the tester would ACK it
+    with pytest.raises(Exception):
+        rwc.link_setfopts('0001020304050607')
+    rwc.fake.answers['READ:LINK:FOPTS_SIZE?\n'] = 'NAK'
+    with pytest.raises(Exception):
+        rwc.link_setfopts('0x0001020304050607')
+    assert sent(rwc) == ['CONF:LINK:FOPTS 0001020304050607\n']
+
+
+@pytest.mark.parametrize('rwc', ['1.6040'], indirect = True)
+def test_crc_split(rwc):
+    rwc.nst_tx_setcr('4_6')
+    rwc.nst_tx_setcrc('OFF')
+    rwc.nst_tx_getcrc()
+    rwc.nst_rx_setcrc('ON')
+    rwc.nst_rx_getcrc()
+    rwc.nst_mfg_setcrc('ON')
+    rwc.nst_mfg_getcrc()
+    rwc.nst_rx_setimplicitcrc('OFF')
+    rwc.nst_rx_getimplicitcrc()
+    assert sent(rwc) == ['CONF:NST:TX:CR 4_6\n',
+                         'CONF:NST:TX:CRC OFF\n',
+                         'READ:NST:TX:CRC?\n',
+                         'CONF:NST:RX:CRC ON\n',
+                         'READ:NST:RX:CRC?\n',
+                         'CONF:NST:MFG:CRC ON\n',
+                         'READ:NST:MFG:CRC?\n',
+                         'CONF:NST:RX:IMPLICIT_CRC OFF\n',
+                         'READ:NST:RX:IMPLICIT_CRC?\n']
+
+
+@pytest.mark.parametrize('call', [
+    lambda r: r.nst_tx_setcr('NO_CRC'),
+    lambda r: r.nst_mfg_setcr('NO_CRC'),
+    lambda r: r.nst_rx_setcr('4_5'),
+    lambda r: r.nst_rx_setimplicitcr('NO_CRC'),
+    lambda r: r.link_getadrchmask_optdr(1),
+    lambda r: r.link_setadrchmask_optdr(1, 1),
+    lambda r: r.query_ilcertoptinfo(),
+    ])
+@pytest.mark.parametrize('rwc', ['1.6040'], indirect = True)
+def test_removed_in_1604(rwc, call):
+    with pytest.raises(Exception, match = 'not supported'):
+        call(rwc)
+    assert sent(rwc) == []
+
+
+@pytest.mark.parametrize('call', [
+    lambda r: r.nst_tx_setcrc('ON'),
+    lambda r: r.nst_rx_getimplicitcrc(),
+    lambda r: r.nst_tx_setsf('SF5'),
+    lambda r: r.nst_rx_setsf('SF6'),
+    lambda r: r.nst_mfg_setsf('SF5'),
+    lambda r: r.protocol_setrelaymode('ON'),
+    lambda r: r.protocol_getrelaymode(),
+    ])
+def test_new_in_1520_or_later(rwc, call):
+    with pytest.raises(Exception, match = 'not supported'):
+        call(rwc)
+    assert sent(rwc) == []
+
+
+@pytest.mark.parametrize('rwc', ['1.6040'], indirect = True)
+def test_new_commands_1604(rwc):
+    rwc.nst_tx_setsf('SF5')
+    rwc.nst_rx_setsf('SF6')
+    rwc.nst_mfg_setsf('ANY')
+    rwc.rf_setedtmultichannel('16-CH')
+    rwc.protocol_setrelaymode('OFF')
+    rwc.protocol_getrelaymode()
+    rwc.query_incertoptinfo()
+    assert sent(rwc) == ['CONF:NST:TX:SF SF5\n',
+                         'CONF:NST:RX:SF SF6\n',
+                         'CONF:NST:MFG:SF ANY\n',
+                         'CONF:RF:EDT_MULTI_CH 16-CH\n',
+                         'CONF:PROTOCOL:RELAY_MODE OFF\n',
+                         'READ:PROTOCOL:RELAY_MODE?\n',
+                         'READ:SYSTEM:OPTION_CERTI_IN?\n']
+
+
+def test_1500_keeps_old_forms(rwc):
+    rwc.nst_tx_setcr('NO_CRC')
+    rwc.nst_rx_setcr('4_5')
+    rwc.link_getadrchmask_optdr(1)
+    rwc.query_ilcertoptinfo()
+    assert sent(rwc) == ['CONF:NST:TX:CR NO_CRC\n',
+                         'CONF:NST:RX:CR 4_5\n',
+                         'READ:LINK:ADR_CH_MASK_OPT? 1\n',
+                         'READ:SYSTEM:OPTION_CERTI_IL?\n']
