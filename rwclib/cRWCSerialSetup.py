@@ -168,7 +168,9 @@ class RwcSerialSetup:
         
         if readResult:
             result = readResult.decode()
-            result = re.sub('\r|\n', '', result)
+            # READ:LINK:MSG? replies end with a NUL (firmware v1.500,
+            # v1.604)
+            result = re.sub('\r|\n', '', result).rstrip('\0')
             return result
         else:
             return None

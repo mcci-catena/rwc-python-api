@@ -490,3 +490,22 @@ def test_command_after_close_port():
     api.close_port()
     with pytest.raises(Exception, match = 'open_port'):
         api.protocol_getyear()
+
+
+def test_reply_nul_stripped():
+    class Sock:
+        '''Nothing waiting when transceive() drains stale replies; then
+        one link message, as the tester sends it.'''
+        replies = [None, b'U\t1\t40 01 00 \x00\r\n']
+        def setblocking(self, flag): pass
+        def settimeout(self, t): pass
+        def fileno(self): return 3
+        def sendto(self, data, addr): pass
+        def recvfrom(self, n):
+            reply = self.replies.pop(0)
+            if reply is None:
+                raise BlockingIOError
+            return reply, None
+    api = RWCTesterApi('5001', '192.0.2.1')
+    api.clientsock = Sock()
+    assert api.link_readmsg() == 'U\t1\t40 01 00 '
