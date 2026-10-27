@@ -449,3 +449,9 @@ def test_1500_keeps_old_forms(rwc):
                          'CONF:NST:RX:CR 4_5\n',
                          'READ:LINK:ADR_CH_MASK_OPT? 1\n',
                          'READ:SYSTEM:OPTION_CERTI_IL?\n']
+
+
+
+def test_sethour_zero(rwc):
+    rwc.protocol_sethour(0)
+    assert sent(rwc) == ['CONF:PROTOCOL:HOUR 0\n']

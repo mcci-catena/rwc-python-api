@@ -2115,13 +2115,13 @@ class RWCTesterApi(RwcSerialSetup):
         '''
         Configure the hour value for TIME information
 
-        :param hour: 1 ~ 23
+        :param hour: 0 ~ 23
 
         :return: ACK on success, NAK on failure
         
         '''
         hournum = int(hour)
-        if hournum >= 1 and hournum <= 23:
+        if hournum >= 0 and hournum <= 23:
             cmdHour = str(hournum)
             cmdSetHour = 'CONF:PROTOCOL:HOUR ' + cmdHour + '\n'
             result = RwcSerialSetup.transceive(self, cmdSetHour)
