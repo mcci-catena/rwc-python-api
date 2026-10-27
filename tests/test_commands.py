@@ -475,3 +475,18 @@ def test_settime_stops_at_nak(rwc, monkeypatch):
 def test_sethour_zero(rwc):
     rwc.protocol_sethour(0)
     assert sent(rwc) == ['CONF:PROTOCOL:HOUR 0\n']
+
+
+@pytest.mark.parametrize('addr', [None, '192.0.2.1'])
+def test_command_before_open_port(addr):
+    api = RWCTesterApi('5001' if addr else '/dev/null', addr)
+    with pytest.raises(Exception, match = 'open_port'):
+        api.protocol_getyear()
+
+
+def test_command_after_close_port():
+    api = RWCTesterApi('5001', '192.0.2.1')
+    api.open_port()
+    api.close_port()
+    with pytest.raises(Exception, match = 'open_port'):
+        api.protocol_getyear()
