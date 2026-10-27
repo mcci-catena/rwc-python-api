@@ -22,6 +22,7 @@
 # Built-in imports
 import sys
 import time
+import datetime
 import ipaddress
 
 # Lib imports
@@ -2203,6 +2204,38 @@ class RWCTesterApi(RwcSerialSetup):
         cmdGetSecond = 'READ:PROTOCOL:SECOND?' + '\n'
         result = RwcSerialSetup.transceive(self, cmdGetSecond)
         return result
+
+    def protocol_settime(self, when = None):
+        '''
+        Set the TIME information: the tester's clock, which it uses to
+        answer DeviceTimeReq. The clock keeps UTC; the tester adds the
+        GPS leap seconds when it answers.
+
+        :param when: a datetime.datetime; a naive one is taken as UTC.
+                     None (the default) sets the current time, starting
+                     at the next whole second.
+
+        :return: ACK on success; otherwise the first reply that is not
+                 ACK
+        
+        '''
+        if when is None:
+            time.sleep(1 - time.time() % 1)
+            when = datetime.datetime.fromtimestamp(round(time.time()),
+                                                   datetime.timezone.utc)
+        elif when.tzinfo is not None:
+            when = when.astimezone(datetime.timezone.utc)
+
+        for setter, value in ((self.protocol_setyear, when.year),
+                              (self.protocol_setmonth, when.month),
+                              (self.protocol_setday, when.day),
+                              (self.protocol_sethour, when.hour),
+                              (self.protocol_setminute, when.minute),
+                              (self.protocol_setsecond, when.second)):
+            result = setter(value)
+            if result != 'ACK':
+                return result
+        return 'ACK'
 
     def protocol_setlinkmargin(self, linkmargin):
         '''

@@ -18,6 +18,7 @@
 #
 ##############################################################################
 
+import datetime
 import os
 import sys
 
@@ -450,6 +451,25 @@ def test_1500_keeps_old_forms(rwc):
                          'READ:LINK:ADR_CH_MASK_OPT? 1\n',
                          'READ:SYSTEM:OPTION_CERTI_IL?\n']
 
+
+def test_settime(rwc):
+    assert rwc.protocol_settime(datetime.datetime(2026, 10, 27, 0, 5, 9)) == 'ACK'
+    assert sent(rwc) == ['CONF:PROTOCOL:YEAR 2026\n', 'CONF:PROTOCOL:MONTH 10\n',
+                         'CONF:PROTOCOL:DAY 27\n', 'CONF:PROTOCOL:HOUR 0\n',
+                         'CONF:PROTOCOL:MINUTE 5\n', 'CONF:PROTOCOL:SECOND 9\n']
+
+
+def test_settime_converts_to_utc(rwc):
+    est = datetime.timezone(datetime.timedelta(hours = -5))
+    rwc.protocol_settime(datetime.datetime(2026, 12, 31, 20, 0, 0, tzinfo = est))
+    assert sent(rwc)[:4] == ['CONF:PROTOCOL:YEAR 2027\n', 'CONF:PROTOCOL:MONTH 1\n',
+                             'CONF:PROTOCOL:DAY 1\n', 'CONF:PROTOCOL:HOUR 1\n']
+
+
+def test_settime_stops_at_nak(rwc, monkeypatch):
+    monkeypatch.setattr(rwc, 'protocol_setmonth', lambda month: 'NAK')
+    assert rwc.protocol_settime(datetime.datetime(2026, 10, 27)) == 'NAK'
+    assert sent(rwc) == ['CONF:PROTOCOL:YEAR 2026\n']
 
 
 def test_sethour_zero(rwc):
