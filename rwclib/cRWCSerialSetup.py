@@ -116,6 +116,14 @@ class RwcSerialSetup:
         '''
         readResult = None
 
+        if self.udpipaddr:
+            sock = getattr(self, 'clientsock', None)
+            isopen = sock is not None and sock.fileno() != -1
+        else:
+            isopen = self.myport.is_open
+        if not isopen:
+            raise Exception('Port not open: call open_port() first.')
+
         if not self.udpipaddr:
             if self.myport.in_waiting != 0:
                 self.myport.reset_input_buffer()
@@ -160,7 +168,9 @@ class RwcSerialSetup:
         
         if readResult:
             result = readResult.decode()
-            result = re.sub('\r|\n', '', result)
+            # READ:LINK:MSG? replies end with a NUL (firmware v1.500,
+            # v1.604)
+            result = re.sub('\r|\n', '', result).rstrip('\0')
             return result
         else:
             return None

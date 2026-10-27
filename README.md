@@ -68,11 +68,18 @@ Example scripts showing how to use the library can be found in the [`examples`](
 
 ## Support
 
-The Python library supports RWC5020x firmware from v1.150 on. v1.0.5 to v1.1.0 were tested with an RWC5020B running firmware v1.500; v1.2.0 was tested with firmware v1.500 and v1.604. There is no manual for firmware later than v1.500; commands for later firmware come from the firmware release notes and from tests on the tester.
+The Python library supports RWC5020x firmware from v1.150 on. v1.0.5 to v1.1.0 were tested with an RWC5020B running firmware v1.500; v1.2.0 was tested with firmware v1.500 and v1.604. v2.0.0-b1 was tested with firmware v1.604. There is no manual for firmware later than v1.500; commands for later firmware come from the firmware release notes and from tests on the tester.
 
 The library logs each command and response through Python's `logging` module, under the logger `rwclib.cRWCSerialSetup`. To see them, configure logging in your script, for example `logging.basicConfig(level=logging.INFO)`.
 
 ## Release History
+
+- v2.0.0-b1 has the following changes:
+  - [#27](https://github.com/mcci-catena/rwc-python-api/issues/27): **Incompatible change.** Replies no longer end with a NUL. `READ:LINK:MSG?` replies (`link_readmsg()`) ended with one, and earlier versions passed it on; code that strips it keeps working, but code that counts fields or compares the whole string may not.
+  - [#30](https://github.com/mcci-catena/rwc-python-api/issues/30): a command sent before `open_port()` or after `close_port()` raises an exception that says to call `open_port()`. Earlier versions failed with `AttributeError` over Ethernet, or logged an error and returned `None`.
+  - [#26](https://github.com/mcci-catena/rwc-python-api/issues/26): new `protocol_settime()` sets the tester's clock (the TIME information that it uses to answer DeviceTimeReq) from a `datetime`, or to the current UTC time. The clock keeps UTC; the tester adds the GPS leap seconds when it answers.
+  - [#25](https://github.com/mcci-catena/rwc-python-api/issues/25): `protocol_sethour()` accepts hour 0; it allowed only 1 to 23, so the clock could not be set between 00:00 and 00:59.
+  - `setup.py` gives the version in Python's form, `2.0.0b1`.
 
 - v1.2.0 has the following changes:
   - Part of [#18](https://github.com/mcci-catena/rwc-python-api/issues/18): firmware v1.604.

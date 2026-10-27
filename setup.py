@@ -23,7 +23,7 @@ from setuptools import setup
 
 setup(
     name='rwcpythonapi',
-    version='1.2.0',
+    version='2.0.0b1',
     description='RWC5020x LoRa Tester Library',
     author='Sivaprakash Veluthambi',
     author_email='',
